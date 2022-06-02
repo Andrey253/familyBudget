@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:family_budget/domain/entity/group.dart';
+import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/ui/widgets/groups/goups_widget_model.dart';
+import 'package:provider/provider.dart';
 
 class GroupsWidget extends StatefulWidget {
   const GroupsWidget({Key? key}) : super(key: key);
@@ -12,12 +13,12 @@ class GroupsWidget extends StatefulWidget {
 }
 
 class _GroupsWidgetState extends State<GroupsWidget> {
-  final model = GroupsWidgetModel();
+  //final model = GroupsWidgetModel();
 
   @override
   Widget build(BuildContext context) {
-    return GroupsWidgetModelProvider(
-      model: model,
+    return ChangeNotifierProvider<UsersWidgetModel>(
+      create: (context) => UsersWidgetModel(),
       child: const _GroupsWidgetBody(),
     );
   }
@@ -30,11 +31,11 @@ class _GroupsWidgetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Группы'),
+        title: const Text('Главная'),
       ),
       body: const _GroupListWidget(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => GroupsWidgetModelProvider.read(context)?.model.showForm(context),
+        onPressed: () => context.read<UsersWidgetModel>().showForm(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -46,39 +47,38 @@ class _GroupListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
-    return ValueListenableBuilder<Box<Group>>(
-      valueListenable: Hive.box<Group>('goups_box').listenable(),
+    //final groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
+    return ValueListenableBuilder<Box<User>>(
+      valueListenable: Hive.box<User>('users_box').listenable(),
       builder: (context, box, _) {
-        final transactions = box.values.toList().cast<Group>();
+        final transactions = box.values.toList().cast<User>();
 
-        return ListView.separated(
-          itemCount: transactions.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _GroupListRowWidget(indexInList: index);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const Divider(height: 1);
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build2(BuildContext context) {
-    final groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
-    return ListView.separated(
-      itemCount: groupsCount,
-      itemBuilder: (BuildContext context, int index) {
-        return _GroupListRowWidget(indexInList: index);
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider(height: 1);
+        return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: transactions.length,
+            itemBuilder: (context, index) => TextButton(
+                  child: Text(transactions[index].name),
+                  onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index),
+                  onPressed: () {},
+                ));
       },
     );
   }
 }
+
+// @override
+// Widget build2(BuildContext context) {
+//   final groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
+//   return ListView.separated(
+//     itemCount: groupsCount,
+//     itemBuilder: (BuildContext context, int index) {
+//       return _GroupListRowWidget(indexInList: index);
+//     },
+//     separatorBuilder: (BuildContext context, int index) {
+//       return const Divider(height: 1);
+//     },
+//   );
+// }
 
 class _GroupListRowWidget extends StatelessWidget {
   final int indexInList;
@@ -89,7 +89,8 @@ class _GroupListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = GroupsWidgetModelProvider.read(context)!.model;
+    final model = context.read<UsersWidgetModel>();
+
     final group = model.groups[indexInList];
 
     return Slidable(

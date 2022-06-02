@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:family_budget/domain/entity/group.dart';
+import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/domain/entity/task.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
 
 class TasksWidgetModel extends ChangeNotifier {
   int groupKey;
-  late final Future<Box<Group>> _groupBox;
+  late final Future<Box<User>> _groupBox;
   var _tasks = <Task>[];
 
   List<Task> get tasks => _tasks.toList();
 
-  Group? _group;
-  Group? get group => _group;
+  User? _group;
+  User? get group => _group;
 
   TasksWidgetModel({required this.groupKey}) {
     _setup();
@@ -60,7 +59,7 @@ class TasksWidgetModel extends ChangeNotifier {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(GroupAdapter());
     }
-    _groupBox = Hive.openBox<Group>('goups_box');
+    _groupBox = Hive.openBox<User>('goups_box');
     if (!Hive.isAdapterRegistered(2)) {
       Hive.registerAdapter(TaskAdapter());
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:family_budget/domain/entity/group.dart';
+import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/domain/entity/task.dart';
 
 class TaskFormWidgetModel {
@@ -22,7 +22,7 @@ class TaskFormWidgetModel {
     final task = Task(text: taskText, isDone: false);
     await taskBox.add(task);
 
-    final groupBox = await Hive.openBox<Group>('goups_box');
+    final groupBox = await Hive.openBox<User>('users_box');
     final group = groupBox.get(groupKey);
     group?.addTask(taskBox, task);
     Navigator.of(context).pop();

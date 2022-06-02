@@ -1,17 +1,17 @@
 import 'package:hive/hive.dart';
 import 'package:family_budget/domain/entity/task.dart';
 
-part 'group.g.dart';
+part 'user.g.dart';
 
 @HiveType(typeId: 1)
-class Group extends HiveObject {
+class User extends HiveObject {
   @HiveField(0)
   String name;
 
   @HiveField(1)
   HiveList<Task>? tasks;
 
-  Group({
+  User({
     required this.name,
   });
 

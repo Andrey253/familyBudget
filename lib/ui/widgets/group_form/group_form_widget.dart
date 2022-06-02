@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:family_budget/ui/widgets/group_form/group_form_widget_model.dart';
+import 'package:provider/provider.dart';
 
 class GroupFormWidget extends StatefulWidget {
   const GroupFormWidget({Key? key}) : super(key: key);
@@ -9,12 +10,12 @@ class GroupFormWidget extends StatefulWidget {
 }
 
 class _GroupFormWidgetState extends State<GroupFormWidget> {
-  final _model = GroupFormWidgetModel();
+  // final _model = GroupFormWidgetModel();
 
   @override
   Widget build(BuildContext context) {
-    return GroupFormWidgetModelProvider(
-      model: _model,
+    return ChangeNotifierProvider<GroupFormWidgetModel>(
+      create: (contex) => GroupFormWidgetModel(),
       child: const _GroupFormWidgetBody(),
     );
   }
@@ -38,7 +39,7 @@ class _GroupFormWidgetBody extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => GroupFormWidgetModelProvider.read(context)?.model.saveGroup(context),
+        onPressed: () => context.read<GroupFormWidgetModel>().saveGroup(context),
         child: const Icon(Icons.done),
       ),
     );
@@ -50,15 +51,15 @@ class _GroupNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = GroupFormWidgetModelProvider.read(context)?.model;
+    final model = context.read<GroupFormWidgetModel>();
     return TextField(
       autofocus: true,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         hintText: 'Имя группы',
       ),
-      onChanged: (value) => model?.groupName = value,
-      onEditingComplete: () => model?.saveGroup(context),
+      onChanged: (value) => model.groupName = value,
+      onEditingComplete: () => model.saveGroup(context),
     );
   }
 }

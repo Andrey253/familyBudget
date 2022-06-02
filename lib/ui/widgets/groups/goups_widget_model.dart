@@ -25,7 +25,7 @@ class UsersWidgetModel extends ChangeNotifier {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(GroupAdapter());
     }
-    final box = await Hive.openBox<User>('goups_box');
+    final box = await Hive.openBox<User>('users_box');
     final groupKey = box.keyAt(groupIndex) as int;
 
     unawaited(
@@ -67,14 +67,14 @@ class UsersWidgetModel extends ChangeNotifier {
   }
 
   void _setup() {
-    // if (!Hive.isAdapterRegistered(1)) {
-    //   Hive.registerAdapter(GroupAdapter());
-    // }
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(GroupAdapter());
+    }
     final box = Hive.box<User>('users_box');
-    // if (!Hive.isAdapterRegistered(2)) {
-    //   Hive.registerAdapter(TaskAdapter());
-    // }
-    // await Hive.openBox<Task>('tasks_box');
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(TaskAdapter());
+    }
+     Hive.box<Task>('tasks_box');
     _readGroupsFromHive(box);
     box.listenable().addListener(() => _readGroupsFromHive(box));
   }

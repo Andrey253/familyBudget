@@ -59,7 +59,7 @@ class _GroupListWidget extends StatelessWidget {
             itemBuilder: (context, index) => TextButton(
                   child: Text(transactions[index].name),
                   onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
-                  onPressed: () {},
+                  onPressed:() => context.read<UsersWidgetModel>().showTasks(context, index),
                 ));
       },
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:family_budget/ui/widgets/tasks/tasks_widget_model.dart';
+import 'package:provider/provider.dart';
 
 class TasksWidget extends StatefulWidget {
   final int groupKey;
@@ -14,18 +15,18 @@ class TasksWidget extends StatefulWidget {
 }
 
 class _TasksWidgetState extends State<TasksWidget> {
-  late final TasksWidgetModel _model;
+  //late final TasksWidgetModel _model;
 
   @override
   void initState() {
     super.initState();
-    _model = TasksWidgetModel(groupKey: widget.groupKey);
+ //   _model = TasksWidgetModel(groupKey: widget.groupKey);
   }
 
   @override
   Widget build(BuildContext context) {
-    return TasksWidgetModelProvider(
-      model: _model,
+    return ChangeNotifierProvider(
+      create:(context)=>  TasksWidgetModel(groupKey: widget.groupKey),
       child: const TasksWidgetBody(),
     );
   }
@@ -36,15 +37,15 @@ class TasksWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = TasksWidgetModelProvider.watch(context)?.model;
-    final title = model?.group?.name ?? 'Задачи';
+    final model = context.watch<TasksWidgetModel>();
+    final title = model.group?.name ?? 'Задачи';
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
       body: const _TaskListWidget(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => model?.showForm(context),
+        onPressed: () => model.showForm(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -56,7 +57,7 @@ class _TaskListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupsCount = TasksWidgetModelProvider.watch(context)?.model.tasks.length ?? 0;
+    final groupsCount = context.watch<TasksWidgetModel>().tasks.length ;
     return ListView.separated(
       itemCount: groupsCount,
       itemBuilder: (BuildContext context, int index) {
@@ -78,7 +79,7 @@ class _TaskListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = TasksWidgetModelProvider.read(context)!.model;
+    final model = context.read<TasksWidgetModel>();
     final task = model.tasks[indexInList];
 
     final icon = task.isDone ? Icons.done : null;

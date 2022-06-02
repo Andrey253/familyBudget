@@ -59,34 +59,34 @@ class TasksWidgetModel extends ChangeNotifier {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(GroupAdapter());
     }
-    _groupBox = Hive.openBox<User>('goups_box');
+    _groupBox = Hive.openBox<User>('users_box');
     if (!Hive.isAdapterRegistered(2)) {
       Hive.registerAdapter(TaskAdapter());
     }
-    Hive.openBox<Task>('tasks_box');
+    Hive.box<Task>('tasks_box');
     _loadGroup();
     _setupListenTasks();
   }
 }
 
-class TasksWidgetModelProvider extends InheritedNotifier {
-  final TasksWidgetModel model;
-  const TasksWidgetModelProvider({
-    Key? key,
-    required this.model,
-    required Widget child,
-  }) : super(
-          key: key,
-          notifier: model,
-          child: child,
-        );
+// class TasksWidgetModelProvider extends InheritedNotifier {
+//   final TasksWidgetModel model;
+//   const TasksWidgetModelProvider({
+//     Key? key,
+//     required this.model,
+//     required Widget child,
+//   }) : super(
+//           key: key,
+//           notifier: model,
+//           child: child,
+//         );
 
-  static TasksWidgetModelProvider? watch(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<TasksWidgetModelProvider>();
-  }
+//   static TasksWidgetModelProvider? watch(BuildContext context) {
+//     return context.dependOnInheritedWidgetOfExactType<TasksWidgetModelProvider>();
+//   }
 
-  static TasksWidgetModelProvider? read(BuildContext context) {
-    final widget = context.getElementForInheritedWidgetOfExactType<TasksWidgetModelProvider>()?.widget;
-    return widget is TasksWidgetModelProvider ? widget : null;
-  }
-}
+//   static TasksWidgetModelProvider? read(BuildContext context) {
+//     final widget = context.getElementForInheritedWidgetOfExactType<TasksWidgetModelProvider>()?.widget;
+//     return widget is TasksWidgetModelProvider ? widget : null;
+//   }
+// }

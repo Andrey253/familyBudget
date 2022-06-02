@@ -36,13 +36,29 @@ class UsersWidgetModel extends ChangeNotifier {
     );
   }
 
-  void deleteGroup(int groupIndex) async {
+  void deleteGroup(int groupIndex, BuildContext context) async {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(GroupAdapter());
     }
-    final box = await Hive.openBox<User>('users_box');
-    await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
-    await box.deleteAt(groupIndex);
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      final box = await Hive.openBox<User>('users_box');
+                      await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
+                      await box.deleteAt(groupIndex);
+                      Navigator.pop(context);
+                    },
+                    child: Text('Удалить пользователя')),
+                TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Отмена'))
+              ],
+            ));
   }
 
   void _readGroupsFromHive(Box<User> box) {

@@ -58,7 +58,7 @@ class _GroupListWidget extends StatelessWidget {
             itemCount: transactions.length,
             itemBuilder: (context, index) => TextButton(
                   child: Text(transactions[index].name),
-                  onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index),
+                  onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
                   onPressed: () {},
                 ));
       },
@@ -100,7 +100,7 @@ class _GroupListRowWidget extends StatelessWidget {
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => model.deleteGroup(indexInList),
+          onTap: () => model.deleteGroup(indexInList, context),
         ),
       ],
       child: ColoredBox(

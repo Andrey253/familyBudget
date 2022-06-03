@@ -1,8 +1,11 @@
+import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/type_transaction/type_transaction_model.dart';
+import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
+import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
-import 'package:family_budget/ui/widgets/groups/goups_widget_model.dart';
 import 'package:provider/provider.dart';
 
 class GroupsWidget extends StatefulWidget {
@@ -31,9 +34,19 @@ class _GroupsWidgetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Главная'),
+        title: const Text('Члены семьи'),
       ),
-      body: const _GroupListWidget(),
+      body: Column(
+        children:  [
+          Text('Члены семьи'),
+          _GroupListWidget(),
+          Text('Типы транзакций'),
+          ChangeNotifierProvider<TypeTransactionsWidgetModel>(
+      create: (contex) => TypeTransactionsWidgetModel(),
+      child: const TypeTransactionWidget(),
+    ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.read<UsersWidgetModel>().showForm(context),
         child: const Icon(Icons.add),
@@ -47,20 +60,33 @@ class _GroupListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
     return ValueListenableBuilder<Box<User>>(
-      valueListenable: Hive.box<User>('users_box').listenable(),
+      valueListenable: Hive.box<User>(HiveDbName.userBox).listenable(),
       builder: (context, box, _) {
-        final transactions = box.values.toList().cast<User>();
-
-        return ListView.builder(
+        final users = box.values.toList().cast<User>();
+        return SizedBox(
+          height: 80,
+          child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            itemCount: transactions.length,
-            itemBuilder: (context, index) => TextButton(
-                  child: Text(transactions[index].name),
-                  onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
-                  onPressed:() => context.read<UsersWidgetModel>().showTasks(context, index),
-                ));
+            child: Row(
+              children: [
+                ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: users.length,
+                    itemBuilder: (context, index) => TextButton(
+                          child: Text(users[index].name),
+                          onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
+                          onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index),
+                        )),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => context.read<UsersWidgetModel>().showForm(context),
+                )
+              ],
+            ),
+          ),
+        );
       },
     );
   }

@@ -57,7 +57,7 @@ class TasksWidgetModel extends ChangeNotifier {
 
   void _setup() {
     if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(GroupAdapter());
+      Hive.registerAdapter(UserAdapter());
     }
     _groupBox = Hive.openBox<User>('users_box');
     if (!Hive.isAdapterRegistered(2)) {

@@ -1,38 +1,47 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'transaction.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class UserAdapter extends TypeAdapter<User> {
+class TransactionAdapter extends TypeAdapter<Transaction> {
   @override
-  final int typeId = 1;
+  final int typeId = 0;
 
   @override
-  User read(BinaryReader reader) {
+  Transaction read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return User(
+    return Transaction(
       name: fields[0] as String,
-      tasks: (fields[1] as HiveList?)?.castHiveList(),
-      isSelected: fields[2] as bool,
+      createdDate: fields[1] as DateTime,
+      isExpense: fields[2] as bool,
+      amount: fields[3] as double,
+      nameUser: fields[4] as String,
+      nameCategory: fields[5] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, User obj) {
+  void write(BinaryWriter writer, Transaction obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.tasks)
+      ..write(obj.createdDate)
       ..writeByte(2)
-      ..write(obj.isSelected);
+      ..write(obj.isExpense)
+      ..writeByte(3)
+      ..write(obj.amount)
+      ..writeByte(4)
+      ..write(obj.nameUser)
+      ..writeByte(5)
+      ..write(obj.nameCategory);
   }
 
   @override
@@ -41,7 +50,7 @@ class UserAdapter extends TypeAdapter<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserAdapter &&
+      other is TransactionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

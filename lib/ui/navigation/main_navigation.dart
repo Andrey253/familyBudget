@@ -1,9 +1,8 @@
+import 'package:family_budget/ui/widgets/users/users_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:family_budget/ui/widgets/group_form/group_form_widget.dart';
 import 'package:family_budget/ui/widgets/task_form/task_form_widget.dart';
 import 'package:family_budget/ui/widgets/tasks/tasks_widget.dart';
-
-import '../widgets/groups/goups_widget.dart';
 
 abstract class MainNavigationRouteNames {
   static const groups = '/';

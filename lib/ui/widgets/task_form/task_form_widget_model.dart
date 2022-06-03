@@ -13,7 +13,7 @@ class TaskFormWidgetModel {
     if (taskText.isEmpty) return;
 
     if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(GroupAdapter());
+      Hive.registerAdapter(UserAdapter());
     }
     if (!Hive.isAdapterRegistered(2)) {
       Hive.registerAdapter(TaskAdapter());

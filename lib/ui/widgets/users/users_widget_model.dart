@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:family_budget/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -21,13 +22,14 @@ class UsersWidgetModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.groupsFrom);
   }
 
-  void showTasks(BuildContext context, int groupIndex) async {
+  void showTasks(BuildContext context, int userIndex) async {
     if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(GroupAdapter());
+      Hive.registerAdapter(UserAdapter());
     }
-    final box = await Hive.openBox<User>('users_box');
-    final groupKey = box.keyAt(groupIndex) as int;
 
+    final box = Hive.box<User>(HiveDbName.userBox);
+    final groupKey = box.keyAt(userIndex) as int;
+    
     unawaited(
       Navigator.of(context).pushNamed(
         MainNavigationRouteNames.tasks,
@@ -38,7 +40,7 @@ class UsersWidgetModel extends ChangeNotifier {
 
   void deleteGroup(int groupIndex, BuildContext context) async {
     if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(GroupAdapter());
+      Hive.registerAdapter(UserAdapter());
     }
     showDialog(
         context: context,
@@ -46,7 +48,7 @@ class UsersWidgetModel extends ChangeNotifier {
               actions: [
                 TextButton(
                     onPressed: () async {
-                      final box = await Hive.openBox<User>('users_box');
+                      final box = await Hive.openBox<User>(HiveDbName.userBox);
                       await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
                       await box.deleteAt(groupIndex);
                       Navigator.pop(context);
@@ -68,36 +70,36 @@ class UsersWidgetModel extends ChangeNotifier {
 
   void _setup() {
     if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(GroupAdapter());
+      Hive.registerAdapter(UserAdapter());
     }
     final box = Hive.box<User>('users_box');
     if (!Hive.isAdapterRegistered(2)) {
       Hive.registerAdapter(TaskAdapter());
     }
-     Hive.box<Task>('tasks_box');
+    Hive.box<Task>('tasks_box');
     _readGroupsFromHive(box);
     box.listenable().addListener(() => _readGroupsFromHive(box));
   }
 }
 
-class GroupsWidgetModelProvider extends InheritedNotifier {
-  final UsersWidgetModel model;
-  const GroupsWidgetModelProvider({
-    Key? key,
-    required this.model,
-    required Widget child,
-  }) : super(
-          key: key,
-          notifier: model,
-          child: child,
-        );
+// class GroupsWidgetModelProvider extends InheritedNotifier {
+//   final UsersWidgetModel model;
+//   const GroupsWidgetModelProvider({
+//     Key? key,
+//     required this.model,
+//     required Widget child,
+//   }) : super(
+//           key: key,
+//           notifier: model,
+//           child: child,
+//         );
 
-  static GroupsWidgetModelProvider? watch(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<GroupsWidgetModelProvider>();
-  }
+//   static GroupsWidgetModelProvider? watch(BuildContext context) {
+//     return context.dependOnInheritedWidgetOfExactType<GroupsWidgetModelProvider>();
+//   }
 
-  static GroupsWidgetModelProvider? read(BuildContext context) {
-    final widget = context.getElementForInheritedWidgetOfExactType<GroupsWidgetModelProvider>()?.widget;
-    return widget is GroupsWidgetModelProvider ? widget : null;
-  }
-}
+//   static GroupsWidgetModelProvider? read(BuildContext context) {
+//     final widget = context.getElementForInheritedWidgetOfExactType<GroupsWidgetModelProvider>()?.widget;
+//     return widget is GroupsWidgetModelProvider ? widget : null;
+//   }
+// }

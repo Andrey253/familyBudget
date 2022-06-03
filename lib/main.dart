@@ -9,10 +9,17 @@ void main() async {
   await Hive.initFlutter();
   // await Hive.deleteBoxFromDisk('users_box');
   // await Hive.deleteBoxFromDisk('tasks_box');
-  Hive.registerAdapter(GroupAdapter());
+  Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(TaskAdapter());
-  await Hive.openBox<User>('users_box');
-  await Hive.openBox<Task>('tasks_box');
+  await Hive.openBox<User>(HiveDbName.userBox);
+  await Hive.openBox<Task>(HiveDbName.tasksBox);
+  await Hive.openBox<String>(HiveDbName.typeBox);
   const app = MyApp();
   runApp(app);
+}
+
+abstract class HiveDbName {
+  static const userBox = 'users_box';
+  static const tasksBox = 'tasks_box';
+  static const typeBox = 'type_box';
 }

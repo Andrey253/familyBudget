@@ -9,17 +9,22 @@ class CategoryTransaction extends HiveObject {
 
   @HiveField(1)
   String type;
+
+  @HiveField(2)
+  String? keyAt;
+
   CategoryTransaction({
     required this.name,
     required this.type,
+    required this.keyAt,
   });
-
-
-
 
   // void addTask(Box<Task> box, Task task) {
   //   tasks ??= HiveList(box);
   //   tasks?.add(task);
   //   save();
   // }
+
+  @override
+  String toString() => 'CategoryTransaction(name: $name, type: $type, keyAt: $keyAt)';
 }

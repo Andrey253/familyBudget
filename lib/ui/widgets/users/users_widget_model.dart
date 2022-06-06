@@ -1,13 +1,15 @@
 import 'dart:async';
-
 import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/type_transaction/transaction_detail.dart';
+import 'package:family_budget/ui/widgets/type_transaction/transaction_type_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/domain/entity/task.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
+import 'package:provider/provider.dart';
 
 class UsersWidgetModel extends ChangeNotifier {
   var _groups = <User>[];
@@ -36,7 +38,7 @@ class UsersWidgetModel extends ChangeNotifier {
     typeTransaction = type;
     listTransactions = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
         .values
-         .where((element) => element.type == typeTransaction)
+        .where((element) => element.type == typeTransaction)
         .toList();
     print('teg $typeTransaction');
     notifyListeners();
@@ -105,16 +107,48 @@ class UsersWidgetModel extends ChangeNotifier {
     box.listenable().addListener(() => _readGroupsFromHive(box));
   }
 
-  void addCategory() async {
+  void addCategory(BuildContext context) async {
+    final type = context.read<UsersWidgetModel>().typeTransaction;
+
+    final transactionCategory = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) {
+        return TransactionTypeDialog(type: type);
+      },
+    )) as CategoryTransaction?;
+    if (transactionCategory == null) return;
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
-    final tr = CategoryTransaction(name: 'sad', type: typeTransaction);
-    await box.add(tr);
+    final index = await box.put(transactionCategory.keyAt, transactionCategory);
+    // final key = await box.keyAt(index);
+    // transactionCategory.keyAt = key;
+    // await transactionCategory.save();
     listTransactions = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
         .values
-         .where((element) => element.type == typeTransaction)
+        .where((element) => element.type == typeTransaction)
         .toList();
     notifyListeners();
     // Navigator.of(context).pop();
+  }
+
+  openTransElement(BuildContext context, CategoryTransaction categoryTransaction) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) {
+        return TransactionDetail(categoryTransaction: categoryTransaction);
+      },
+    ));
+  }
+
+  deleteTypeTransaction(int index) async {
+    print('teg $index');
+    final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
+    final key = listTransactions[index].keyAt;
+    print('teg $key');
+    await box.delete(key);
+
+    listTransactions = box.values.where((element) => element.type == typeTransaction).toList();
+    final keys = box.keys;
+    print('teg keys $keys');
+    notifyListeners();
+    // box.deleteFromDisk();
   }
 }
 

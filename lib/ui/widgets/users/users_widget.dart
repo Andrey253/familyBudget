@@ -35,7 +35,6 @@ class _GroupsWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Члены семьи'),
@@ -50,7 +49,7 @@ class _GroupsWidgetBody extends StatelessWidget {
             child: const TypeTransactionWidget(),
           ),
           const Text('Категории транзакций'),
-         const  ListTransaction()
+          const Expanded(child: ListTransaction())
         ],
       ),
       floatingActionButton: FloatingActionButton(

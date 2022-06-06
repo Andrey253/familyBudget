@@ -20,13 +20,13 @@ class _TasksWidgetState extends State<TasksWidget> {
   @override
   void initState() {
     super.initState();
- //   _model = TasksWidgetModel(groupKey: widget.groupKey);
+    //   _model = TasksWidgetModel(groupKey: widget.groupKey);
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create:(context)=>  TasksWidgetModel(groupKey: widget.groupKey),
+      create: (context) => TasksWidgetModel(userKey: widget.groupKey),
       child: const TasksWidgetBody(),
     );
   }
@@ -38,7 +38,7 @@ class TasksWidgetBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<TasksWidgetModel>();
-    final title = model.group?.name ?? 'Задачи';
+    final title = model.user?.name ?? 'Задачи';
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -57,18 +57,29 @@ class _TaskListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupsCount = context.watch<TasksWidgetModel>().tasks.length ;
-    return ListView.separated(
-      itemCount: groupsCount,
-      itemBuilder: (BuildContext context, int index) {
-        return _TaskListRowWidget(indexInList: index);
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider(height: 1);
-      },
+    final model = context.read<TasksWidgetModel>();
+    return Column(
+      children: [Text('Name user: ${model.user?.name}')],
     );
   }
 }
+// class _TaskListWidget extends StatelessWidget {
+//   const _TaskListWidget({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final groupsCount = context.watch<TasksWidgetModel>().tasks.length ;
+//     return ListView.separated(
+//       itemCount: groupsCount,
+//       itemBuilder: (BuildContext context, int index) {
+//         return _TaskListRowWidget(indexInList: index);
+//       },
+//       separatorBuilder: (BuildContext context, int index) {
+//         return const Divider(height: 1);
+//       },
+//     );
+//   }
+// }
 
 class _TaskListRowWidget extends StatelessWidget {
   final int indexInList;
@@ -80,14 +91,14 @@ class _TaskListRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.read<TasksWidgetModel>();
-    final task = model.tasks[indexInList];
+     final user = model.user;
 
-    final icon = task.isDone ? Icons.done : null;
-    final style = task.isDone
-        ? const TextStyle(
-            decoration: TextDecoration.lineThrough,
-          )
-        : null;
+    // final icon = task.isDone ? Icons.done : null;
+    // final style = task.isDone
+    //     ? const TextStyle(
+    //         decoration: TextDecoration.lineThrough,
+    //       )
+    //     : null;
 
     return Slidable(
       actionPane: const SlidableBehindActionPane(),
@@ -96,18 +107,18 @@ class _TaskListRowWidget extends StatelessWidget {
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => model.deleteTask(indexInList),
+          onTap: () => null,
         ),
       ],
       child: ColoredBox(
         color: Colors.white,
         child: ListTile(
           title: Text(
-            task.text,
-            style: style,
+            user?.name??'',
+           // style: style,
           ),
-          trailing: Icon(icon),
-          onTap: () => model.doneToggle(indexInList),
+        //  trailing: Icon(icon),
+          onTap: () => null,
         ),
       ),
     );

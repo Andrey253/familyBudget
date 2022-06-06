@@ -1,5 +1,5 @@
+import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
-import 'package:family_budget/ui/widgets/group_form/group_form_widget_model.dart';
 import 'package:provider/provider.dart';
 
 class GroupFormWidget extends StatefulWidget {
@@ -14,8 +14,8 @@ class _GroupFormWidgetState extends State<GroupFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<GroupFormWidgetModel>(
-      create: (contex) => GroupFormWidgetModel(),
+    return ChangeNotifierProvider<UsersWidgetModel>(
+      create: (contex) => UsersWidgetModel(),
       child: const _GroupFormWidgetBody(),
     );
   }
@@ -39,7 +39,7 @@ class _GroupFormWidgetBody extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<GroupFormWidgetModel>().saveGroup(context),
+        onPressed: () => context.read<UsersWidgetModel>().saveGroup(context),
         child: const Icon(Icons.done),
       ),
     );
@@ -51,7 +51,7 @@ class _GroupNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<GroupFormWidgetModel>();
+    final model = context.read<UsersWidgetModel>();
     return TextField(
       autofocus: true,
       decoration: const InputDecoration(

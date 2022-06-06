@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:family_budget/ui/widgets/task_form/task_form_widget_model.dart';
+import 'package:provider/provider.dart';
 
 class TaskFormWidget extends StatefulWidget {
   final int groupKey;
@@ -23,8 +24,8 @@ class _TaskFormWidgetState extends State<TaskFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return TaskFormWidgetModelProvider(
-      model: _model,
+    return ChangeNotifierProvider(
+      create:(context)=> TaskFormWidgetModel(groupKey: widget.groupKey),
       child: const _TextFormWidgetBody(),
     );
   }
@@ -48,7 +49,7 @@ class _TextFormWidgetBody extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => TaskFormWidgetModelProvider.read(context)?.model.saveTask(context),
+        onPressed: () => context.read<TaskFormWidgetModel>().saveTask(context),
         child: const Icon(Icons.done),
       ),
     );
@@ -60,7 +61,7 @@ class _TaskTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = TaskFormWidgetModelProvider.read(context)?.model;
+    final model = context.read<TaskFormWidgetModel>();
     return TextField(
       autofocus: true,
       minLines: null,
@@ -70,8 +71,8 @@ class _TaskTextWidget extends StatelessWidget {
         border: InputBorder.none,
         hintText: 'Текст задачи',
       ),
-      onChanged: (value) => model?.taskText = value,
-      onEditingComplete: () => model?.saveTask(context),
+      onChanged: (value) => model.taskText = value,
+      onEditingComplete: () => model.saveTask(context),
     );
   }
 }

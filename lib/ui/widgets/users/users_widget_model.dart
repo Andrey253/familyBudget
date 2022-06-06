@@ -10,14 +10,26 @@ import 'package:family_budget/ui/navigation/main_navigation.dart';
 
 class UsersWidgetModel extends ChangeNotifier {
   var _groups = <User>[];
+  var groupName = '';
 
   List<User> get groups => _groups.toList();
 
   UsersWidgetModel() {
-    print('teg GroupsWidgetModel');
+
     _setup();
   }
 
+  void saveGroup(BuildContext context) async {
+    if (groupName.isEmpty) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    final box = Hive.box<User>(HiveDbName.userBox);
+    final group = User(name: groupName, isSelected: false);
+    await box.add(group);
+    Navigator.of(context).pop();
+  }
   void showForm(BuildContext context) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.groupsFrom);
   }
@@ -29,7 +41,7 @@ class UsersWidgetModel extends ChangeNotifier {
 
     final box = Hive.box<User>(HiveDbName.userBox);
     final groupKey = box.keyAt(userIndex) as int;
-    
+
     unawaited(
       Navigator.of(context).pushNamed(
         MainNavigationRouteNames.tasks,

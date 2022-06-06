@@ -37,14 +37,14 @@ class _GroupsWidgetBody extends StatelessWidget {
         title: const Text('Члены семьи'),
       ),
       body: Column(
-        children:  [
+        children: [
           Text('Члены семьи'),
           _GroupListWidget(),
           Text('Типы транзакций'),
           ChangeNotifierProvider<TypeTransactionsWidgetModel>(
-      create: (contex) => TypeTransactionsWidgetModel(),
-      child: const TypeTransactionWidget(),
-    ),
+            create: (contex) => TypeTransactionsWidgetModel(),
+            child: const TypeTransactionWidget(),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -66,25 +66,21 @@ class _GroupListWidget extends StatelessWidget {
         final users = box.values.toList().cast<User>();
         return SizedBox(
           height: 80,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ListView.builder(
+          child: Row(
+            children: [
+              Expanded(
+                child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: users.length,
                     itemBuilder: (context, index) => TextButton(
-                          child: Text(users[index].name),
-                          onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
-                          onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index),
-                        )),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () => context.read<UsersWidgetModel>().showForm(context),
-                )
-              ],
-            ),
+                        child: Text(users[index].name),
+                        onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
+                        onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index))),
+              ),
+              IconButton(
+                  icon: const Icon(Icons.add), onPressed: () => context.read<UsersWidgetModel>().showForm(context))
+            ],
           ),
         );
       },

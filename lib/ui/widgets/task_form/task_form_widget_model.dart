@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/domain/entity/task.dart';
 
-class TaskFormWidgetModel {
+class TaskFormWidgetModel extends ChangeNotifier{
   int groupKey;
   var taskText = '';
 
@@ -29,29 +29,29 @@ class TaskFormWidgetModel {
   }
 }
 
-class TaskFormWidgetModelProvider extends InheritedWidget {
-  final TaskFormWidgetModel model;
+// class TaskFormWidgetModelProvider extends InheritedWidget {
+//   final TaskFormWidgetModel model;
 
-  const TaskFormWidgetModelProvider({
-    Key? key,
-    required this.model,
-    required Widget child,
-  }) : super(
-          key: key,
-          child: child,
-        );
+//   const TaskFormWidgetModelProvider({
+//     Key? key,
+//     required this.model,
+//     required Widget child,
+//   }) : super(
+//           key: key,
+//           child: child,
+//         );
 
-  static TaskFormWidgetModelProvider? watch(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<TaskFormWidgetModelProvider>();
-  }
+//   static TaskFormWidgetModelProvider? watch(BuildContext context) {
+//     return context.dependOnInheritedWidgetOfExactType<TaskFormWidgetModelProvider>();
+//   }
 
-  static TaskFormWidgetModelProvider? read(BuildContext context) {
-    final widget = context.getElementForInheritedWidgetOfExactType<TaskFormWidgetModelProvider>()?.widget;
-    return widget is TaskFormWidgetModelProvider ? widget : null;
-  }
+//   static TaskFormWidgetModelProvider? read(BuildContext context) {
+//     final widget = context.getElementForInheritedWidgetOfExactType<TaskFormWidgetModelProvider>()?.widget;
+//     return widget is TaskFormWidgetModelProvider ? widget : null;
+//   }
 
-  @override
-  bool updateShouldNotify(TaskFormWidgetModelProvider oldWidget) {
-    return false;
-  }
-}
+//   @override
+//   bool updateShouldNotify(TaskFormWidgetModelProvider oldWidget) {
+//     return false;
+//   }
+// }

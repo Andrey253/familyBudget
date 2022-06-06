@@ -5,7 +5,7 @@ import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/domain/entity/task.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
 
-class TasksWidgetModel extends ChangeNotifier {
+class UserProfileModel extends ChangeNotifier {
   int userKey;
   late final Box<User> _userBox;
   // var _tasks = <Task>[];
@@ -15,19 +15,19 @@ class TasksWidgetModel extends ChangeNotifier {
   User? _user;
   User? get user => _user;
 
-  TasksWidgetModel({required this.userKey}) {
+  UserProfileModel({required this.userKey}) {
     _setup();
   }
 
-  void showForm(BuildContext context) {
+  void addTransaction(BuildContext context) {
     Navigator.of(context).pushNamed(
-      MainNavigationRouteNames.tasksForm,
+      MainNavigationRouteNames.addTransaction,
       arguments: userKey,
     );
   }
 
-  void _loadUser()  {
-    final box =  _userBox;
+  void _loadUser() {
+    final box = _userBox;
     _user = box.get(userKey);
     notifyListeners();
   }

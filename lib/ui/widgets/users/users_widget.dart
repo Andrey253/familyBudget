@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/type_transaction/list_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transaction_model.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
@@ -8,14 +11,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:provider/provider.dart';
 
-class GroupsWidget extends StatefulWidget {
-  const GroupsWidget({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  _GroupsWidgetState createState() => _GroupsWidgetState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _GroupsWidgetState extends State<GroupsWidget> {
+class _MainPageState extends State<MainPage> {
   //final model = GroupsWidgetModel();
 
   @override
@@ -32,19 +35,22 @@ class _GroupsWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Члены семьи'),
       ),
       body: Column(
         children: [
-          Text('Члены семьи'),
-          _GroupListWidget(),
-          Text('Типы транзакций'),
+          const Text('Члены семьи'),
+          const _GroupListWidget(),
+          const Text('Типы транзакций'),
           ChangeNotifierProvider<TypeTransactionsWidgetModel>(
             create: (contex) => TypeTransactionsWidgetModel(),
             child: const TypeTransactionWidget(),
           ),
+          const Text('Категории транзакций'),
+         const  ListTransaction()
         ],
       ),
       floatingActionButton: FloatingActionButton(

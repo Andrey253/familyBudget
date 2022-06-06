@@ -11,11 +11,10 @@ import 'package:family_budget/ui/navigation/main_navigation.dart';
 class TypeTransactionsWidgetModel extends ChangeNotifier {
   var _types = <String>[];
 
-
   List<String> get types => _types.toList();
 
   void addCategory(BuildContext context) async {
-      final textEditController = TextEditingController();
+    final textEditController = TextEditingController();
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -38,7 +37,7 @@ class TypeTransactionsWidgetModel extends ChangeNotifier {
   }
 
   void showForm(BuildContext context) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.groupsFrom);
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.userAdd);
   }
 
   void showTasks(BuildContext context, int groupIndex) {
@@ -47,7 +46,7 @@ class TypeTransactionsWidgetModel extends ChangeNotifier {
 
     unawaited(
       Navigator.of(context).pushNamed(
-        MainNavigationRouteNames.tasks,
+        MainNavigationRouteNames.userProfile,
         arguments: groupKey,
       ),
     );
@@ -60,7 +59,7 @@ class TypeTransactionsWidgetModel extends ChangeNotifier {
               actions: [
                 TextButton(
                     onPressed: () async {
-                      final box = await Hive.openBox<String>(HiveDbName.typeBox);
+                      final box =  Hive.box<String>(HiveDbName.typeBox);
                       await box.deleteAt(groupIndex);
                       Navigator.pop(context);
                     },

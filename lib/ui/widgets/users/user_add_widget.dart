@@ -2,14 +2,14 @@ import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class GroupFormWidget extends StatefulWidget {
-  const GroupFormWidget({Key? key}) : super(key: key);
+class UserAddWidget extends StatefulWidget {
+  const UserAddWidget({Key? key}) : super(key: key);
 
   @override
-  _GroupFormWidgetState createState() => _GroupFormWidgetState();
+  _UserAddWidgetState createState() => _UserAddWidgetState();
 }
 
-class _GroupFormWidgetState extends State<GroupFormWidget> {
+class _UserAddWidgetState extends State<UserAddWidget> {
   // final _model = GroupFormWidgetModel();
 
   @override
@@ -28,7 +28,7 @@ class _GroupFormWidgetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Новая группа'),
+        title: const Text('Добавление пользователя'),
       ),
       body: Center(
         child: Container(

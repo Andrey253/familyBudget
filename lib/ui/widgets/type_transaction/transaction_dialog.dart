@@ -1,15 +1,15 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:flutter/material.dart';
 
-
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
-  final Function(String name, double amount, bool isExpense) onClickedDone;
-
+  final Function(String name, double amount, bool isExpense, String nameUser, String nameCategory) onClickedDone;
+  final String nameUser;
+  final String nameCategory;
   const TransactionDialog({
     Key? key,
     this.transaction,
-    required this.onClickedDone,
+    required this.onClickedDone,required this.nameUser,required this.nameCategory,
   }) : super(key: key);
 
   @override
@@ -57,11 +57,11 @@ class _TransactionDialogState extends State<TransactionDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-            const  SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildName(),
-            const  SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildAmount(),
-            const  SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildRadioButtons(),
             ],
           ),
@@ -76,30 +76,27 @@ class _TransactionDialogState extends State<TransactionDialog> {
 
   Widget buildName() => TextFormField(
         controller: nameController,
-        decoration:const InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Enter Name',
         ),
-        validator: (name) =>
-            name != null && name.isEmpty ? 'Enter a name' : null,
+        validator: (name) => name != null && name.isEmpty ? 'Enter a name' : null,
       );
 
   Widget buildAmount() => TextFormField(
-        decoration:const InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Enter Amount',
         ),
         keyboardType: TextInputType.number,
-        validator: (amount) => amount != null && double.tryParse(amount) == null
-            ? 'Enter a valid number'
-            : null,
+        validator: (amount) => amount != null && double.tryParse(amount) == null ? 'Enter a valid number' : null,
         controller: amountController,
       );
 
   Widget buildRadioButtons() => Column(
         children: [
           RadioListTile<bool>(
-            title:const Text('Expense'),
+            title: const Text('Expense'),
             value: true,
             groupValue: isExpense,
             onChanged: (value) => setState(() => isExpense = value!),
@@ -114,7 +111,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       );
 
   Widget buildCancelButton(BuildContext context) => TextButton(
-        child:const Text('Cancel'),
+        child: const Text('Cancel'),
         onPressed: () => Navigator.of(context).pop(),
       );
 
@@ -130,7 +127,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           final name = nameController.text;
           final amount = double.tryParse(amountController.text) ?? 0;
 
-          widget.onClickedDone(name, amount, isExpense);
+          widget.onClickedDone(name, amount, isExpense, widget.nameUser,widget.nameCategory);
 
           Navigator.of(context).pop();
         }

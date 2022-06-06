@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -11,11 +12,11 @@ import 'package:family_budget/ui/navigation/main_navigation.dart';
 class UsersWidgetModel extends ChangeNotifier {
   var _groups = <User>[];
   var groupName = '';
+  List<CategoryTransaction> listTransactions = [];
 
   List<User> get groups => _groups.toList();
-
+  String typeTransaction = '';
   UsersWidgetModel() {
-
     _setup();
   }
 
@@ -30,8 +31,19 @@ class UsersWidgetModel extends ChangeNotifier {
     await box.add(group);
     Navigator.of(context).pop();
   }
+
+  void selectTypeTransaction(BuildContext context, String type) async {
+    typeTransaction = type;
+    listTransactions = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+        .values
+         .where((element) => element.type == typeTransaction)
+        .toList();
+    print('teg $typeTransaction');
+    notifyListeners();
+  }
+
   void showForm(BuildContext context) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.groupsFrom);
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.userAdd);
   }
 
   void showTasks(BuildContext context, int userIndex) async {
@@ -44,7 +56,7 @@ class UsersWidgetModel extends ChangeNotifier {
 
     unawaited(
       Navigator.of(context).pushNamed(
-        MainNavigationRouteNames.tasks,
+        MainNavigationRouteNames.userProfile,
         arguments: groupKey,
       ),
     );
@@ -84,13 +96,25 @@ class UsersWidgetModel extends ChangeNotifier {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(UserAdapter());
     }
-    final box = Hive.box<User>('users_box');
+    final box = Hive.box<User>(HiveDbName.userBox);
     if (!Hive.isAdapterRegistered(2)) {
       Hive.registerAdapter(TaskAdapter());
     }
-    Hive.box<Task>('tasks_box');
+
     _readGroupsFromHive(box);
     box.listenable().addListener(() => _readGroupsFromHive(box));
+  }
+
+  void addCategory() async {
+    final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
+    final tr = CategoryTransaction(name: 'sad', type: typeTransaction);
+    await box.add(tr);
+    listTransactions = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+        .values
+         .where((element) => element.type == typeTransaction)
+        .toList();
+    notifyListeners();
+    // Navigator.of(context).pop();
   }
 }
 

@@ -1,31 +1,31 @@
+import 'package:family_budget/ui/widgets/user_profile/user_profile_widget.dart';
 import 'package:family_budget/ui/widgets/users/user_add_widget.dart';
 import 'package:family_budget/ui/widgets/users/users_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:family_budget/ui/widgets/task_form/task_form_widget.dart';
-import 'package:family_budget/ui/widgets/tasks/tasks_widget.dart';
 
 abstract class MainNavigationRouteNames {
-  static const groups = '/';
-  static const groupsFrom = '/groupForm';
-  static const tasks = '/tasks';
-  static const tasksForm = '/tasks/form';
+  static const mainPage = '/';
+  static const userAdd = '/userAdd';
+  static const userProfile = '/userProfile';
+  static const addTransaction = '/userProfile/addTransaction';
 }
 
 class MainNavigation {
-  final initialRoute = MainNavigationRouteNames.groups;
+  final initialRoute = MainNavigationRouteNames.mainPage;
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRouteNames.groups: (context) => const GroupsWidget(),
-    MainNavigationRouteNames.groupsFrom: (context) => const GroupFormWidget(),
+    MainNavigationRouteNames.mainPage: (context) => const MainPage(),
+    MainNavigationRouteNames.userAdd: (context) => const UserAddWidget(),
   };
 
   Route<Object> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case MainNavigationRouteNames.tasks:
+      case MainNavigationRouteNames.userProfile:
         final groupKey = settings.arguments as int;
         return MaterialPageRoute(
-          builder: (context) => TasksWidget(groupKey: groupKey),
+          builder: (context) => UserProfileWidget(groupKey: groupKey),
         );
-      case MainNavigationRouteNames.tasksForm:
+      case MainNavigationRouteNames.addTransaction:
         final groupKey = settings.arguments as int;
         return MaterialPageRoute(
           builder: (context) {

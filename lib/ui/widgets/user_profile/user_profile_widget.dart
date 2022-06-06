@@ -1,6 +1,7 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
+import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
@@ -66,54 +67,47 @@ class _TaskListWidget extends StatelessWidget {
     return Column(
       children: [
         Text('Name user: ${model.user?.name}'),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TransactionDialog(onClickedDone: addTransaction,nameUser: model.user!.name,nameCategory: ''),
-              ));
-            },
-            child: Text('Add Transaction')),
-            ValueListenableBuilder<Box<Transaction>>(
-      valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
-      builder: (context, box, _) {
-        final users = box.values.toList().cast<Transaction>();
-        return SizedBox(
-          height: 80,
-          child: Row(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: users.length,
-                    itemBuilder: (context, index) => TextButton(
-                        child: Text('${users[index].name} : ${users[index].amount}'),
-                        onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
-                        onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index))),
-              ),
-              IconButton(
-                  icon: const Icon(Icons.add), onPressed: () => context.read<UsersWidgetModel>().showForm(context))
-            ],
-          ),
-        );
-      },
-    )
+     const   TypeInUSer(),
+        ValueListenableBuilder<Box<Transaction>>(
+          valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+          builder: (context, box, _) {
+            final transactions = box.values.toList().cast<Transaction>();
+            return ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: transactions.length,
+                itemBuilder: (context, index) => Card(
+                      elevation: 5,
+                      child: ListTile(
+                        leading: Text('${transactions[index].nameCategory}'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed:()=> model.deleteTransaction(transactions[index].createdDate.toString()),
+                        ),
+                        subtitle: Text('${transactions[index].createdDate}'),
+                        title: TextButton(
+                            child: Text('${transactions[index].name} : ${transactions[index].amount}'),
+                            onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
+                            onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index)),
+                      ),
+                    ));
+          },
+        )
       ],
     );
   }
 
-  Future addTransaction(String name, double amount, bool isExpense,String nameUser,String nameCategory) async {
+  Future addTransaction(String name, double amount, bool isExpense, String nameUser, String nameCategory) async {
     final transaction = Transaction()
       ..name = name
       ..createdDate = DateTime.now()
       ..amount = amount
       ..isExpense = isExpense
       ..nameUser = nameUser
-      ..nameCategory= nameCategory;
+      ..nameCategory = nameCategory;
 
-    final box =await Hive.openBox<Transaction>(HiveDbName.transactionBox);
-  await  box.add(transaction);
-
+    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
+    await box.put(transaction.createdDate.toString(), transaction);
   }
 }
 // class _TaskListWidget extends StatelessWidget {

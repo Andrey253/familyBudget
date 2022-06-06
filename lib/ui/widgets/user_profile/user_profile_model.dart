@@ -1,3 +1,4 @@
+import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -61,13 +62,16 @@ class UserProfileModel extends ChangeNotifier {
       Hive.registerAdapter(UserAdapter());
     }
     _userBox = Hive.box<User>(HiveDbName.userBox);
-    // if (!Hive.isAdapterRegistered(2)) {
-    //   Hive.registerAdapter(TaskAdapter());
-    // }
-    // Hive.box<Task>('tasks_box');
+
     _loadUser();
     notifyListeners();
     // _setupListenTasks();
+  }
+
+  void deleteTransaction(String key) async {
+    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
+    await box.delete(key);
+    // box.clear();
   }
 }
 

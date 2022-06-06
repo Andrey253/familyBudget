@@ -138,15 +138,10 @@ class UsersWidgetModel extends ChangeNotifier {
   }
 
   deleteTypeTransaction(int index) async {
-    print('teg $index');
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
     final key = listTransactions[index].keyAt;
-    print('teg $key');
     await box.delete(key);
-
     listTransactions = box.values.where((element) => element.type == typeTransaction).toList();
-    final keys = box.keys;
-    print('teg keys $keys');
     notifyListeners();
     // box.deleteFromDisk();
   }

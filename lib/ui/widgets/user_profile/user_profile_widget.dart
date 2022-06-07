@@ -70,7 +70,7 @@ class _TransactionListWidget extends StatelessWidget {
         ValueListenableBuilder<Box<Transaction>>(
           valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
           builder: (context, box, _) {
-            final transactions = box.values.toList().cast<Transaction>().where((element) => element.nameCategory==model.typeTransaction).toList();
+            final transactions = box.values.toList().cast<Transaction>().where((element) =>model.typeTransaction!=''? element.nameCategory==model.typeTransaction:true).toList();
             return ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,

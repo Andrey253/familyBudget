@@ -57,6 +57,10 @@ class UserProfileModel extends ChangeNotifier {
   }
 
   void _setup() {
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+        .values
+
+        .toList();
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(UserAdapter());
     }

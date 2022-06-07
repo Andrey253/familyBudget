@@ -1,4 +1,4 @@
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +14,8 @@ class _UserAddWidgetState extends State<UserAddWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UsersWidgetModel>(
-      create: (contex) => UsersWidgetModel(),
+    return ChangeNotifierProvider<MainModel>(
+      create: (contex) => MainModel(),
       child: const _GroupFormWidgetBody(),
     );
   }
@@ -39,7 +39,7 @@ class _GroupFormWidgetBody extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<UsersWidgetModel>().saveGroup(context),
+        onPressed: () => context.read<MainModel>().saveGroup(context),
         child: const Icon(Icons.done),
       ),
     );
@@ -51,7 +51,7 @@ class _GroupNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<UsersWidgetModel>();
+    final model = context.read<MainModel>();
     return TextField(
       autofocus: true,
       decoration: const InputDecoration(

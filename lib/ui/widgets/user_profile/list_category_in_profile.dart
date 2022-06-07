@@ -1,5 +1,5 @@
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,9 @@ class _ListCategoryInProfileState extends State<ListCategoryInProfile> {
             itemBuilder: (context, index) => Card(
                   elevation: 8,
                   child: ListTile(
-                    trailing: IconButton(onPressed: () => model.addTransaction(context, model.listTypes[index]), icon: const Icon(Icons.add)),
+                    trailing: IconButton(
+                        onPressed: () => model.addTransaction(context, model.listTypes[index]),
+                        icon: const Icon(Icons.add)),
                     leading: Text(model.listTypes[index].type),
                     title: TextButton(
                         onPressed: () => {},

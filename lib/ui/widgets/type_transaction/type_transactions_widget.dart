@@ -1,5 +1,5 @@
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -23,7 +23,7 @@ class TypeTransactionWidget extends StatelessWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.done_all),
-                  onPressed: () => context.read<UsersWidgetModel>().resetTypeTransaction(context),
+                  onPressed: () => context.read<MainModel>().resetTypeTransaction(context),
                 ),
                 ListView.builder(
                     shrinkWrap: true,
@@ -31,13 +31,12 @@ class TypeTransactionWidget extends StatelessWidget {
                     itemCount: types.length,
                     itemBuilder: (context, index) => TextButton(
                           child: Text(types[index]),
-                          onLongPress: () => context.read<UsersWidgetModel>().deleteCategoryTransaction(index),
-                          onPressed: () =>
-                              context.read<UsersWidgetModel>().selectTypeTransaction(context, types[index]),
+                          onLongPress: () => context.read<MainModel>().deleteTypeTransaction(index,context),
+                          onPressed: () => context.read<MainModel>().selectTypeTransaction(context, types[index]),
                         )),
                 IconButton(
                   icon: const Icon(Icons.add),
-                  onPressed: () => context.read<UsersWidgetModel>().addType(context),
+                  onPressed: () => context.read<MainModel>().addType(context),
                 )
               ],
             ),
@@ -57,7 +56,7 @@ class _GroupListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<UsersWidgetModel>();
+    final model = context.read<MainModel>();
 
     final group = model.groups[indexInList];
 

@@ -1,6 +1,6 @@
 import 'package:family_budget/ui/widgets/user_profile/user_profile_widget.dart';
-import 'package:family_budget/ui/widgets/users/user_add_widget.dart';
-import 'package:family_budget/ui/widgets/users/users_widget.dart';
+import 'package:family_budget/ui/widgets/main/user_add_widget.dart';
+import 'package:family_budget/ui/widgets/main/main_widget.dart';
 import 'package:flutter/material.dart';
 
 abstract class MainNavigationRouteNames {

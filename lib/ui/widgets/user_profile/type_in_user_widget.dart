@@ -2,7 +2,7 @@ import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -62,7 +62,7 @@ class _GroupListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<UsersWidgetModel>();
+    final model = context.read<MainModel>();
 
     final group = model.groups[indexInList];
 

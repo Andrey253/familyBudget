@@ -11,14 +11,14 @@ import 'package:family_budget/domain/entity/task.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:provider/provider.dart';
 
-class UsersWidgetModel extends ChangeNotifier {
+class MainModel extends ChangeNotifier {
   var _groups = <User>[];
   var groupName = '';
   List<CategoryTransaction> listTypes = [];
 
   List<User> get groups => _groups.toList();
   String? typeTransaction;
-  UsersWidgetModel() {
+  MainModel() {
     _setup();
   }
 
@@ -104,14 +104,15 @@ class UsersWidgetModel extends ChangeNotifier {
     listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
   }
 
-  void addType(BuildContext context) async {
-    final type = context.read<UsersWidgetModel>().typeTransaction;
+  void addCategory(BuildContext context) async {
+    // final type = context.read<MainModel>().typeTransaction;
 
     final transactionCategory = await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return TransactionTypeDialog(type: type);
+        return TransactionTypeDialog(type: typeTransaction);
       },
     )) as CategoryTransaction?;
+    print('teg transactionCategory $transactionCategory');
     if (transactionCategory == null) return;
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
     final index = await box.put(transactionCategory.keyAt, transactionCategory);
@@ -125,12 +126,13 @@ class UsersWidgetModel extends ChangeNotifier {
     notifyListeners();
     // Navigator.of(context).pop();
   }
-    void addCategory(BuildContext context) async {
+
+  void addType(BuildContext context) async {
     final textEditController = TextEditingController();
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text('Введите имя категории'),
+              title: const Text('Введите имя типа транзакций'),
               content: TextField(controller: textEditController),
               actions: [
                 TextButton(
@@ -156,7 +158,7 @@ class UsersWidgetModel extends ChangeNotifier {
     ));
   }
 
-  deleteCategoryTransaction(int index) async {
+  void deleteCategoryTransaction(int index) async {
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
     final key = listTypes[index].keyAt;
     await box.delete(key);

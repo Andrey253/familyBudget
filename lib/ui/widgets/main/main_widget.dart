@@ -1,8 +1,10 @@
+import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/main/circular_bar.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -21,8 +23,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UsersWidgetModel>(
-      create: (context) => UsersWidgetModel(),
+    return ChangeNotifierProvider<MainModel>(
+      create: (context) => MainModel(),
       child: const _GroupsWidgetBody(),
     );
   }
@@ -33,20 +35,51 @@ class _GroupsWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<MainModel>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Члены семьи'),
       ),
       body: Column(
-        children: const [
+        children: [
           _UserListWidget(),
           Text('Типы транзакций'),
           TypeTransactionWidget(),
-          Expanded(child: ListCategoryTransaction())
+          ListCategoryTransaction(),
+          Expanded(
+            child: ValueListenableBuilder<Box<Transaction>>(
+              valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+              builder: (context, box, _) {
+                final transactions = box.values
+                    .toList()
+                    .cast<Transaction>()
+                    .where((element) =>
+                        model.typeTransaction != null ? element.typeTransaction == model.typeTransaction : true)
+                    .toList();
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) => Card(
+                          elevation: 5,
+                          child: ListTile(
+                            leading: Text(transactions[index].typeTransaction),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: transactions[index].delete,
+                            ),
+                            subtitle: Text(
+                                '${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
+                            title: Text('${transactions[index].name} : ${transactions[index].amount}'),
+                          ),
+                        ));
+              },
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<UsersWidgetModel>().showForm(context),
+        onPressed: () => context.read<MainModel>().showForm(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -72,8 +105,8 @@ class _UserListWidget extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: users.length,
                     itemBuilder: (context, index) => GestureDetector(
-                          onLongPress: () => context.read<UsersWidgetModel>().deleteUser(index, context),
-                          onTap: () => context.read<UsersWidgetModel>().showTasks(context, index),
+                          onLongPress: () => context.read<MainModel>().deleteUser(index, context),
+                          onTap: () => context.read<MainModel>().showTasks(context, index),
                           child: Container(
                             width: 80,
                             decoration: BoxDecoration(
@@ -89,7 +122,7 @@ class _UserListWidget extends StatelessWidget {
                         )),
               ),
               GestureDetector(
-                onTap: () => context.read<UsersWidgetModel>().showForm(context),
+                onTap: () => context.read<MainModel>().showForm(context),
                 child: Container(
                   width: 80, height: 80,
                   decoration: BoxDecoration(
@@ -132,7 +165,7 @@ class _GroupListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<UsersWidgetModel>();
+    final model = context.read<MainModel>();
 
     final group = model.groups[indexInList];
 

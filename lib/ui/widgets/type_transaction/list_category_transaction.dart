@@ -1,4 +1,4 @@
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ class ListCategoryTransaction extends StatefulWidget {
 class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<UsersWidgetModel>();
+    final model = context.watch<MainModel>();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -21,23 +21,21 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
         if (model.typeTransaction != null)
           TextButton(
               child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addType(context)),
-        Expanded(
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: model.listTypes.length,
-              itemBuilder: (context, index) => Card(
-                    elevation: 8,
-                    child: ListTile(
-                      trailing: IconButton(
-                          onPressed: () => model.deleteCategoryTransaction(index), icon: const Icon(Icons.delete)),
-                      leading: Text(model.listTypes[index].type),
-                      title: TextButton(
-                          onPressed: () => model.openTransElement(context, model.listTypes[index]),
-                          child: Text(
-                              '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
-                    ),
-                  )),
-        ),
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: model.listTypes.length,
+            itemBuilder: (context, index) => Card(
+                  elevation: 8,
+                  child: ListTile(
+                    trailing: IconButton(
+                        onPressed: () => model.deleteCategoryTransaction(index), icon: const Icon(Icons.delete)),
+                    leading: Text(model.listTypes[index].type),
+                    title: TextButton(
+                        onPressed: () => model.openTransElement(context, model.listTypes[index]),
+                        child: Text(
+                            '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
+                  ),
+                )),
       ],
     );
   }

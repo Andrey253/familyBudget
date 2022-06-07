@@ -5,7 +5,7 @@ part 'category_transaction.g.dart';
 @HiveType(typeId: 3)
 class CategoryTransaction extends HiveObject {
   @HiveField(0)
-  String name;
+  String nameCategory;
 
   @HiveField(1)
   String type;
@@ -14,7 +14,7 @@ class CategoryTransaction extends HiveObject {
   String? keyAt;
 
   CategoryTransaction({
-    required this.name,
+    required this.nameCategory,
     required this.type,
     required this.keyAt,
   });
@@ -26,5 +26,5 @@ class CategoryTransaction extends HiveObject {
   // }
 
   @override
-  String toString() => 'CategoryTransaction(name: $name, type: $type, keyAt: $keyAt)';
+  String toString() => 'CategoryTransaction(name: $nameCategory, type: $type, keyAt: $keyAt)';
 }

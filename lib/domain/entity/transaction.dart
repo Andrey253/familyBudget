@@ -14,11 +14,19 @@ class Transaction extends HiveObject {
   late bool isExpense = true;
 
   @HiveField(3)
-  late double amount;
+  double? amount;
 
   @HiveField(4)
   late String nameUser;
   
   @HiveField(5)
   late String nameCategory;
+  
+  @HiveField(6)
+  late String typeTransaction;
+
+  @override
+  String toString() {
+    return 'Transaction(name: $name, createdDate: $createdDate, isExpense: $isExpense, amount: $amount, nameUser: $nameUser, nameCategory: $nameCategory, typeTransaction: $typeTransaction)';
+  }
 }

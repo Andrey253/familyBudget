@@ -64,7 +64,7 @@ class UsersWidgetModel extends ChangeNotifier {
     );
   }
 
-  void deleteGroup(int groupIndex, BuildContext context) async {
+  void deleteUser(int groupIndex, BuildContext context) async {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(UserAdapter());
     }

@@ -25,8 +25,9 @@ class TypeInUserProfile extends StatelessWidget {
           itemBuilder: (context, index) => TextButton(
                 child: Text(types[index]),
                 //   onLongPress: () => context.read<TypeTransactionsWidgetModel>().deleteGroup(index, context),
-                
-                onPressed:()=> model.selectTypeTransaction(context, types[index]),
+
+                onPressed: () => model.selectTypeTransaction(context, types[index]),
+                onLongPress: () => model.resetTypeTransaction(context, types[index]),
                 // onPressed: () {
                 //   Navigator.of(context).push(MaterialPageRoute(
                 //     builder: (context) => TransactionDialog(
@@ -72,7 +73,7 @@ class _GroupListRowWidget extends StatelessWidget {
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => model.deleteGroup(indexInList, context),
+          onTap: () => model.deleteUser(indexInList, context),
         ),
       ],
       child: ColoredBox(

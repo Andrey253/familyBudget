@@ -1,11 +1,8 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -70,24 +67,24 @@ class _TransactionListWidget extends StatelessWidget {
         ValueListenableBuilder<Box<Transaction>>(
           valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
           builder: (context, box, _) {
-            final transactions = box.values.toList().cast<Transaction>().where((element) =>model.typeTransaction!=''? element.nameCategory==model.typeTransaction:true).toList();
+            final transactions = box.values
+                .toList()
+                .cast<Transaction>()
+                .where((element) => model.typeTransaction != null ? element.typeTransaction == model.typeTransaction : true)
+                .toList();
             return ListView.builder(
                 shrinkWrap: true,
-                scrollDirection: Axis.vertical,
                 itemCount: transactions.length,
                 itemBuilder: (context, index) => Card(
                       elevation: 5,
                       child: ListTile(
-                        leading: Text(transactions[index].nameCategory),
+                        leading: Text(transactions[index].typeTransaction),
                         trailing: IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () => model.deleteTransaction(transactions[index].createdDate.toString()),
                         ),
-                        subtitle: Text('${transactions[index].createdDate}'),
-                        title: TextButton(
-                            child: Text('${transactions[index].name} : ${transactions[index].amount}'),
-                            onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
-                            onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index)),
+                        subtitle: Text('${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
+                        title: Text('${transactions[index].name} : ${transactions[index].amount}'),
                       ),
                     ));
           },

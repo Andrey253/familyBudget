@@ -25,12 +25,12 @@ class _ListCategoryInProfileState extends State<ListCategoryInProfile> {
               itemBuilder: (context, index) => Card(
                     elevation: 8,
                     child: ListTile(
-                      trailing: IconButton(onPressed: () => model.addTransaction(context), icon: const Icon(Icons.add)),
+                      trailing: IconButton(onPressed: () => model.addTransaction(context, model.listTypes[index]), icon: const Icon(Icons.add)),
                       leading: Text(model.listTypes[index].type),
                       title: TextButton(
                           onPressed: () => {},
                           child: Text(
-                              '${model.listTypes[index].name} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
+                              '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
                     ),
                   )),
         ),

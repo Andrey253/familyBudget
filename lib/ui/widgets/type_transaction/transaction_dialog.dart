@@ -1,17 +1,14 @@
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/main.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
-  final Function(String name, double amount, bool isExpense, String nameUser, String nameCategory) onClickedDone;
-  final String nameUser;
-  final String nameCategory;
+
   const TransactionDialog({
     Key? key,
     this.transaction,
-    required this.onClickedDone,
-    required this.nameUser,
-    required this.nameCategory,
   }) : super(key: key);
 
   @override
@@ -33,7 +30,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       final transaction = widget.transaction!;
 
       nameController.text = transaction.name;
-      amountController.text = transaction.amount.toString();
+      amountController.text = (transaction.amount?? '').toString();
       isExpense = transaction.isExpense;
     }
   }
@@ -46,10 +43,22 @@ class _TransactionDialogState extends State<TransactionDialog> {
     super.dispose();
   }
 
+  void onClickedDone(String name, double amount, bool isExpense, Transaction transaction) async {
+    transaction.name = name;
+    transaction.createdDate = DateTime.now();
+    transaction.amount = amount;
+    transaction.isExpense = isExpense;
+
+    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
+    await box.put(transaction.createdDate.toString(), transaction);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.transaction != null;
-    final title = isEditing ? 'Edit Transaction ${widget.nameCategory}' : 'Add Transaction ${widget.nameCategory}';
+    final title = isEditing
+        ? 'Edit Transaction ${widget.transaction?.typeTransaction}'
+        : 'Add Transaction ${widget.transaction?.nameCategory}';
 
     return AlertDialog(
       title: Text(title),
@@ -129,7 +138,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           final name = nameController.text;
           final amount = double.tryParse(amountController.text) ?? 0;
 
-          widget.onClickedDone(name, amount, isExpense, widget.nameUser, widget.nameCategory);
+          onClickedDone(name, amount, isExpense, widget.transaction!);
 
           Navigator.of(context).pop();
         }

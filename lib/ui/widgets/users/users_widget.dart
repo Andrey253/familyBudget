@@ -1,3 +1,4 @@
+import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transaction_model.dart';
@@ -76,10 +77,21 @@ class _UserListWidget extends StatelessWidget {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: users.length,
-                    itemBuilder: (context, index) => TextButton(
-                        child: Text(users[index].name),
-                        onLongPress: () => context.read<UsersWidgetModel>().deleteGroup(index, context),
-                        onPressed: () => context.read<UsersWidgetModel>().showTasks(context, index))),
+                    itemBuilder: (context, index) => GestureDetector(
+                          onLongPress: () => context.read<UsersWidgetModel>().deleteUser(index, context),
+                          onTap: () => context.read<UsersWidgetModel>().showTasks(context, index),
+                          child: Container(
+                            width: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: const LinearGradient(colors: [Colors.red, Colors.cyan]),
+                            ),
+                            // color: Colors.red,
+                            child: Center(
+                              child: Text(users[index].name),
+                            ),
+                          ).paddingAll(4),
+                        )),
               ),
               IconButton(
                   icon: const Icon(Icons.add), onPressed: () => context.read<UsersWidgetModel>().showForm(context))
@@ -125,7 +137,7 @@ class _GroupListRowWidget extends StatelessWidget {
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => model.deleteGroup(indexInList, context),
+          onTap: () => model.deleteUser(indexInList, context),
         ),
       ],
       child: ColoredBox(

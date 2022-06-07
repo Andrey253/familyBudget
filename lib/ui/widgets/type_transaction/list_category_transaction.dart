@@ -32,7 +32,7 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
                       title: TextButton(
                           onPressed: () => model.openTransElement(context, model.listTypes[index]),
                           child: Text(
-                              '${model.listTypes[index].name} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
+                              '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
                     ),
                   )),
         ),

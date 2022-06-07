@@ -16,7 +16,7 @@ class TypeTransactionWidget extends StatelessWidget {
       valueListenable: Hive.box<String>(HiveDbName.typeBox).listenable(),
       builder: (context, box, _) {
         final types = box.values.toList();
-        
+
         return SizedBox(
           height: 80,
           child: SingleChildScrollView(
@@ -30,7 +30,8 @@ class TypeTransactionWidget extends StatelessWidget {
                     itemBuilder: (context, index) => TextButton(
                           child: Text(types[index]),
                           onLongPress: () => context.read<TypeTransactionsWidgetModel>().deleteGroup(index, context),
-                          onPressed: () => context.read<UsersWidgetModel>().selectTypeTransaction(context,types[index]),
+                          onPressed: () =>
+                              context.read<UsersWidgetModel>().selectTypeTransaction(context, types[index]),
                         )),
                 IconButton(
                   icon: const Icon(Icons.add),
@@ -44,7 +45,6 @@ class TypeTransactionWidget extends StatelessWidget {
     );
   }
 }
-
 
 class _GroupListRowWidget extends StatelessWidget {
   final int indexInList;
@@ -66,7 +66,7 @@ class _GroupListRowWidget extends StatelessWidget {
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => model.deleteGroup(indexInList, context),
+          onTap: () => model.deleteUser(indexInList, context),
         ),
       ],
       child: ColoredBox(

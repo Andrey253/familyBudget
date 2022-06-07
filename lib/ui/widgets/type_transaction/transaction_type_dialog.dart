@@ -74,7 +74,7 @@ class _TransactionTypeDialogState extends State<TransactionTypeDialog> {
           final name = nameController.text;
 
           Navigator.of(context)
-              .pop(CategoryTransaction(name: name, type: widget.type, keyAt: DateTime.now().toString()));
+              .pop(CategoryTransaction(nameCategory: name, type: widget.type, keyAt: DateTime.now().toString()));
         }
       },
     );

@@ -1,3 +1,4 @@
+import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,22 @@ class TypeTransactionWidget extends StatelessWidget {
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: types.length,
-                    itemBuilder: (context, index) => TextButton(
-                          child: Text(types[index]),
-                          onLongPress: () => context.read<MainModel>().deleteTypeTransaction(index,context),
-                          onPressed: () => context.read<MainModel>().selectTypeTransaction(context, types[index]),
+                    itemBuilder: (context, index) => GestureDetector(
+                          onLongPress: () => context.read<MainModel>().deleteTypeTransaction(index, context),
+                          onTap: () => context.read<MainModel>().selectTypeTransaction(context, types[index]),
+                          child: Container(
+                            width: 80,
+                            decoration: BoxDecoration(
+                              // color: Colors.primaries[index],
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: LinearGradient(
+                                  colors: [Colors.primaries[(index + 4) % 18], Colors.primaries[(index + 10) % 18]]),
+                            ),
+                            // color: Colors.red,
+                            child: Center(
+                              child: Text(types[index]),
+                            ),
+                          ).paddingAll(4),
                         )),
                 IconButton(
                   icon: const Icon(Icons.add),

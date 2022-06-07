@@ -115,7 +115,7 @@ class MainModel extends ChangeNotifier {
     print('teg transactionCategory $transactionCategory');
     if (transactionCategory == null) return;
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
-    final index = await box.put(transactionCategory.keyAt, transactionCategory);
+    final index = await box.add( transactionCategory);
     // final key = await box.keyAt(index);
     // transactionCategory.keyAt = key;
     // await transactionCategory.save();
@@ -160,9 +160,8 @@ class MainModel extends ChangeNotifier {
 
   void deleteCategoryTransaction(int index) async {
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
-    final key = listTypes[index].keyAt;
-    await box.delete(key);
-    listTypes = box.values.where((element) => element.type == typeTransaction).toList();
+    await box.delete(index);
+    listTypes = box.values.toList();
     notifyListeners();
     // box.deleteFromDisk();
   }

@@ -19,20 +19,17 @@ class CategoryTransactionAdapter extends TypeAdapter<CategoryTransaction> {
     return CategoryTransaction(
       nameCategory: fields[0] as String,
       type: fields[1] as String,
-      keyAt: fields[2] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CategoryTransaction obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.nameCategory)
       ..writeByte(1)
-      ..write(obj.type)
-      ..writeByte(2)
-      ..write(obj.keyAt);
+      ..write(obj.type);
   }
 
   @override
@@ -41,5 +38,7 @@ class CategoryTransactionAdapter extends TypeAdapter<CategoryTransaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CategoryTransactionAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is CategoryTransactionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

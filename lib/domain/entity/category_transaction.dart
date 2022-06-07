@@ -10,13 +10,9 @@ class CategoryTransaction extends HiveObject {
   @HiveField(1)
   String type;
 
-  @HiveField(2)
-  String? keyAt;
-
   CategoryTransaction({
     required this.nameCategory,
     required this.type,
-    required this.keyAt,
   });
 
   // void addTask(Box<Task> box, Task task) {
@@ -26,5 +22,5 @@ class CategoryTransaction extends HiveObject {
   // }
 
   @override
-  String toString() => 'CategoryTransaction(name: $nameCategory, type: $type, keyAt: $keyAt)';
+  String toString() => 'CategoryTransaction(name: $nameCategory, type: $type)';
 }

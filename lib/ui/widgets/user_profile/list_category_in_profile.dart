@@ -31,7 +31,7 @@ class _ListCategoryInProfileState extends State<ListCategoryInProfile> {
                     title: TextButton(
                         onPressed: () => {},
                         child: Text(
-                            '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
+                            '${model.listTypes[index].nameCategory} ${model.listTypes[index].type}')),
                   ),
                 )),
       ],

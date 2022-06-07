@@ -28,12 +28,12 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
                   elevation: 8,
                   child: ListTile(
                     trailing: IconButton(
-                        onPressed: () => model.deleteCategoryTransaction(index), icon: const Icon(Icons.delete)),
+                        onPressed: () => model.deleteCategoryTransaction(model.listTypes[index].key), icon: const Icon(Icons.delete)),
                     leading: Text(model.listTypes[index].type),
                     title: TextButton(
                         onPressed: () => model.openTransElement(context, model.listTypes[index]),
                         child: Text(
-                            '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
+                            '${model.listTypes[index].nameCategory} ${model.listTypes[index].type}')),
                   ),
                 )),
       ],

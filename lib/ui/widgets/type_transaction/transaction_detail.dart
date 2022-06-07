@@ -24,7 +24,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
         children: [
           Text(' Тип транзакции: ${widget.categoryTransaction.type}').paddingAll(),
           Text(' Наименование транзакции: ${widget.categoryTransaction.nameCategory}').paddingAll(),
-          Text(' Индекс транзакции: ${widget.categoryTransaction.keyAt}').paddingAll(),
+          Text(' Индекс транзакции: ${widget.categoryTransaction.key}').paddingAll(),
         ],
       ),
     );

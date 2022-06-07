@@ -110,9 +110,10 @@ class _UserListWidget extends StatelessWidget {
                           child: Container(
                             width: 80,
                             decoration: BoxDecoration(
-                              color: Colors.primaries[index],
+                              //  color: Colors.primaries[index],
                               borderRadius: BorderRadius.circular(10),
-                              // gradient: const LinearGradient(colors: [Colors.red, Colors.cyan]),
+                              gradient: LinearGradient(
+                                  colors: [Colors.primaries[index % 18], Colors.primaries[(index * 2 + 1) % 18]]),
                             ),
                             // color: Colors.red,
                             child: Center(
@@ -126,9 +127,9 @@ class _UserListWidget extends StatelessWidget {
                 child: Container(
                   width: 80, height: 80,
                   decoration: BoxDecoration(
-                    color: Colors.primaries[9],
+                    // color: Colors.primaries[9],
                     borderRadius: BorderRadius.circular(10),
-                    // gradient: const LinearGradient(colors: [Colors.red, Colors.cyan]),
+                    gradient: LinearGradient(colors: [Colors.primaries[10], Colors.primaries[12]]),
                   ),
                   // color: Colors.red,
                   child: const Center(child: Text('Добавить члена семьи', textAlign: TextAlign.center)),

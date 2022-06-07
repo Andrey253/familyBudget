@@ -2,14 +2,14 @@ import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ListTransaction extends StatefulWidget {
-  const ListTransaction({Key? key}) : super(key: key);
+class ListCategoryTransaction extends StatefulWidget {
+  const ListCategoryTransaction({Key? key}) : super(key: key);
 
   @override
-  State<ListTransaction> createState() => _ListTransactionState();
+  State<ListCategoryTransaction> createState() => _ListCategoryTransactionState();
 }
 
-class _ListTransactionState extends State<ListTransaction> {
+class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<UsersWidgetModel>();
@@ -20,19 +20,19 @@ class _ListTransactionState extends State<ListTransaction> {
         TextButton(
             child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addCategory(context)),
         Expanded(
-          // height: 300,
           child: ListView.builder(
               shrinkWrap: true,
-              itemCount: model.listTransactions.length,
+              itemCount: model.listTypes.length,
               itemBuilder: (context, index) => Card(
                     elevation: 8,
                     child: ListTile(
-                      trailing: IconButton(onPressed: ()=>model.deleteTypeTransaction(index), icon: Icon(Icons.delete)),
-                      leading: Text('${model.listTransactions[index].type}'),
+                      trailing: IconButton(
+                          onPressed: () => model.deleteTypeTransaction(index), icon: const Icon(Icons.delete)),
+                      leading: Text(model.listTypes[index].type),
                       title: TextButton(
-                          onPressed: () => model.openTransElement(context, model.listTransactions[index]),
+                          onPressed: () => model.openTransElement(context, model.listTypes[index]),
                           child: Text(
-                              '${model.listTransactions[index].name} ${model.listTransactions[index].type} ${model.listTransactions[index].keyAt}')),
+                              '${model.listTypes[index].name} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
                     ),
                   )),
         ),

@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/type_transaction/list_transaction.dart';
+import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transaction_model.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
@@ -42,14 +40,14 @@ class _GroupsWidgetBody extends StatelessWidget {
       body: Column(
         children: [
           const Text('Члены семьи'),
-          const _GroupListWidget(),
+          const _UserListWidget(),
           const Text('Типы транзакций'),
           ChangeNotifierProvider<TypeTransactionsWidgetModel>(
             create: (contex) => TypeTransactionsWidgetModel(),
             child: const TypeTransactionWidget(),
           ),
           const Text('Категории транзакций'),
-          const Expanded(child: ListTransaction())
+          const Expanded(child: ListCategoryTransaction())
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -60,8 +58,8 @@ class _GroupsWidgetBody extends StatelessWidget {
   }
 }
 
-class _GroupListWidget extends StatelessWidget {
-  const _GroupListWidget({Key? key}) : super(key: key);
+class _UserListWidget extends StatelessWidget {
+  const _UserListWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

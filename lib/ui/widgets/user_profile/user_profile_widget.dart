@@ -1,6 +1,8 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
+import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
@@ -33,45 +35,42 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => UserProfileModel(userKey: widget.groupKey),
-      child: const TasksWidgetBody(),
+      child: const TransactionsWidgetBody(),
     );
   }
 }
 
-class TasksWidgetBody extends StatelessWidget {
-  const TasksWidgetBody({Key? key}) : super(key: key);
+class TransactionsWidgetBody extends StatelessWidget {
+  const TransactionsWidgetBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<UserProfileModel>();
-    final title = model.user?.name ?? 'Задачи';
+    final title = model.user?.name ?? '';
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
-      body: const _TaskListWidget(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => model.addTransaction(context),
-        child: const Icon(Icons.add),
-      ),
+      body: const _TransactionListWidget(),
     );
   }
 }
 
-class _TaskListWidget extends StatelessWidget {
-  const _TaskListWidget({Key? key}) : super(key: key);
+class _TransactionListWidget extends StatelessWidget {
+  const _TransactionListWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<UserProfileModel>();
+    final model = context.watch<UserProfileModel>();
     return Column(
       children: [
         Text('Name user: ${model.user?.name}'),
-     const   TypeInUSer(),
+        const TypeInUserProfile(),
+        const Expanded(child: ListCategoryInProfile()),
         ValueListenableBuilder<Box<Transaction>>(
           valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
           builder: (context, box, _) {
-            final transactions = box.values.toList().cast<Transaction>();
+            final transactions = box.values.toList().cast<Transaction>().where((element) => element.nameCategory==model.typeTransaction).toList();
             return ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
@@ -79,10 +78,10 @@ class _TaskListWidget extends StatelessWidget {
                 itemBuilder: (context, index) => Card(
                       elevation: 5,
                       child: ListTile(
-                        leading: Text('${transactions[index].nameCategory}'),
+                        leading: Text(transactions[index].nameCategory),
                         trailing: IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed:()=> model.deleteTransaction(transactions[index].createdDate.toString()),
+                          onPressed: () => model.deleteTransaction(transactions[index].createdDate.toString()),
                         ),
                         subtitle: Text('${transactions[index].createdDate}'),
                         title: TextButton(
@@ -95,19 +94,6 @@ class _TaskListWidget extends StatelessWidget {
         )
       ],
     );
-  }
-
-  Future addTransaction(String name, double amount, bool isExpense, String nameUser, String nameCategory) async {
-    final transaction = Transaction()
-      ..name = name
-      ..createdDate = DateTime.now()
-      ..amount = amount
-      ..isExpense = isExpense
-      ..nameUser = nameUser
-      ..nameCategory = nameCategory;
-
-    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    await box.put(transaction.createdDate.toString(), transaction);
   }
 }
 // class _TaskListWidget extends StatelessWidget {

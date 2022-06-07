@@ -9,7 +9,9 @@ class TransactionDialog extends StatefulWidget {
   const TransactionDialog({
     Key? key,
     this.transaction,
-    required this.onClickedDone,required this.nameUser,required this.nameCategory,
+    required this.onClickedDone,
+    required this.nameUser,
+    required this.nameCategory,
   }) : super(key: key);
 
   @override
@@ -47,7 +49,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.transaction != null;
-    final title = isEditing ? 'Edit Transaction' : 'Add Transaction';
+    final title = isEditing ? 'Edit Transaction ${widget.nameCategory}' : 'Add Transaction ${widget.nameCategory}';
 
     return AlertDialog(
       title: Text(title),
@@ -127,7 +129,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           final name = nameController.text;
           final amount = double.tryParse(amountController.text) ?? 0;
 
-          widget.onClickedDone(name, amount, isExpense, widget.nameUser,widget.nameCategory);
+          widget.onClickedDone(name, amount, isExpense, widget.nameUser, widget.nameCategory);
 
           Navigator.of(context).pop();
         }

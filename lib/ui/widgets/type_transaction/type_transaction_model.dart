@@ -18,7 +18,7 @@ class TypeTransactionsWidgetModel extends ChangeNotifier {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Введите имя категории'),
+              title: const Text('Введите имя категории'),
               content: TextField(controller: textEditController),
               actions: [
                 TextButton(
@@ -26,12 +26,12 @@ class TypeTransactionsWidgetModel extends ChangeNotifier {
                       Hive.box<String>(HiveDbName.typeBox).add(textEditController.text);
                       Navigator.of(context).pop();
                     },
-                    child: Text('Ок')),
+                    child: const Text('Ок')),
                 TextButton(
                     onPressed: () async {
                       Navigator.pop(context);
                     },
-                    child: Text('Отмена'))
+                    child: const Text('Отмена'))
               ],
             ));
   }
@@ -63,12 +63,12 @@ class TypeTransactionsWidgetModel extends ChangeNotifier {
                       await box.deleteAt(groupIndex);
                       Navigator.pop(context);
                     },
-                    child: Text('Удалить тип транзакции ')),
+                    child: const Text('Удалить тип транзакции ')),
                 TextButton(
                     onPressed: () async {
                       Navigator.pop(context);
                     },
-                    child: Text('Отмена'))
+                    child: const Text('Отмена'))
               ],
             ));
   }

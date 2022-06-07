@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 class UsersWidgetModel extends ChangeNotifier {
   var _groups = <User>[];
   var groupName = '';
-  List<CategoryTransaction> listTransactions = [];
+  List<CategoryTransaction> listTypes = [];
 
   List<User> get groups => _groups.toList();
   String typeTransaction = '';
@@ -36,7 +36,7 @@ class UsersWidgetModel extends ChangeNotifier {
 
   void selectTypeTransaction(BuildContext context, String type) async {
     typeTransaction = type;
-    listTransactions = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
         .values
         .where((element) => element.type == typeTransaction)
         .toList();
@@ -79,12 +79,12 @@ class UsersWidgetModel extends ChangeNotifier {
                       await box.deleteAt(groupIndex);
                       Navigator.pop(context);
                     },
-                    child: Text('Удалить пользователя')),
+                    child: const Text('Удалить пользователя')),
                 TextButton(
                     onPressed: () async {
                       Navigator.pop(context);
                     },
-                    child: Text('Отмена'))
+                    child: const Text('Отмена'))
               ],
             ));
   }
@@ -121,7 +121,7 @@ class UsersWidgetModel extends ChangeNotifier {
     // final key = await box.keyAt(index);
     // transactionCategory.keyAt = key;
     // await transactionCategory.save();
-    listTransactions = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
         .values
         .where((element) => element.type == typeTransaction)
         .toList();
@@ -139,9 +139,9 @@ class UsersWidgetModel extends ChangeNotifier {
 
   deleteTypeTransaction(int index) async {
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
-    final key = listTransactions[index].keyAt;
+    final key = listTypes[index].keyAt;
     await box.delete(key);
-    listTransactions = box.values.where((element) => element.type == typeTransaction).toList();
+    listTypes = box.values.where((element) => element.type == typeTransaction).toList();
     notifyListeners();
     // box.deleteFromDisk();
   }

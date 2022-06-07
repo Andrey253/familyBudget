@@ -1,5 +1,7 @@
+import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
@@ -10,7 +12,8 @@ class UserProfileModel extends ChangeNotifier {
   int userKey;
   late final Box<User> _userBox;
   // var _tasks = <Task>[];
-
+  String typeTransaction = '';
+  List<CategoryTransaction> listTypes = [];
   // List<Task> get tasks => _tasks.toList();
 
   User? _user;
@@ -19,12 +22,19 @@ class UserProfileModel extends ChangeNotifier {
   UserProfileModel({required this.userKey}) {
     _setup();
   }
+  void selectTypeTransaction(BuildContext context, String type) async {
+    typeTransaction = type;
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+        .values
+        .where((element) => element.type == typeTransaction)
+        .toList();
+    notifyListeners();
+  }
 
   void addTransaction(BuildContext context) {
-    Navigator.of(context).pushNamed(
-      MainNavigationRouteNames.addTransaction,
-      arguments: userKey,
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => TransactionDialog(
+            onClickedDone: onClickedDone, nameUser: _user?.name ?? '', nameCategory: typeTransaction)));
   }
 
   void _loadUser() {
@@ -33,29 +43,18 @@ class UserProfileModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void _readTasks() {
-  //   _tasks = _user?.tasks ?? <Task>[];
-  //   notifyListeners();
-  // }
+  dynamic onClickedDone(String name, double amount, bool isExpense, String nameUser, String nameCategory) async {
+    final transaction = Transaction()
+      ..name = name
+      ..createdDate = DateTime.now()
+      ..amount = amount
+      ..isExpense = isExpense
+      ..nameUser = nameUser
+      ..nameCategory = nameCategory;
 
-  // void _setupListenTasks() async {
-  //   final box = await _userBox;
-  //   _readTasks();
-  //   box.listenable(keys: <dynamic>[userKey]).addListener(_readTasks);
-  // }
-
-  // void deleteTask(int groupIndex) async {
-  //   await _user?.tasks?.deleteFromHive(groupIndex);
-  //   await _user?.save();
-  // }
-
-  // void doneToggle(int groupIndex) async {
-  //   final task = group?.tasks?[groupIndex];
-  //   final currentState = task?.isDone ?? false;
-  //   task?.isDone = !currentState;
-  //   await task?.save();
-  //   notifyListeners();
-  // }
+    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
+    await box.put(transaction.createdDate.toString(), transaction);
+  }
 
   void _setup() {
     if (!Hive.isAdapterRegistered(1)) {

@@ -20,7 +20,7 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
         const Text('Категории транзакций'),
         if (model.typeTransaction != null)
           TextButton(
-              child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addType(context)),
+              child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addCategory(context)),
         ListView.builder(
             shrinkWrap: true,
             itemCount: model.listTypes.length,

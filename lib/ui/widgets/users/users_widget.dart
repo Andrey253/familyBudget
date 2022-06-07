@@ -1,7 +1,6 @@
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
-import 'package:family_budget/ui/widgets/type_transaction/type_transaction_model.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
@@ -39,16 +38,11 @@ class _GroupsWidgetBody extends StatelessWidget {
         title: const Text('Члены семьи'),
       ),
       body: Column(
-        children: [
-          const Text('Члены семьи'),
-          const _UserListWidget(),
-          const Text('Типы транзакций'),
-          ChangeNotifierProvider<TypeTransactionsWidgetModel>(
-            create: (contex) => TypeTransactionsWidgetModel(),
-            child: const TypeTransactionWidget(),
-          ),
-          const Text('Категории транзакций'),
-          const Expanded(child: ListCategoryTransaction())
+        children: const [
+          _UserListWidget(),
+          Text('Типы транзакций'),
+          TypeTransactionWidget(),
+          Expanded(child: ListCategoryTransaction())
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -83,8 +77,9 @@ class _UserListWidget extends StatelessWidget {
                           child: Container(
                             width: 80,
                             decoration: BoxDecoration(
+                              color: Colors.primaries[index],
                               borderRadius: BorderRadius.circular(10),
-                              gradient: const LinearGradient(colors: [Colors.red, Colors.cyan]),
+                              // gradient: const LinearGradient(colors: [Colors.red, Colors.cyan]),
                             ),
                             // color: Colors.red,
                             child: Center(
@@ -93,8 +88,19 @@ class _UserListWidget extends StatelessWidget {
                           ).paddingAll(4),
                         )),
               ),
-              IconButton(
-                  icon: const Icon(Icons.add), onPressed: () => context.read<UsersWidgetModel>().showForm(context))
+              GestureDetector(
+                onTap: () => context.read<UsersWidgetModel>().showForm(context),
+                child: Container(
+                  width: 80, height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.primaries[9],
+                    borderRadius: BorderRadius.circular(10),
+                    // gradient: const LinearGradient(colors: [Colors.red, Colors.cyan]),
+                  ),
+                  // color: Colors.red,
+                  child: const Center(child: Text('Добавить члена семьи', textAlign: TextAlign.center)),
+                ),
+              ).paddingAll(4),
             ],
           ),
         );

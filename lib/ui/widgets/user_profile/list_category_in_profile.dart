@@ -18,22 +18,20 @@ class _ListCategoryInProfileState extends State<ListCategoryInProfile> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: model.listTypes.length,
-              itemBuilder: (context, index) => Card(
-                    elevation: 8,
-                    child: ListTile(
-                      trailing: IconButton(onPressed: () => model.addTransaction(context, model.listTypes[index]), icon: const Icon(Icons.add)),
-                      leading: Text(model.listTypes[index].type),
-                      title: TextButton(
-                          onPressed: () => {},
-                          child: Text(
-                              '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
-                    ),
-                  )),
-        ),
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: model.listTypes.length,
+            itemBuilder: (context, index) => Card(
+                  elevation: 8,
+                  child: ListTile(
+                    trailing: IconButton(onPressed: () => model.addTransaction(context, model.listTypes[index]), icon: const Icon(Icons.add)),
+                    leading: Text(model.listTypes[index].type),
+                    title: TextButton(
+                        onPressed: () => {},
+                        child: Text(
+                            '${model.listTypes[index].nameCategory} ${model.listTypes[index].type} ${model.listTypes[index].keyAt}')),
+                  ),
+                )),
       ],
     );
   }

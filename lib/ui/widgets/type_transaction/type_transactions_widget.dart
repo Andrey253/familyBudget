@@ -1,6 +1,4 @@
-import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/type_transaction/type_transaction_model.dart';
 import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -23,19 +21,23 @@ class TypeTransactionWidget extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
+                IconButton(
+                  icon: const Icon(Icons.done_all),
+                  onPressed: () => context.read<UsersWidgetModel>().resetTypeTransaction(context),
+                ),
                 ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: types.length,
                     itemBuilder: (context, index) => TextButton(
                           child: Text(types[index]),
-                          onLongPress: () => context.read<TypeTransactionsWidgetModel>().deleteGroup(index, context),
+                          onLongPress: () => context.read<UsersWidgetModel>().deleteCategoryTransaction(index),
                           onPressed: () =>
                               context.read<UsersWidgetModel>().selectTypeTransaction(context, types[index]),
                         )),
                 IconButton(
                   icon: const Icon(Icons.add),
-                  onPressed: () => context.read<TypeTransactionsWidgetModel>().addCategory(context),
+                  onPressed: () => context.read<UsersWidgetModel>().addType(context),
                 )
               ],
             ),

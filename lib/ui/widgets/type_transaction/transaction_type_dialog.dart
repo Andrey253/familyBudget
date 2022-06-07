@@ -1,6 +1,4 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
-import 'package:family_budget/domain/entity/transaction.dart';
-import 'package:family_budget/ui/widgets/users/users_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +7,7 @@ class TransactionTypeDialog extends StatefulWidget {
     Key? key,
     required this.type,
   }) : super(key: key);
-  final String type;
+  final String? type;
   @override
   _TransactionTypeDialogState createState() => _TransactionTypeDialogState();
 }
@@ -70,11 +68,11 @@ class _TransactionTypeDialogState extends State<TransactionTypeDialog> {
       onPressed: () async {
         final isValid = formKey.currentState!.validate();
 
-        if (isValid) {
+        if (isValid && widget.type!=null) {
           final name = nameController.text;
 
           Navigator.of(context)
-              .pop(CategoryTransaction(nameCategory: name, type: widget.type, keyAt: DateTime.now().toString()));
+              .pop(CategoryTransaction(nameCategory: name, type: widget.type!, keyAt: DateTime.now().toString()));
         }
       },
     );

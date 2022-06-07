@@ -27,11 +27,10 @@ class UserProfileModel extends ChangeNotifier {
         .toList();
     notifyListeners();
   }
+
   void resetTypeTransaction(BuildContext context, String type) async {
     typeTransaction = null;
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
-        .values
-        .toList();
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
     notifyListeners();
   }
 
@@ -39,12 +38,10 @@ class UserProfileModel extends ChangeNotifier {
     final transaction = Transaction()
       ..name = ''
       ..createdDate = DateTime.now()
-
       ..isExpense = false
       ..nameUser = _user?.name ?? ''
       ..nameCategory = categoryTransaction.nameCategory
       ..typeTransaction = categoryTransaction.type;
-    print('teg transaction $transaction');
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => TransactionDialog(transaction: transaction)));
   }
 
@@ -66,11 +63,6 @@ class UserProfileModel extends ChangeNotifier {
     // _setupListenTasks();
   }
 
-  void deleteTransaction(String key) async {
-    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    await box.delete(key);
-    // box.clear();
-  }
 }
 
 // class TasksWidgetModelProvider extends InheritedNotifier {

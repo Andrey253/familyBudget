@@ -63,31 +63,37 @@ class _TransactionListWidget extends StatelessWidget {
       children: [
         Text('Name user: ${model.user?.name}'),
         const TypeInUserProfile(),
-        const Expanded(child: ListCategoryInProfile()),
-        ValueListenableBuilder<Box<Transaction>>(
-          valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
-          builder: (context, box, _) {
-            final transactions = box.values
-                .toList()
-                .cast<Transaction>()
-                .where((element) => model.typeTransaction != null ? element.typeTransaction == model.typeTransaction : true)
-                .toList();
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: transactions.length,
-                itemBuilder: (context, index) => Card(
-                      elevation: 5,
-                      child: ListTile(
-                        leading: Text(transactions[index].typeTransaction),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () => model.deleteTransaction(transactions[index].createdDate.toString()),
+        const ListCategoryInProfile(),
+        Expanded(
+          child: ValueListenableBuilder<Box<Transaction>>(
+            valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+            builder: (context, box, _) {
+              final transactions = box.values
+                  .toList()
+                  .cast<Transaction>()
+                  .where((element) =>
+                      model.typeTransaction != null ? element.typeTransaction == model.typeTransaction : true)
+                  .where((element) =>
+                      element.nameUser == model.user?.name)
+                  .toList();
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) => Card(
+                        elevation: 5,
+                        child: ListTile(
+                          leading: Text(transactions[index].typeTransaction),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed:  transactions[index].delete,
+                          ),
+                          subtitle: Text(
+                              '${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
+                          title: Text('${transactions[index].name} : ${transactions[index].amount}'),
                         ),
-                        subtitle: Text('${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
-                        title: Text('${transactions[index].name} : ${transactions[index].amount}'),
-                      ),
-                    ));
-          },
+                      ));
+            },
+          ),
         )
       ],
     );

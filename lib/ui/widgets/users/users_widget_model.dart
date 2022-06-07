@@ -17,7 +17,7 @@ class UsersWidgetModel extends ChangeNotifier {
   List<CategoryTransaction> listTypes = [];
 
   List<User> get groups => _groups.toList();
-  String typeTransaction = '';
+  String? typeTransaction;
   UsersWidgetModel() {
     _setup();
   }
@@ -41,6 +41,12 @@ class UsersWidgetModel extends ChangeNotifier {
         .where((element) => element.type == typeTransaction)
         .toList();
     print('teg $typeTransaction');
+    notifyListeners();
+  }
+
+  void resetTypeTransaction(BuildContext context) async {
+    typeTransaction = null;
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
     notifyListeners();
   }
 
@@ -95,19 +101,10 @@ class UsersWidgetModel extends ChangeNotifier {
   }
 
   void _setup() {
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(UserAdapter());
-    }
-    final box = Hive.box<User>(HiveDbName.userBox);
-    if (!Hive.isAdapterRegistered(2)) {
-      Hive.registerAdapter(TaskAdapter());
-    }
-
-    _readGroupsFromHive(box);
-    box.listenable().addListener(() => _readGroupsFromHive(box));
+    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
   }
 
-  void addCategory(BuildContext context) async {
+  void addType(BuildContext context) async {
     final type = context.read<UsersWidgetModel>().typeTransaction;
 
     final transactionCategory = await Navigator.of(context).push(MaterialPageRoute(
@@ -128,6 +125,28 @@ class UsersWidgetModel extends ChangeNotifier {
     notifyListeners();
     // Navigator.of(context).pop();
   }
+    void addCategory(BuildContext context) async {
+    final textEditController = TextEditingController();
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Введите имя категории'),
+              content: TextField(controller: textEditController),
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      Hive.box<String>(HiveDbName.typeBox).add(textEditController.text);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Ок')),
+                TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Отмена'))
+              ],
+            ));
+  }
 
   openTransElement(BuildContext context, CategoryTransaction categoryTransaction) {
     Navigator.of(context).push(MaterialPageRoute(
@@ -137,13 +156,34 @@ class UsersWidgetModel extends ChangeNotifier {
     ));
   }
 
-  deleteTypeTransaction(int index) async {
+  deleteCategoryTransaction(int index) async {
     final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
     final key = listTypes[index].keyAt;
     await box.delete(key);
     listTypes = box.values.where((element) => element.type == typeTransaction).toList();
     notifyListeners();
     // box.deleteFromDisk();
+  }
+
+  void deleteTypeTransaction(int groupIndex, BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              actions: [
+                TextButton(
+                    onPressed: () async {
+                      final box = Hive.box<String>(HiveDbName.typeBox);
+                      await box.deleteAt(groupIndex);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Удалить тип транзакции ')),
+                TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Отмена'))
+              ],
+            ));
   }
 }
 

@@ -17,8 +17,10 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextButton(
-            child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addCategory(context)),
+        const Text('Категории транзакций'),
+        if (model.typeTransaction != null)
+          TextButton(
+              child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addType(context)),
         Expanded(
           child: ListView.builder(
               shrinkWrap: true,
@@ -27,7 +29,7 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
                     elevation: 8,
                     child: ListTile(
                       trailing: IconButton(
-                          onPressed: () => model.deleteTypeTransaction(index), icon: const Icon(Icons.delete)),
+                          onPressed: () => model.deleteCategoryTransaction(index), icon: const Icon(Icons.delete)),
                       leading: Text(model.listTypes[index].type),
                       title: TextButton(
                           onPressed: () => model.openTransElement(context, model.listTypes[index]),

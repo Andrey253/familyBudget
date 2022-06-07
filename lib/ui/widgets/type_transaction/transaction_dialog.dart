@@ -30,7 +30,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       final transaction = widget.transaction!;
 
       nameController.text = transaction.name;
-      amountController.text = (transaction.amount?? '').toString();
+      amountController.text = (transaction.amount ?? '').toString();
       isExpense = transaction.isExpense;
     }
   }
@@ -50,7 +50,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
     transaction.isExpense = isExpense;
 
     final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    await box.put(transaction.createdDate.toString(), transaction);
+    await box.add(transaction);
   }
 
   @override

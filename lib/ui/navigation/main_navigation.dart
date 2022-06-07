@@ -2,7 +2,6 @@ import 'package:family_budget/ui/widgets/user_profile/user_profile_widget.dart';
 import 'package:family_budget/ui/widgets/users/user_add_widget.dart';
 import 'package:family_budget/ui/widgets/users/users_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:family_budget/ui/widgets/task_form/task_form_widget.dart';
 
 abstract class MainNavigationRouteNames {
   static const mainPage = '/';
@@ -25,13 +24,13 @@ class MainNavigation {
         return MaterialPageRoute(
           builder: (context) => UserProfileWidget(groupKey: groupKey),
         );
-      case MainNavigationRouteNames.addTransaction:
-        final groupKey = settings.arguments as int;
-        return MaterialPageRoute(
-          builder: (context) {
-            return TaskFormWidget(groupKey: groupKey);
-          },
-        );
+      // case MainNavigationRouteNames.addTransaction:
+      //   final groupKey = settings.arguments as int;
+      //   return MaterialPageRoute(
+      //     builder: (context) {
+      //       return TaskFormWidget(groupKey: groupKey);
+      //     },
+      //   );
       default:
         const widget = Text('Navigation error!!!');
         return MaterialPageRoute(builder: (context) => widget);

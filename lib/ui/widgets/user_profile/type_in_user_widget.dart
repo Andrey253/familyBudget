@@ -1,4 +1,7 @@
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/domain/model/type_transaction.dart';
+import 'package:family_budget/domain/sourse/string.dart';
+import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
@@ -15,26 +18,33 @@ class TypeInUserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<UserProfileModel>();
     final types = Hive.box<String>(HiveDbName.typeBox).values.toList();
+final type = <TypeTrans>[
+      TypeTrans(TypeTransaction.all, const LinearGradient(colors: [Color.fromARGB(255, 0, 255, 0), Color.fromARGB(255, 255, 0, 0)])),
+      TypeTrans(TypeTransaction.income, const LinearGradient(colors: [Color.fromARGB(255, 166, 248, 141), Color.fromARGB(244, 56, 153, 0)])),
+      TypeTrans(TypeTransaction.expense, const LinearGradient(colors: [Color.fromARGB(255, 250, 117, 117), Color.fromARGB(255, 151, 0, 0)])),
+    ];
 
     return SizedBox(
       height: 80,
-      child: ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: types.length,
-          itemBuilder: (context, index) => TextButton(
-                child: Text(types[index]),
-                //   onLongPress: () => context.read<TypeTransactionsWidgetModel>().deleteGroup(index, context),
-
-                onPressed: () => model.selectTypeTransaction(context, types[index]),
-                onLongPress: () => model.resetTypeTransaction(context, types[index]),
-                // onPressed: () {
-                //   Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => TransactionDialog(
-                //         onClickedDone: addTransaction, nameUser: model.user!.name, nameCategory: types[index]),
-                //   ));
-                // },
-              )),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: type
+              .map((typeString) => GestureDetector(
+    onLongPress: () => model.resetTypeTransaction(context, typeString.name),
+                    onTap: () =>model.selectTypeTransaction(context, typeString.name),
+                    child: Container(
+                      width: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: typeString.color,
+                      ),
+                      // color: Colors.red,
+                      child: Center(
+                        child: Text(typeString.name, textAlign: TextAlign.center),
+                      ),
+                    ).paddingAll(4),
+                  ))
+              .toList()),
     );
   }
 

@@ -1,7 +1,8 @@
+import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/circular_bar.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
@@ -35,29 +36,48 @@ class _GroupsWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<MainModel>();
+    final model = context.watch<MainModel>();
 
     return Scaffold(
       appBar: AppBar(
+        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.mms))],
         title: const Text('Члены семьи'),
       ),
-      body: Column(
-        children: [
-          _UserListWidget(),
-          Text('Типы транзакций'),
-          TypeTransactionWidget(),
-          ListCategoryTransaction(),
-          Expanded(
-            child: ValueListenableBuilder<Box<Transaction>>(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const _UserListWidget(),
+            const Text('Типы транзакций'),
+            const TypeTransactionWidget(),
+            const ListCategoryTransaction(),
+            ValueListenableBuilder<Box<Transaction>>(
+                valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+                builder: (context, box, _) {
+                  final tr = Hive.box<Transaction>(HiveDbName.transactionBox).values;
+                  final expense = tr.where((element) => element.isExpense = true);
+                  final out = tr.where((element) => element.isExpense = false);
+                  final summExp = expense.fold<double>(0, (previousValue, element) => previousValue + element.amount);
+                  final summEOut = out.fold<double>(0, (previousValue, element) => previousValue + element.amount);
+                  print('teg tr ${tr.map((e) => e.isExpense)}');
+                  final List<ChartData> chartData = [
+                    ChartData('Расходы', summEOut, Colors.yellow),
+                    ChartData('Доходы', summExp),
+                  ];
+                  return CircleDiagramm(chartData: chartData);
+                }),
+            ValueListenableBuilder<Box<Transaction>>(
               valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
               builder: (context, box, _) {
+                print('teg  model.typeTransaction ${model.typeTransaction}');
                 final transactions = box.values
                     .toList()
                     .cast<Transaction>()
-                    .where((element) =>
-                        model.typeTransaction != null ? element.typeTransaction == model.typeTransaction : true)
+                    .where((element) => model.typeTransaction == TypeTransaction.all
+                        ? true
+                        : element.typeTransaction == model.typeTransaction)
                     .toList();
                 return ListView.builder(
+                    primary: false,
                     shrinkWrap: true,
                     itemCount: transactions.length,
                     itemBuilder: (context, index) => Card(
@@ -74,13 +94,9 @@ class _GroupsWidgetBody extends StatelessWidget {
                           ),
                         ));
               },
-            ),
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<MainModel>().showForm(context),
-        child: const Icon(Icons.add),
+            )
+          ],
+        ),
       ),
     );
   }

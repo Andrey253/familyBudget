@@ -1,3 +1,4 @@
+import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class _ListCategoryTransactionState extends State<ListCategoryTransaction> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text('Категории транзакций'),
-        if (model.typeTransaction != null)
+        if (model.typeTransaction != TypeTransaction.all)
           TextButton(
               child: Text('Добавить категорию ${model.typeTransaction}'), onPressed: () => model.addCategory(context)),
         ListView.builder(

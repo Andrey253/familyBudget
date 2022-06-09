@@ -30,7 +30,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       final transaction = widget.transaction!;
 
       nameController.text = transaction.name;
-      amountController.text = (transaction.amount ?? '').toString();
+      amountController.text = (transaction.amount == 0 ? '' : transaction.amount).toString();
       isExpense = transaction.isExpense;
     }
   }
@@ -43,14 +43,10 @@ class _TransactionDialogState extends State<TransactionDialog> {
     super.dispose();
   }
 
-  void onClickedDone(String name, double amount, bool isExpense, Transaction transaction) async {
-    transaction.name = name;
-    transaction.createdDate = DateTime.now();
-    transaction.amount = amount;
-    transaction.isExpense = isExpense;
-
+  void onClickedDone(String _name, double amount, bool isExpense, Transaction transaction) async {
+    final tr = transaction.copyWith(name:_name,createdDate: DateTime.now(), isExpense:isExpense,amount: amount, nameUser: null,nameCategory: null,typeTransaction: null);
     final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    await box.add(transaction);
+    await box.add(tr);
   }
 
   @override

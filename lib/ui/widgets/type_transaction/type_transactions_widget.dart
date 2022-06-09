@@ -1,61 +1,46 @@
-import 'package:family_budget/extentions.dart';
-import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/main_model.dart';
+import 'package:family_budget/domain/model/type_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+
+import 'package:family_budget/domain/sourse/string.dart';
+import 'package:family_budget/extentions.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
+
+
 
 class TypeTransactionWidget extends StatelessWidget {
   const TypeTransactionWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<Box<String>>(
-      valueListenable: Hive.box<String>(HiveDbName.typeBox).listenable(),
-      builder: (context, box, _) {
-        final types = box.values.toList();
-
-        return SizedBox(
-          height: 80,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.done_all),
-                  onPressed: () => context.read<MainModel>().resetTypeTransaction(context),
-                ),
-                ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: types.length,
-                    itemBuilder: (context, index) => GestureDetector(
-                          onLongPress: () => context.read<MainModel>().deleteTypeTransaction(index, context),
-                          onTap: () => context.read<MainModel>().selectTypeTransaction(context, types[index]),
-                          child: Container(
-                            width: 80,
-                            decoration: BoxDecoration(
-                              // color: Colors.primaries[index],
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                  colors: [Colors.primaries[(index + 4) % 18], Colors.primaries[(index + 10) % 18]]),
-                            ),
-                            // color: Colors.red,
-                            child: Center(
-                              child: Text(types[index]),
-                            ),
-                          ).paddingAll(4),
-                        )),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () => context.read<MainModel>().addType(context),
-                )
-              ],
-            ),
-          ),
-        );
-      },
+    final type = <TypeTrans>[
+      TypeTrans(TypeTransaction.all, const LinearGradient(colors: [Color.fromARGB(255, 0, 255, 0), Color.fromARGB(255, 255, 0, 0)])),
+      TypeTrans(TypeTransaction.income, const LinearGradient(colors: [Color.fromARGB(255, 166, 248, 141), Color.fromARGB(244, 56, 153, 0)])),
+      TypeTrans(TypeTransaction.expense, const LinearGradient(colors: [Color.fromARGB(255, 250, 117, 117), Color.fromARGB(255, 151, 0, 0)])),
+    ];
+    return SizedBox(
+      height: 80,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: type
+              .map((typeString) => GestureDetector(
+                    onLongPress: () => context.read<MainModel>().resetTypeTransaction(context),
+                    onTap: () => context.read<MainModel>().selectTypeTransaction(context, typeString.name),
+                    child: Container(
+                      width: 80,
+                      decoration: BoxDecoration(
+                        // color: Colors.primaries[index],
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: typeString.color,
+                      ),
+                      // color: Colors.red,
+                      child: Center(
+                        child: Text(typeString.name, textAlign: TextAlign.center),
+                      ),
+                    ).paddingAll(4),
+                  ))
+              .toList()),
     );
   }
 }

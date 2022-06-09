@@ -1,4 +1,5 @@
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
@@ -72,7 +73,7 @@ class _TransactionListWidget extends StatelessWidget {
                   .toList()
                   .cast<Transaction>()
                   .where((element) =>
-                      model.typeTransaction != null ? element.typeTransaction == model.typeTransaction : true)
+                      model.typeTransaction != TypeTransaction.all ? element.typeTransaction == model.typeTransaction : true)
                   .where((element) =>
                       element.nameUser == model.user?.name)
                   .toList();

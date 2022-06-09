@@ -14,19 +14,38 @@ class Transaction extends HiveObject {
   late bool isExpense = true;
 
   @HiveField(3)
-  double? amount;
+  late double amount;
 
   @HiveField(4)
   late String nameUser;
-  
+
   @HiveField(5)
   late String nameCategory;
-  
+
   @HiveField(6)
   late String typeTransaction;
 
   @override
   String toString() {
     return 'Transaction(name: $name, createdDate: $createdDate, isExpense: $isExpense, amount: $amount, nameUser: $nameUser, nameCategory: $nameCategory, typeTransaction: $typeTransaction)';
+  }
+
+  Transaction copyWith({
+    String? name,
+    DateTime? createdDate,
+    bool? isExpense,
+    double? amount,
+    String? nameUser,
+    String? nameCategory,
+    String? typeTransaction,
+  }) {
+    return Transaction()
+      ..name = name ?? this.name
+      ..createdDate = createdDate ?? this.createdDate
+      ..isExpense = isExpense ?? this.isExpense
+      ..amount = amount ?? this.amount
+      ..nameUser = nameUser ?? this.nameUser
+      ..nameCategory = nameCategory ?? this.nameCategory
+      ..typeTransaction = typeTransaction ?? this.typeTransaction;
   }
 }

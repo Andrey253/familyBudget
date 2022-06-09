@@ -1,5 +1,6 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class UserProfileModel extends ChangeNotifier {
     typeTransaction = type;
     listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
         .values
-        .where((element) => element.type == typeTransaction)
+        .where((element) => type == TypeTransaction.all ? true : element.type == typeTransaction)
         .toList();
     notifyListeners();
   }
@@ -38,10 +39,11 @@ class UserProfileModel extends ChangeNotifier {
     final transaction = Transaction()
       ..name = ''
       ..createdDate = DateTime.now()
-      ..isExpense = false
+      ..isExpense =categoryTransaction.type == TypeTransaction.income? false : true
       ..nameUser = _user?.name ?? ''
       ..nameCategory = categoryTransaction.nameCategory
-      ..typeTransaction = categoryTransaction.type;
+      ..typeTransaction = categoryTransaction.type
+      ..amount = 0;
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => TransactionDialog(transaction: transaction)));
   }
 
@@ -62,7 +64,6 @@ class UserProfileModel extends ChangeNotifier {
     notifyListeners();
     // _setupListenTasks();
   }
-
 }
 
 // class TasksWidgetModelProvider extends InheritedNotifier {

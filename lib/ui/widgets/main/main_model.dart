@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_detail.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_type_dialog.dart';
@@ -38,14 +39,13 @@ class MainModel extends ChangeNotifier {
     typeTransaction = type;
     listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
         .values
-        .where((element) => element.type == typeTransaction)
+        .where((element) =>type==TypeTransaction.all ? true: element.type == typeTransaction)
         .toList();
-    print('teg $typeTransaction');
     notifyListeners();
   }
 
   void resetTypeTransaction(BuildContext context) async {
-    typeTransaction = null;
+    typeTransaction = TypeTransaction.all;
     listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
     notifyListeners();
   }

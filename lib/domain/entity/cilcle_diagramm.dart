@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
-class ChartData {
-  ChartData(this.x, this.y, [this.color]);
-  final String x;
-  final double y;
-  final Color? color;
-}
 
 class CircleDiagramm extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -42,4 +36,10 @@ class _SalesData {
 
   final String year;
   final double sales;
+}
+class ChartData {
+  ChartData(this.x, this.y, [this.color]);
+  final String x;
+  final double y;
+  final Color? color;
 }

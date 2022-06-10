@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/model/type_transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_detail.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
-import 'package:family_budget/domain/entity/task.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class MainModel extends ChangeNotifier {
   List<CategoryTransaction> listTypes = [];
 
   List<User> get groups => _groups.toList();
-  String? typeTransaction;
+  String typeTransaction = TypeTransaction.all;
   MainModel() {
     _setup();
   }
@@ -81,7 +81,7 @@ class MainModel extends ChangeNotifier {
                 TextButton(
                     onPressed: () async {
                       final box = await Hive.openBox<User>(HiveDbName.userBox);
-                      await box.getAt(groupIndex)?.tasks?.deleteAllFromHive();
+
                       await box.deleteAt(groupIndex);
                       Navigator.pop(context);
                     },

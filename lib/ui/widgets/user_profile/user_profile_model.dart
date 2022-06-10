@@ -11,7 +11,7 @@ class UserProfileModel extends ChangeNotifier {
   int userKey;
   late final Box<User> _userBox;
 
-  String? typeTransaction;
+  String? typeTransaction  = TypeTransaction.all;
   List<CategoryTransaction> listTypes = [];
 
   User? _user;

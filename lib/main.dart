@@ -3,7 +3,6 @@ import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
-import 'package:family_budget/domain/entity/task.dart';
 import 'package:family_budget/ui/widgets/app/my_app.dart';
 
 void main() async {
@@ -16,7 +15,6 @@ void main() async {
   // await Hive.deleteBoxFromDisk(HiveDbName.categoryTransaction);
 
   Hive.registerAdapter(UserAdapter());
-  Hive.registerAdapter(TaskAdapter());
   Hive.registerAdapter(TransactionAdapter());
   Hive.registerAdapter(CategoryTransactionAdapter());
 

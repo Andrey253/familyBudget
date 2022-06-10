@@ -67,15 +67,17 @@ class _TransactionListWidget extends StatelessWidget {
         const ListCategoryInProfile(),
         Expanded(
           child: ValueListenableBuilder<Box<Transaction>>(
-            valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+            valueListenable:
+                Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
             builder: (context, box, _) {
               final transactions = box.values
                   .toList()
                   .cast<Transaction>()
                   .where((element) =>
-                      model.typeTransaction != TypeTransaction.all ? element.typeTransaction == model.typeTransaction : true)
-                  .where((element) =>
-                      element.nameUser == model.user?.name)
+                      model.typeTransaction != TypeTransaction.all
+                          ? element.typeTransaction == model.typeTransaction
+                          : true)
+                  .where((element) => element.nameUser == model.user?.name)
                   .toList();
               return ListView.builder(
                   shrinkWrap: true,
@@ -86,11 +88,12 @@ class _TransactionListWidget extends StatelessWidget {
                           leading: Text(transactions[index].typeTransaction),
                           trailing: IconButton(
                             icon: const Icon(Icons.edit),
-                            onPressed:  transactions[index].delete,
+                            onPressed: transactions[index].delete,
                           ),
                           subtitle: Text(
                               '${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
-                          title: Text('${transactions[index].name} : ${transactions[index].amount}'),
+                          title: Text(
+                              '${transactions[index].name} : ${transactions[index].amount}: ${transactions[index].isExpense}'),
                         ),
                       ));
             },

@@ -18,7 +18,6 @@ class UserAdapter extends TypeAdapter<User> {
     };
     return User(
       name: fields[0] as String,
-      tasks: (fields[1] as HiveList?)?.castHiveList(),
       isSelected: fields[2] as bool,
     );
   }
@@ -26,11 +25,9 @@ class UserAdapter extends TypeAdapter<User> {
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.name)
-      ..writeByte(1)
-      ..write(obj.tasks)
       ..writeByte(2)
       ..write(obj.isSelected);
   }

@@ -3,6 +3,7 @@ import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/indicators/circular_indicator.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
@@ -50,31 +51,18 @@ class _GroupsWidgetBody extends StatelessWidget {
             const Text('Типы транзакций'),
             const TypeTransactionWidget(),
             const ListCategoryTransaction(),
+            IndicatorFamalyBudget(),
             ValueListenableBuilder<Box<Transaction>>(
-                valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
-                builder: (context, box, _) {
-                  final tr = Hive.box<Transaction>(HiveDbName.transactionBox).values;
-                  final expense = tr.where((element) => element.isExpense = true);
-                  final out = tr.where((element) => element.isExpense = false);
-                  final summExp = expense.fold<double>(0, (previousValue, element) => previousValue + element.amount);
-                  final summEOut = out.fold<double>(0, (previousValue, element) => previousValue + element.amount);
-                  print('teg tr ${tr.map((e) => e.isExpense)}');
-                  final List<ChartData> chartData = [
-                    ChartData('Расходы', summEOut, Colors.yellow),
-                    ChartData('Доходы', summExp),
-                  ];
-                  return CircleDiagramm(chartData: chartData);
-                }),
-            ValueListenableBuilder<Box<Transaction>>(
-              valueListenable: Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+              valueListenable:
+                  Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
               builder: (context, box, _) {
-                print('teg  model.typeTransaction ${model.typeTransaction}');
                 final transactions = box.values
                     .toList()
                     .cast<Transaction>()
-                    .where((element) => model.typeTransaction == TypeTransaction.all
-                        ? true
-                        : element.typeTransaction == model.typeTransaction)
+                    .where((element) =>
+                        model.typeTransaction == TypeTransaction.all
+                            ? true
+                            : element.typeTransaction == model.typeTransaction)
                     .toList();
                 return ListView.builder(
                     primary: false,
@@ -90,7 +78,8 @@ class _GroupsWidgetBody extends StatelessWidget {
                             ),
                             subtitle: Text(
                                 '${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
-                            title: Text('${transactions[index].name} : ${transactions[index].amount}'),
+                            title: Text(
+                                '${transactions[index].name} : ${transactions[index].amount} : ${transactions[index].isExpense}'),
                           ),
                         ));
               },
@@ -101,6 +90,8 @@ class _GroupsWidgetBody extends StatelessWidget {
     );
   }
 }
+
+
 
 class _UserListWidget extends StatelessWidget {
   const _UserListWidget({Key? key}) : super(key: key);
@@ -121,15 +112,21 @@ class _UserListWidget extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: users.length,
                     itemBuilder: (context, index) => GestureDetector(
-                          onLongPress: () => context.read<MainModel>().deleteUser(index, context),
-                          onTap: () => context.read<MainModel>().showTasks(context, index),
+                          onLongPress: () => context
+                              .read<MainModel>()
+                              .deleteUser(index, context),
+                          onTap: () => context
+                              .read<MainModel>()
+                              .showTasks(context, index),
                           child: Container(
                             width: 80,
                             decoration: BoxDecoration(
                               //  color: Colors.primaries[index],
                               borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                  colors: [Colors.primaries[index % 18], Colors.primaries[(index * 2 + 1) % 18]]),
+                              gradient: LinearGradient(colors: [
+                                Colors.primaries[index % 18],
+                                Colors.primaries[(index * 2 + 1) % 18]
+                              ]),
                             ),
                             // color: Colors.red,
                             child: Center(
@@ -145,10 +142,13 @@ class _UserListWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     // color: Colors.primaries[9],
                     borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(colors: [Colors.primaries[10], Colors.primaries[12]]),
+                    gradient: LinearGradient(
+                        colors: [Colors.primaries[10], Colors.primaries[12]]),
                   ),
                   // color: Colors.red,
-                  child: const Center(child: Text('Добавить члена семьи', textAlign: TextAlign.center)),
+                  child: const Center(
+                      child: Text('Добавить члена семьи',
+                          textAlign: TextAlign.center)),
                 ),
               ).paddingAll(4),
             ],

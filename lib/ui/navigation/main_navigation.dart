@@ -44,14 +44,17 @@ class MainNavigation {
         final arg = settings.arguments as List;
         return MaterialPageRoute(
           builder: (context) {
-            return TransactionDetail(categoryTransaction: arg[0],model: arg[1],);
+            return TransactionDetail(
+              categoryTransaction: arg[0],
+              model: arg[1],
+            );
           },
         );
       case MainNavigationRouteNames.transactions:
         final data = settings.arguments as List;
         return MaterialPageRoute(
           builder: (context) {
-            return TransactionList(typeTransaction: data[0],userName: data[1],start: data[2],end: data[3]);
+            return TransactionList(typeTransaction: data[0], userName: data[1]);
           },
         );
       default:

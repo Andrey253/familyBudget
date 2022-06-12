@@ -12,6 +12,7 @@ class DrawerMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<MainModel>();
+    final date = DateTime.now();
 
     return Drawer(
         child: Column(
@@ -22,7 +23,12 @@ class DrawerMain extends StatelessWidget {
 
               Navigator.pushNamed(
                   context, MainNavigationRouteNames.transactions,
-                  arguments: [TypeTransaction.all, null, null, null]);
+                  arguments: [
+                    TypeTransaction.all,
+                    null,
+                    DateTime(date.year, date.month),
+                    DateTime(date.year, date.month + 1)
+                  ]);
             },
             icon: Icon(Icons.add),
             label: Text('Все операции')),

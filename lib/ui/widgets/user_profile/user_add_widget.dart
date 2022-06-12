@@ -39,7 +39,7 @@ class _GroupFormWidgetBody extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<MainModel>().saveGroup(context),
+        onPressed: () => context.read<MainModel>().saveUser(context),
         child: const Icon(Icons.done),
       ),
     );
@@ -59,7 +59,7 @@ class _GroupNameWidget extends StatelessWidget {
         hintText: 'Имя группы',
       ),
       onChanged: (value) => model.groupName = value,
-      onEditingComplete: () => model.saveGroup(context),
+      onEditingComplete: () => model.saveUser(context),
     );
   }
 }

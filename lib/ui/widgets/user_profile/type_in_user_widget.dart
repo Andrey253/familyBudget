@@ -85,7 +85,7 @@ class _GroupListRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<MainModel>();
 
-    final group = model.groups[indexInList];
+    final group = model.users[indexInList];
 
     return Slidable(
       actionPane: const SlidableBehindActionPane(),

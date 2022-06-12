@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/model/type_transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
@@ -17,15 +18,25 @@ class MainModel extends ChangeNotifier {
   var _groups = <User>[];
   var groupName = '';
   List<NameCategory> listCategory = [];
+  List<Transaction> listTransaction = [];
 
-  List<User> get groups => _groups.toList();
+  List<User> get users => _groups.toList();
   String typeTransaction = TypeTransaction.all;
-  DateTimeRange? dateTimeRange;
+
+  List<ChartData> chartDataTypeTransaction = [];
+  List<ChartData> chartDataNameTransaction = [];
+
+  DateTime dateNow = DateTime.now();
+  DateTime? _start;
+  DateTime? get start => _start;
+  DateTime? _end;
+  DateTime? get end => _end;
+
   MainModel() {
     _setup();
   }
 
-  void saveGroup(BuildContext context) async {
+  void saveUser(BuildContext context) async {
     if (groupName.isEmpty) {
       Navigator.of(context).pop();
       return;
@@ -86,9 +97,6 @@ class MainModel extends ChangeNotifier {
   }
 
   void deleteUser(int groupIndex, BuildContext context) async {
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(UserAdapter());
-    }
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -110,19 +118,15 @@ class MainModel extends ChangeNotifier {
             ));
   }
 
-  void _readGroupsFromHive(Box<User> box) {
-    _groups = box.values.toList();
-    notifyListeners();
-  }
-
   void _setup() {
     listCategory =
         Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
+    _start = DateTime(dateNow.year, dateNow.month);
+    _end = DateTime(dateNow.year, dateNow.month + 1)
+        .add(const Duration(microseconds: -1));
   }
 
   void addCategory(BuildContext context, String typeTrans) async {
-    // final type = context.read<MainModel>().typeTransaction;
-
     final transactionCategory =
         await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
@@ -137,7 +141,6 @@ class MainModel extends ChangeNotifier {
         .where((element) => element.type == typeTransaction)
         .toList();
     notifyListeners();
-    // Navigator.of(context).pop();
   }
 
   openTransElement(BuildContext ctx, NameCategory categoryTransaction) {
@@ -148,7 +151,8 @@ class MainModel extends ChangeNotifier {
   void deleteCategoryTransaction(
       NameCategory nameCategory, BuildContext context) async {
     final summ = Hive.box<Transaction>(HiveDbName.transactionBox)
-        .values.where((element) => element.nameCategory==nameCategory.name)
+        .values
+        .where((element) => element.nameCategory == nameCategory.name)
         .fold<double>(
             0, (previousValue, element) => previousValue + element.amount);
     if (summ > 0) {
@@ -165,9 +169,9 @@ class MainModel extends ChangeNotifier {
     // box.deleteFromDisk();
   }
 
-  void saveCategoryTransaction (
+  void saveCategoryTransaction(
       NameCategory categoryTransaction, BuildContext context) async {
-  await  categoryTransaction.save();
+    await categoryTransaction.save();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
     listCategory = box.values.toList();
     Navigator.pop(context);
@@ -177,6 +181,73 @@ class MainModel extends ChangeNotifier {
 
   void setState() {
     notifyListeners();
+  }
+
+  void setDateTimeRange(DateTime? start, DateTime? end) {
+    _start = start ?? _start ?? DateTime(2022);
+    _end = end ?? _end ?? DateTime(2220);
+    notifyListeners();
+  }
+
+  Iterable<Transaction> getTransaction(String? userName) {
+    return Hive.box<Transaction>(HiveDbName.transactionBox)
+        .values
+        .where((e) => start != null ? e.createdDate.isAfter(start!) : true)
+        .where((e) => end != null
+            ? e.createdDate.isBefore(end!.add(const Duration(days: 1)))
+            : true)
+        .where((e) => userName == null ? true : e.nameUser == userName);
+  }
+
+  void getDataNameTransactions(String? userName) {
+    final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
+    final tr = getTransaction(userName);
+
+    chartDataNameTransaction = [];
+    for (var category in catName) {
+      final items =
+          tr.where((transaction) => category.name == transaction.nameCategory);
+
+      final summItems = items.fold<double>(
+          0, (previousValue, element) => previousValue + element.amount);
+
+      chartDataNameTransaction.add(ChartData(category.name, summItems));
+    }
+    final s =
+        chartDataNameTransaction.fold<double>(0, (prV, e) => prV + e.summa);
+    for (var e in chartDataNameTransaction) {
+      e.type =
+          '${e.type} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
+    }
+  }
+
+  void getDataTypeTransactions(String? userName) {
+    final tr = getTransaction(userName);
+
+    final List<String> types = [
+      TypeTransaction.expense,
+      TypeTransaction.income
+    ];
+    chartDataTypeTransaction = [];
+    for (var type in types) {
+      final items =
+          tr.where((transaction) => type == transaction.typeTransaction);
+      final summItems = items.fold<double>(
+          0, (previousValue, element) => previousValue + element.amount);
+      chartDataTypeTransaction.add(ChartData(type, summItems));
+    }
+    final s =
+        chartDataTypeTransaction.fold<double>(0, (prV, e) => prV + e.summa);
+    for (var e in chartDataTypeTransaction) {
+      e.type =
+          '${e.type} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
+    }
+  }
+
+  void setListTransaction(String? userName) {
+    // listTransaction = [];
+    listTransaction = getTransaction(userName).toList();
+    listTransaction.sort(((a, b) => a.createdDate.compareTo(b.createdDate)));
   }
 }
 

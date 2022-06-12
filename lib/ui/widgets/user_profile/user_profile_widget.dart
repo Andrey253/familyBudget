@@ -1,6 +1,7 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
 import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
@@ -37,34 +38,44 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => UserProfileModel(userKey: widget.groupKey),
-      child: const TransactionsWidgetBody(),
+      child: const UserProfileWidgetBody(),
     );
   }
 }
 
-class TransactionsWidgetBody extends StatelessWidget {
-  const TransactionsWidgetBody({Key? key}) : super(key: key);
+class UserProfileWidgetBody extends StatelessWidget {
+  const UserProfileWidgetBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<UserProfileModel>();
     final title = model.user?.name ?? '';
     return Scaffold(
-      drawerDragStartBehavior: DragStartBehavior.down,
       drawer: Drawer(
           child: TextButton.icon(
               onPressed: () {}, icon: Icon(Icons.add), label: Text('First'))),
       appBar: AppBar(
+        actions: [
+          Builder(
+              builder: (context) => IconButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  icon: Icon(Icons.menu)))
+        ],
+        leading: BackButton(
+          onPressed: () => Navigator.pop(context, false),
+        ),
         title: Text(title),
       ),
-      body: Column(
-        children: [
-          const TypeInUserProfile(),
-          const ListCategoryInProfile(),
-          const SelectPeriod(),
-          IndicatorFamalyBudget(
-              userName: model.user?.name, dateTimeRange: model.dateTimeRange),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const TypeInUserProfile(),
+            const ListCategoryInProfile(),
+            const SelectPeriod(),
+            IndicatorFamalyBudget(userName: model.user?.name),
+            IndicatorPerson(userName: model.user?.name),
+          ],
+        ),
       ),
     );
   }

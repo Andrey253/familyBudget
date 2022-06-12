@@ -15,9 +15,9 @@ class TypeTransactionWidget extends StatelessWidget {
     final model = context.watch<MainModel>();
     final type = <TypeTrans>[
       TypeTrans(TypeTransaction.income, Colors.green),
-      TypeTrans(TypeTransaction.addIncome, Colors.green.shade200),
-      TypeTrans(TypeTransaction.all, Colors.blue),
       TypeTrans(TypeTransaction.expense, Colors.red),
+      TypeTrans(TypeTransaction.all, Colors.blue),
+      TypeTrans(TypeTransaction.addIncome, Colors.green.shade200),
       TypeTrans(TypeTransaction.addExpense, Colors.red.shade200),
     ];
     return SizedBox(

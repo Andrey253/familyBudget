@@ -26,37 +26,30 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MainModel>(
-      create: (context) => MainModel(),
-      child: const _MainWidgetBody(),
-    );
-  }
-}
-
-class _MainWidgetBody extends StatelessWidget {
-  const _MainWidgetBody({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.watch<MainModel>();
 
     return SafeArea(
       child: Scaffold(
-        drawer: DrawerMain(),
+        drawer: const DrawerMain(),
         appBar: AppBar(
-          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.mms))],
+          automaticallyImplyLeading: false,
+          actions: [
+            Builder(
+                builder: (context) => IconButton(
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    icon: Icon(Icons.menu)))
+          ],
           title: const Text('Члены семьи'),
         ),
         body: SingleChildScrollView(
           child: Column(
-            children: [
-              const _UserListWidget(),
-              const Text('Типы транзакций'),
-              const TypeTransactionWidget(),
-              const CategoryTransaction(),
-              const SelectPeriodMain(),
-              IndicatorFamalyBudget(dateTimeRange: model.dateTimeRange),
-              IndicatorPerson(dateTimeRange: model.dateTimeRange),
+            children: const [
+              _UserListWidget(),
+              Text('Типы транзакций'),
+              TypeTransactionWidget(),
+              CategoryTransaction(),
+              SelectPeriodMain(),
+              IndicatorFamalyBudget(),
+              IndicatorPerson(),
               // TransactionList(typeTransaction: TypeTransaction.all)
             ],
           ),
@@ -65,8 +58,6 @@ class _MainWidgetBody extends StatelessWidget {
     );
   }
 }
-
-
 
 class _UserListWidget extends StatelessWidget {
   const _UserListWidget({Key? key}) : super(key: key);
@@ -159,7 +150,7 @@ class _GroupListRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<MainModel>();
 
-    final group = model.groups[indexInList];
+    final user = model.users[indexInList];
 
     return Slidable(
       actionPane: const SlidableBehindActionPane(),
@@ -174,7 +165,7 @@ class _GroupListRowWidget extends StatelessWidget {
       child: ColoredBox(
         color: Colors.white,
         child: ListTile(
-          title: Text(group.name),
+          title: Text(user.name),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => model.showTasks(context, indexInList),
         ),

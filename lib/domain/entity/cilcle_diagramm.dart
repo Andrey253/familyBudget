@@ -39,7 +39,7 @@ class _SalesData {
 
 class ChartData {
   ChartData(this.type, this.summa, [this.color]);
-  final String type;
+  String type;
   final double summa;
   final Color? color;
 

@@ -1,5 +1,4 @@
 import 'package:family_budget/ui/widgets/main/main_model.dart';
-import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,48 +21,44 @@ class SelectPeriodMain extends StatelessWidget {
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
               if (date == null) return;
-              model.dateTimeRange = DateTimeRange(
-                  start: date, end: model.dateTimeRange?.end ?? DateTime(2220));
+              model.setDateTimeRange(date, null);
 
-              model.setState();
+              // model.setState();
             },
             child: Text(
-              'Старт \n ${model.dateTimeRange?.start.toString().split(' ').first ?? ''}',
+              'Старт \n ${(model.start ?? '').toString().split(' ').first}',
               textAlign: TextAlign.center,
             )),
         TextButton(
             onPressed: () async {
-              model.dateTimeRange = await showDateRangePicker(
+              final range = await showDateRangePicker(
                   context: context,
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
 
-              model.setState();
+              model.setDateTimeRange(range?.start, range?.end);
             },
-            child: buildRange(model.dateTimeRange)),
+            child: buildRange(model)),
         TextButton(
             onPressed: () async {
-              final date = await showDatePicker(
+              final end = await showDatePicker(
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
-              if (date == null) return;
-              model.dateTimeRange = DateTimeRange(
-                  start: model.dateTimeRange?.start ?? DateTime(0), end: date);
-
-              model.setState();
+              if (end == null) return;
+              model.setDateTimeRange(null, end);
             },
             child: Text(
-                'Конец \n ${model.dateTimeRange?.end.toString().split(' ').first ?? ''}',
+                'Конец \n ${(model.end ?? '').toString().split(' ').first}',
                 textAlign: TextAlign.center)),
       ],
     );
   }
 
-  Widget buildRange(DateTimeRange? dateTimeRange) {
+  Widget buildRange(MainModel? model) {
     return Text(
-        'Выбрать период \n ${dateTimeRange?.start.toString().split(' ').first ?? ''} ${dateTimeRange?.end.toString().split(' ').first ?? ''}',
+        'Выбрать период \n ${(model?.start ?? '').toString().split(' ').first} ${(model?.end ?? '').toString().split(' ').first}',
         textAlign: TextAlign.center);
   }
 }

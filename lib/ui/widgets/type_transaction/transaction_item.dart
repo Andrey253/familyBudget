@@ -1,4 +1,5 @@
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:flutter/material.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -17,7 +18,7 @@ class TransactionItem extends StatelessWidget {
         leading: Text(transaction.typeTransaction),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
-          onPressed: transaction.delete,
+          onPressed: ()=>Navigator.pushNamed(context, MainNavigationRouteNames.transactioDialog,arguments: transaction),
         ),
         subtitle: Text(
             '${transaction.createdDate} ${transaction.nameUser} ${transaction.nameCategory} ${transaction.name} '),

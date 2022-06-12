@@ -45,7 +45,7 @@ class IndicatorFamalyBudget extends StatelessWidget {
             final summItems = items.fold<double>(
                 0, (previousValue, element) => previousValue + element.amount);
             chartData.add(ChartData(
-                '$type ${(summItems / summ * 100).toInt()}%', summItems));
+                '$type ${(summItems / (summ==0?1:summ) * 100).toInt()}%', summItems));
           }
           return CircleDiagramm(chartData: chartData);
         });

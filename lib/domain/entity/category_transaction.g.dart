@@ -6,7 +6,7 @@ part of 'category_transaction.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CategoryTransactionAdapter extends TypeAdapter<NameCategory> {
+class NameCategoryAdapter extends TypeAdapter<NameCategory> {
   @override
   final int typeId = 3;
 
@@ -40,7 +40,7 @@ class CategoryTransactionAdapter extends TypeAdapter<NameCategory> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CategoryTransactionAdapter &&
+      other is NameCategoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -3,8 +3,8 @@ import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ListCategoryTransaction extends StatelessWidget {
-  const ListCategoryTransaction({Key? key}) : super(key: key);
+class CategoryTransaction extends StatelessWidget {
+  const CategoryTransaction({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +15,6 @@ class ListCategoryTransaction extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text('Категории транзакций'),
-        if (model.typeTransaction != TypeTransaction.all)
-          TextButton(
-              child: Text('Добавить категорию ${model.typeTransaction}'),
-              onPressed: () => model.addCategory(context)),
         GridView.builder(
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: size.width / 4,
@@ -26,7 +22,7 @@ class ListCategoryTransaction extends StatelessWidget {
                 // crossAxisSpacing: 20,
                 mainAxisSpacing: 20),
             shrinkWrap: true,
-            itemCount: model.listTypes.length,
+            itemCount: model.listCategory.length,
             itemBuilder: (context, index) => Card(
                   elevation: 8,
                   child: categoryTransactionItem(model, index, context),
@@ -37,7 +33,7 @@ class ListCategoryTransaction extends StatelessWidget {
 
   Widget categoryTransactionItem(
       MainModel model, int index, BuildContext context) {
-    var categoryTransaction = model.listTypes[index];
+    var categoryTransaction = model.listCategory[index];
     return Column(
       children: [
         Text((categoryTransaction.fix ?? '- -').toString()),
@@ -46,11 +42,12 @@ class ListCategoryTransaction extends StatelessWidget {
               model.openTransElement(context, categoryTransaction);
             },
             child: Text(
-              model.listTypes[index].name,
+              model.listCategory[index].name,
               style: TextStyle(
-                  color: model.listTypes[index].type == TypeTransaction.expense
-                      ? Colors.red
-                      : Colors.green),
+                  color:
+                      model.listCategory[index].type == TypeTransaction.expense
+                          ? Colors.red
+                          : Colors.green),
             )),
       ],
     );

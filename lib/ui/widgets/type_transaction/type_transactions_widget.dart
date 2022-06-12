@@ -12,38 +12,37 @@ class TypeTransactionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<MainModel>();
     final type = <TypeTrans>[
-      TypeTrans(
-          TypeTransaction.all,
-           Colors.blue),
-      TypeTrans(
-          TypeTransaction.income,
-          Colors.green),
-      TypeTrans(
-          TypeTransaction.expense,
-           Colors.red),
+      TypeTrans(TypeTransaction.income, Colors.green),
+      TypeTrans(TypeTransaction.addIncome, Colors.green.shade200),
+      TypeTrans(TypeTransaction.all, Colors.blue),
+      TypeTrans(TypeTransaction.expense, Colors.red),
+      TypeTrans(TypeTransaction.addExpense, Colors.red.shade200),
     ];
     return SizedBox(
       height: 70,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: type
-              .map((typeString) => GestureDetector(
-                    onLongPress: () =>
-                        context.read<MainModel>().resetTypeTransaction(context),
-                    onTap: () => context
-                        .read<MainModel>()
-                        .selectTypeTransaction(context, typeString.name),
+              .map((typeTrans) => GestureDetector(
+                    onLongPress: () => model.resetTypeTransaction(context),
+                    onTap: () =>
+                        model.selectTypeTransaction(context, typeTrans),
                     child: Container(
                       width: 70,
                       decoration: BoxDecoration(
-                         color: typeString.color,
+                        color: typeTrans.color,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       // color: Colors.red,
                       child: Center(
-                        child:
-                            Text(typeString.name, textAlign: TextAlign.center),
+                        child: Text(typeTrans.name,
+                            style: TextStyle(
+                                color: typeTrans.name == model.typeTransaction
+                                    ? Colors.white
+                                    : Colors.black),
+                            textAlign: TextAlign.center),
                       ),
                     ).paddingAll(4),
                   ))
@@ -52,37 +51,37 @@ class TypeTransactionWidget extends StatelessWidget {
   }
 }
 
-class _GroupListRowWidget extends StatelessWidget {
-  final int indexInList;
-  const _GroupListRowWidget({
-    Key? key,
-    required this.indexInList,
-  }) : super(key: key);
+// class _GroupListRowWidget extends StatelessWidget {
+//   final int indexInList;
+//   const _GroupListRowWidget({
+//     Key? key,
+//     required this.indexInList,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<MainModel>();
+//   @override
+//   Widget build(BuildContext context) {
+//     final model = context.read<MainModel>();
 
-    final group = model.groups[indexInList];
+//     final group = model.groups[indexInList];
 
-    return Slidable(
-      actionPane: const SlidableBehindActionPane(),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Delete',
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () => model.deleteUser(indexInList, context),
-        ),
-      ],
-      child: ColoredBox(
-        color: Colors.white,
-        child: ListTile(
-          title: Text(group.name),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => model.showTasks(context, indexInList),
-        ),
-      ),
-    );
-  }
-}
+//     return Slidable(
+//       actionPane: const SlidableBehindActionPane(),
+//       secondaryActions: <Widget>[
+//         IconSlideAction(
+//           caption: 'Delete',
+//           color: Colors.red,
+//           icon: Icons.delete,
+//           onTap: () => model.deleteUser(indexInList, context),
+//         ),
+//       ],
+//       child: ColoredBox(
+//         color: Colors.white,
+//         child: ListTile(
+//           title: Text(group.name),
+//           trailing: const Icon(Icons.chevron_right),
+//           onTap: () => model.showTasks(context, indexInList),
+//         ),
+//       ),
+//     );
+//   }
+// }

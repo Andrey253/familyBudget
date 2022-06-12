@@ -22,28 +22,34 @@ class TypeInUserProfile extends StatelessWidget {
       TypeTrans(TypeTransaction.income, Colors.green),
       TypeTrans(TypeTransaction.expense, Colors.red),
     ];
+    print('teg ${model.typeTransaction} ');
 
     return SizedBox(
       height: 80,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: type
-              .map((typeString) => GestureDetector(
+              .map((typeTrans) => GestureDetector(
                     onLongPress: () =>
-                        model.resetTypeTransaction(context, typeString.name),
+                        model.resetTypeTransaction(context, typeTrans.name),
                     onTap: () =>
-                        model.selectTypeTransaction(context, typeString.name),
+                        model.selectTypeTransaction(context, typeTrans.name),
                     child: Container(
-                      
                       width: 80,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: typeString.color,
+                        color: typeTrans.color,
                       ),
                       // color: Colors.red,
                       child: Center(
-                        child:
-                            Text(typeString.name, textAlign: TextAlign.center),
+                        child: Text(
+                          typeTrans.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: typeTrans.name == model.typeTransaction
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
                       ),
                     ).paddingAll(4),
                   ))
@@ -51,19 +57,20 @@ class TypeInUserProfile extends StatelessWidget {
     );
   }
 
-  Future addTransaction(String name, double amount, bool isExpense,
-      String nameUser, String nameCategory) async {
-    final transaction = Transaction()
-      ..name = name
-      ..createdDate = DateTime.now()
-      ..amount = amount
-      ..isExpense = isExpense
-      ..nameUser = nameUser
-      ..nameCategory = nameCategory;
+  // Future addTransaction(String name, double amount, bool isExpense,
+  //     String nameUser, String nameCategory) async {
+  //   final transaction = Transaction(
+  //       name: name,
+  //       createdDate: DateTime.now(),
+  //       amount: amount,
+  //       isExpense: isExpense,
+  //       nameUser: nameUser,
+  //       nameCategory: nameCategory,
+  //       typeTransaction: );
 
-    final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    await box.put(transaction.createdDate.toString(), transaction);
-  }
+  //   final box = Hive.box<Transaction>(HiveDbName.transactionBox);
+  //   await box.add(transaction);
+  // }
 }
 
 //незадействовано

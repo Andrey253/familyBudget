@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 class MainModel extends ChangeNotifier {
   var _groups = <User>[];
   var groupName = '';
-  List<NameCategory> listTypes = [];
+  List<NameCategory> listCategory = [];
 
   List<User> get groups => _groups.toList();
   String typeTransaction = TypeTransaction.all;
@@ -36,11 +36,21 @@ class MainModel extends ChangeNotifier {
     Navigator.of(context).pop();
   }
 
-  void selectTypeTransaction(BuildContext context, String type) async {
-    typeTransaction = type;
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName)
+  void selectTypeTransaction(BuildContext context, TypeTrans typeTrans) async {
+    if (typeTrans.name == TypeTransaction.addExpense) {
+      typeTransaction = TypeTransaction.expense;
+      addCategory(context, TypeTransaction.expense);
+      return;
+    }
+    if (typeTrans.name == TypeTransaction.addIncome) {
+      typeTransaction = TypeTransaction.income;
+      addCategory(context, TypeTransaction.income);
+      return;
+    }
+    typeTransaction = typeTrans.name;
+    listCategory = Hive.box<NameCategory>(HiveDbName.categoryName)
         .values
-        .where((element) => type == TypeTransaction.all
+        .where((element) => typeTrans.name == TypeTransaction.all
             ? true
             : element.type == typeTransaction)
         .toList();
@@ -49,7 +59,8 @@ class MainModel extends ChangeNotifier {
 
   void resetTypeTransaction(BuildContext context) async {
     typeTransaction = TypeTransaction.all;
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
+    listCategory =
+        Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
     notifyListeners();
   }
 
@@ -104,26 +115,23 @@ class MainModel extends ChangeNotifier {
   }
 
   void _setup() {
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
+    listCategory =
+        Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
   }
 
-  void addCategory(BuildContext context) async {
+  void addCategory(BuildContext context, String typeTrans) async {
     // final type = context.read<MainModel>().typeTransaction;
 
     final transactionCategory =
         await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return TransactionTypeDialog(type: typeTransaction);
+        return TransactionTypeDialog(type: typeTrans);
       },
     )) as NameCategory?;
-    print('teg transactionCategory $transactionCategory');
     if (transactionCategory == null) return;
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
-    final index = await box.add(transactionCategory);
-    // final key = await box.keyAt(index);
-    // transactionCategory.keyAt = key;
-    // await transactionCategory.save();
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName)
+    await box.add(transactionCategory);
+    listCategory = Hive.box<NameCategory>(HiveDbName.categoryName)
         .values
         .where((element) => element.type == typeTransaction)
         .toList();
@@ -140,7 +148,7 @@ class MainModel extends ChangeNotifier {
       NameCategory categoryTransaction, BuildContext context) async {
     categoryTransaction.delete();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
-    listTypes = box.values.toList();
+    listCategory = box.values.toList();
     Navigator.pop(context);
     notifyListeners();
     // box.deleteFromDisk();
@@ -150,7 +158,7 @@ class MainModel extends ChangeNotifier {
       NameCategory categoryTransaction, BuildContext context) async {
     categoryTransaction.save();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
-    listTypes = box.values.toList();
+    listCategory = box.values.toList();
     Navigator.pop(context);
     notifyListeners();
     // box.deleteFromDisk();

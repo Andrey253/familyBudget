@@ -20,7 +20,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   final nameController = TextEditingController();
   final amountController = TextEditingController();
 
-  bool isExpense = true;
+  DateTime dateTime = DateTime.now();
 
   @override
   void initState() {
@@ -30,8 +30,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
       final transaction = widget.transaction!;
 
       nameController.text = transaction.name;
-      amountController.text = (transaction.amount == 0 ? '' : transaction.amount).toString();
-      isExpense = transaction.isExpense;
+      amountController.text =
+          (transaction.amount == 0 ? '' : transaction.amount).toString();
     }
   }
 
@@ -43,15 +43,25 @@ class _TransactionDialogState extends State<TransactionDialog> {
     super.dispose();
   }
 
-  void onClickedDone(String _name, double amount, bool isExpense, Transaction transaction) async {
-    final tr = transaction.copyWith(name:_name,createdDate: DateTime.now(), isExpense:isExpense,amount: amount, nameUser: null,nameCategory: null,typeTransaction: null);
+  void onClickedDone(
+      String _name, double amount, Transaction transaction) async {
+    transaction.name = _name;
+    transaction.amount = amount;
+    transaction.createdDate = dateTime;
+
     final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    await box.add(tr);
+    print('teg transaction ${transaction.key}');
+
+    if (transaction.key == null) {
+      await box.add(transaction);
+    } else {
+      transaction.save();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = widget.transaction != null;
+    final isEditing = widget.transaction?.key != null;
     final title = isEditing
         ? 'Edit Transaction ${widget.transaction?.typeTransaction}'
         : 'Add Transaction ${widget.transaction?.nameCategory}';
@@ -69,12 +79,13 @@ class _TransactionDialogState extends State<TransactionDialog> {
               const SizedBox(height: 8),
               buildAmount(),
               const SizedBox(height: 8),
-              buildRadioButtons(),
+              buildCalebdar(),
             ],
           ),
         ),
       ),
       actions: <Widget>[
+        buildDeleteButton(context, widget.transaction),
         buildCancelButton(context),
         buildAddButton(context, isEditing: isEditing),
       ],
@@ -87,7 +98,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
           border: OutlineInputBorder(),
           hintText: 'Enter Name',
         ),
-        validator: (name) => name != null && name.isEmpty ? 'Enter a name' : null,
+        validator: (name) =>
+            name != null && name.isEmpty ? 'Enter a name' : null,
       );
 
   Widget buildAmount() => TextFormField(
@@ -96,30 +108,42 @@ class _TransactionDialogState extends State<TransactionDialog> {
           hintText: 'Enter Amount',
         ),
         keyboardType: TextInputType.number,
-        validator: (amount) => amount != null && double.tryParse(amount) == null ? 'Enter a valid number' : null,
+        validator: (amount) => amount != null && double.tryParse(amount) == null
+            ? 'Enter a valid number'
+            : null,
         controller: amountController,
       );
 
-  Widget buildRadioButtons() => Column(
+  Widget buildCalebdar() => Row(
         children: [
-          RadioListTile<bool>(
-            title: const Text('Expense'),
-            value: true,
-            groupValue: isExpense,
-            onChanged: (value) => setState(() => isExpense = value!),
-          ),
-          RadioListTile<bool>(
-            title: const Text('Income'),
-            value: false,
-            groupValue: isExpense,
-            onChanged: (value) => setState(() => isExpense = value!),
-          ),
+          IconButton(
+              onPressed: () async {
+                final date = await showDatePicker(
+                    context: context,
+                    initialDate: dateTime,
+                    firstDate: DateTime(2022),
+                    lastDate: DateTime(2025));
+                dateTime = date ?? DateTime.now();
+                setState(() {});
+              },
+              icon: Icon(Icons.calendar_today)),
+          Text('${dateTime.toString().split(' ').first}')
         ],
       );
 
   Widget buildCancelButton(BuildContext context) => TextButton(
         child: const Text('Cancel'),
         onPressed: () => Navigator.of(context).pop(),
+      );
+  Widget buildDeleteButton(BuildContext context, Transaction? transaction) =>
+      TextButton(
+        child: transaction?.key != null
+            ? const Text('Delete')
+            : const SizedBox.shrink(),
+        onPressed: () {
+          transaction?.delete();
+          Navigator.of(context).pop();
+        },
       );
 
   Widget buildAddButton(BuildContext context, {required bool isEditing}) {
@@ -134,7 +158,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           final name = nameController.text;
           final amount = double.tryParse(amountController.text) ?? 0;
 
-          onClickedDone(name, amount, isExpense, widget.transaction!);
+          onClickedDone(name, amount, widget.transaction!);
 
           Navigator.of(context).pop();
         }

@@ -51,7 +51,7 @@ class _GroupsWidgetBody extends StatelessWidget {
             _UserListWidget(),
             Text('Типы транзакций'),
             TypeTransactionWidget(),
-            ListCategoryTransaction(),
+            CategoryTransaction(),
             SelectPeriodMain(),
             IndicatorFamalyBudget(dateTimeRange: model.dateTimeRange),
             IndicatorPerson(dateTimeRange: model.dateTimeRange),

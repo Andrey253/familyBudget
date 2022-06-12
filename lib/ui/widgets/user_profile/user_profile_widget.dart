@@ -56,16 +56,11 @@ class TransactionsWidgetBody extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Text('Name user: ${model.user?.name}'),
           const TypeInUserProfile(),
           const ListCategoryInProfile(),
-          SelectPeriod(),
+          const SelectPeriod(),
           IndicatorFamalyBudget(
               userName: model.user?.name, dateTimeRange: model.dateTimeRange),
-          Expanded(
-              child: TransactionList(
-                  typeTransaction: model.typeTransaction,
-                  userName: model.user?.name))
         ],
       ),
     );

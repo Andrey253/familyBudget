@@ -40,15 +40,15 @@ class UserProfileModel extends ChangeNotifier {
   }
 
   void addTransaction(BuildContext context, NameCategory categoryTransaction) {
-    final transaction = Transaction()
-      ..name = ''
-      ..createdDate = DateTime.now()
-      ..isExpense =
-          categoryTransaction.type == TypeTransaction.income ? false : true
-      ..nameUser = _user?.name ?? ''
-      ..nameCategory = categoryTransaction.name
-      ..typeTransaction = categoryTransaction.type
-      ..amount = 0;
+    final transaction = Transaction(
+        name: '',
+        createdDate: DateTime.now(),
+        isExpense:
+            categoryTransaction.type == TypeTransaction.income ? false : true,
+        nameUser: _user?.name ?? '',
+        nameCategory: categoryTransaction.name,
+        typeTransaction: categoryTransaction.type,
+        amount: 0);
     Navigator.of(context).pushNamed(MainNavigationRouteNames.transactioDialog,
         arguments: transaction);
   }

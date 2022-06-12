@@ -1,6 +1,10 @@
+import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
+import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
 class CategoryTransaction extends StatelessWidget {
@@ -8,47 +12,69 @@ class CategoryTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<MainModel>();
+    final model = context.watch<MainModel>();
     final size = MediaQuery.of(context).size;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text('Категории транзакций'),
-        GridView.builder(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: size.width / 4,
-                // childAspectRatio: 6 / 2,
-                // crossAxisSpacing: 20,
-                mainAxisSpacing: 20),
-            shrinkWrap: true,
-            itemCount: model.listCategory.length,
-            itemBuilder: (context, index) => Card(
-                  elevation: 8,
-                  child: categoryTransactionItem(model, index, context),
-                )),
-      ],
-    );
+return
+    ValueListenableBuilder<Box<Transaction>>(
+        valueListenable:
+            Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
+        builder: (context, box, _) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Категории транзакций'),
+              GridView(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: size.width / 4,
+                    // childAspectRatio: 6 / 2,
+                    // crossAxisSpacing: 20,
+                    // mainAxisSpacing: 20
+                  ),
+                  shrinkWrap: true,
+                  children: model.listCategory
+                      .map((e) => Card(
+                            elevation: 8,
+                            child: categoryTransactionItem(model, e, context),
+                          ))
+                      .toList()),
+            ],
+          );
+        });
   }
 
   Widget categoryTransactionItem(
-      MainModel model, int index, BuildContext context) {
-    var categoryTransaction = model.listCategory[index];
+      MainModel model, NameCategory nameCategory, BuildContext context) {
+    final date = DateTime.now();
+    final dateStart = DateTime(date.year, date.month);
+    final dateEnd = DateTime(date.year, date.month + 1);
+    final trans = Hive.box<Transaction>(HiveDbName.transactionBox)
+        .values
+        .where((e) => e.createdDate.isAfter(dateStart))
+        .where((e) => e.createdDate.isBefore(dateEnd))
+        .where((element) => element.nameCategory == nameCategory.name);
+    final summ = trans.fold<double>(
+        0, (previousValue, element) => previousValue + element.amount);
+
     return Column(
       children: [
-        Text((categoryTransaction.fix ?? '- -').toString()),
+        Text(
+          (nameCategory.fix ?? '-- -').toString(),
+          style: nameCategory.fix != null && nameCategory.fix! < summ
+              ? TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
+              : TextStyle(),
+        ),
         TextButton(
             onPressed: () {
-              model.openTransElement(context, categoryTransaction);
+              model.openTransElement(context, nameCategory);
             },
             child: Text(
-              model.listCategory[index].name,
+              nameCategory.name,
               style: TextStyle(
-                  color:
-                      model.listCategory[index].type == TypeTransaction.expense
-                          ? Colors.red
-                          : Colors.green),
+                  color: nameCategory.type == TypeTransaction.expense
+                      ? Colors.red
+                      : Colors.green),
             )),
+        Text((summ.toString())),
       ],
     );
   }

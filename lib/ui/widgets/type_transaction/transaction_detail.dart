@@ -40,8 +40,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
               .paddingAll(),
           Row(
             children: [
-              Text(' Наименование транзакции: ${widget.categoryTransaction.name}')
-                  .paddingAll(),
+              Text(' Наименование транзакции: ').paddingAll(),
               Expanded(child: TextField(controller: widget.textControllerName))
             ],
           ),
@@ -49,7 +48,11 @@ class _TransactionDetailState extends State<TransactionDetail> {
             children: [
               Text(' Фиксировать ${widget.categoryTransaction.type}: ')
                   .paddingAll(),
-              Expanded(child: TextField(controller: widget.textControllerFix))
+              Expanded(
+                  child: TextFormField(
+                controller: widget.textControllerFix,
+                onChanged: validate,
+              ))
             ],
           ),
           Text(' Индекс транзакции: ${widget.categoryTransaction.key}')
@@ -70,21 +73,33 @@ class _TransactionDetailState extends State<TransactionDetail> {
   }
 
   void save() {
+    if (!validate(widget.textControllerFix.text)) return;
     final oldNameTransaction = widget.categoryTransaction.name;
     final newNameTransaction = widget.textControllerName.text;
     final transactions =
         Hive.box<Transaction>(HiveDbName.transactionBox).values;
     transactions
-        .where((transaction) =>
-            transaction.nameCategory == oldNameTransaction)
+        .where((transaction) => transaction.nameCategory == oldNameTransaction)
         .forEach((e) {
       e.nameCategory = newNameTransaction;
       e.save();
     });
     widget.categoryTransaction.name = newNameTransaction;
-    widget.categoryTransaction.fix =
-        double.parse(widget.textControllerFix.text);
+    widget.categoryTransaction.fix = widget.textControllerFix.text == ''
+        ? null
+        : double.parse(widget.textControllerFix.text);
 
     widget.model.saveCategoryTransaction(widget.categoryTransaction, context);
+  }
+
+  bool validate(String value) {
+    try {
+      if (value != '') double.parse(value);
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Не верное число')));
+      return false;
+    }
   }
 }

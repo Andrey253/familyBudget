@@ -23,7 +23,7 @@ class TypeTransactionWidget extends StatelessWidget {
     return SizedBox(
       height: 70,
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: type
               .map((typeTrans) => GestureDetector(
                     onLongPress: () => model.resetTypeTransaction(context),

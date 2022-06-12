@@ -3,9 +3,9 @@ import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
 import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
+import 'package:family_budget/ui/widgets/main/drawer_main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_list.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
@@ -28,40 +28,45 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MainModel>(
       create: (context) => MainModel(),
-      child: const _GroupsWidgetBody(),
+      child: const _MainWidgetBody(),
     );
   }
 }
 
-class _GroupsWidgetBody extends StatelessWidget {
-  const _GroupsWidgetBody({Key? key}) : super(key: key);
+class _MainWidgetBody extends StatelessWidget {
+  const _MainWidgetBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<MainModel>();
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.mms))],
-        title: const Text('Члены семьи'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _UserListWidget(),
-            Text('Типы транзакций'),
-            TypeTransactionWidget(),
-            CategoryTransaction(),
-            SelectPeriodMain(),
-            IndicatorFamalyBudget(dateTimeRange: model.dateTimeRange),
-            IndicatorPerson(dateTimeRange: model.dateTimeRange),
-            // TransactionList(typeTransaction: TypeTransaction.all)
-          ],
+    return SafeArea(
+      child: Scaffold(
+        drawer: DrawerMain(),
+        appBar: AppBar(
+          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.mms))],
+          title: const Text('Члены семьи'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const _UserListWidget(),
+              const Text('Типы транзакций'),
+              const TypeTransactionWidget(),
+              const CategoryTransaction(),
+              const SelectPeriodMain(),
+              IndicatorFamalyBudget(dateTimeRange: model.dateTimeRange),
+              IndicatorPerson(dateTimeRange: model.dateTimeRange),
+              // TransactionList(typeTransaction: TypeTransaction.all)
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
 
 class _UserListWidget extends StatelessWidget {
   const _UserListWidget({Key? key}) : super(key: key);

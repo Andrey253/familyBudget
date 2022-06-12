@@ -44,8 +44,9 @@ class IndicatorPerson extends StatelessWidget {
 
             final summItems = items.fold<double>(
                 0, (previousValue, element) => previousValue + element.amount);
+
             chartData.add(ChartData(
-                '${category.name} ${(summItems / (summ==0?1:summ) * 100).toInt()}%',
+                '${category.name} ${(summItems / (summ == 0 ? 1 : summ) * 100).toStringAsFixed(1)}%',
                 summItems));
           }
           // print('teg chartData $chartData');

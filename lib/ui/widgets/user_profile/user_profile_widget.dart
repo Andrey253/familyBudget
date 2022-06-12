@@ -2,13 +2,12 @@ import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_item.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_list.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
 import 'package:family_budget/ui/widgets/user_profile/select_period.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -51,6 +50,10 @@ class TransactionsWidgetBody extends StatelessWidget {
     final model = context.watch<UserProfileModel>();
     final title = model.user?.name ?? '';
     return Scaffold(
+      drawerDragStartBehavior: DragStartBehavior.down,
+      drawer: Drawer(
+          child: TextButton.icon(
+              onPressed: () {}, icon: Icon(Icons.add), label: Text('First'))),
       appBar: AppBar(
         title: Text(title),
       ),

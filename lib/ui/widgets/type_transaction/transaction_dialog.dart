@@ -1,7 +1,9 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
@@ -50,7 +52,6 @@ class _TransactionDialogState extends State<TransactionDialog> {
     transaction.createdDate = dateTime;
 
     final box = Hive.box<Transaction>(HiveDbName.transactionBox);
-    print('teg transaction ${transaction.key}');
 
     if (transaction.key == null) {
       await box.add(transaction);

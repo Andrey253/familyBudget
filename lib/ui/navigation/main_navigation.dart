@@ -1,5 +1,6 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/ui/widgets/reports/transaction_list.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_detail.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_widget.dart';
@@ -10,6 +11,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 abstract class MainNavigationRouteNames {
   static const mainPage = '/';
+  static const transactions = '/transactions';
   static const transactionDetail = '/transactionDetail';
   static const userAdd = '/userAdd';
   static const userProfile = '/userProfile';
@@ -43,6 +45,13 @@ class MainNavigation {
         return MaterialPageRoute(
           builder: (context) {
             return TransactionDetail(categoryTransaction: arg[0],model: arg[1],);
+          },
+        );
+      case MainNavigationRouteNames.transactions:
+        final data = settings.arguments as List;
+        return MaterialPageRoute(
+          builder: (context) {
+            return TransactionList(typeTransaction: data[0],userName: data[1],start: data[2],end: data[3]);
           },
         );
       default:

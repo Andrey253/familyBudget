@@ -3,5 +3,5 @@ abstract class TypeTransaction {
   static const income = 'Приход';
   static const addIncome = 'Добавить приход';
   static const addExpense = 'Добавить расход';
-  static const all = 'Все операции';
+  static const all = 'Все категории';
 }

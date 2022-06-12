@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/model/type_transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
@@ -145,8 +146,18 @@ class MainModel extends ChangeNotifier {
   }
 
   void deleteCategoryTransaction(
-      NameCategory categoryTransaction, BuildContext context) async {
-    categoryTransaction.delete();
+      NameCategory nameCategory, BuildContext context) async {
+    final summ = Hive.box<Transaction>(HiveDbName.transactionBox)
+        .values.where((element) => element.nameCategory==nameCategory.name)
+        .fold<double>(
+            0, (previousValue, element) => previousValue + element.amount);
+    if (summ > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'В данной категории есть транзакции. Необходимо сначала удалить транзакции из категории')));
+      return;
+    }
+    nameCategory.delete();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
     listCategory = box.values.toList();
     Navigator.pop(context);
@@ -154,9 +165,9 @@ class MainModel extends ChangeNotifier {
     // box.deleteFromDisk();
   }
 
-  void saveCategoryTransaction(
+  void saveCategoryTransaction (
       NameCategory categoryTransaction, BuildContext context) async {
-    categoryTransaction.save();
+  await  categoryTransaction.save();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
     listCategory = box.values.toList();
     Navigator.pop(context);

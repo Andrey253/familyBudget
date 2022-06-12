@@ -58,7 +58,7 @@ class _GroupNameWidget extends StatelessWidget {
         border: OutlineInputBorder(),
         hintText: 'Имя группы',
       ),
-      onChanged: (value) => model.groupName = value,
+      onChanged: (value) => model.nameUser = value,
       onEditingComplete: () => model.saveUser(context),
     );
   }

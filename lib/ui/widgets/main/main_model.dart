@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class MainModel extends ChangeNotifier {
   var _groups = <User>[];
-  var groupName = '';
+  var nameUser = '';
   List<NameCategory> listCategory = [];
   List<Transaction> listTransaction = [];
 
@@ -37,14 +37,16 @@ class MainModel extends ChangeNotifier {
   }
 
   void saveUser(BuildContext context) async {
-    if (groupName.isEmpty) {
+    if (nameUser.isEmpty) {
       Navigator.of(context).pop();
       return;
     }
 
     final box = Hive.box<User>(HiveDbName.userBox);
-    final group = User(name: groupName, isSelected: false);
-    await box.add(group);
+    final users = box.values;
+    if (users.map((e) => e.name).contains(nameUser)) return;
+    final user = User(name: nameUser, isSelected: false);
+    await box.add(user);
     Navigator.of(context).pop();
   }
 

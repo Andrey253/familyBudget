@@ -7,36 +7,43 @@ import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 
-
-
 class TypeTransactionWidget extends StatelessWidget {
   const TypeTransactionWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final type = <TypeTrans>[
-      TypeTrans(TypeTransaction.all, const LinearGradient(colors: [Color.fromARGB(255, 0, 255, 0), Color.fromARGB(255, 255, 0, 0)])),
-      TypeTrans(TypeTransaction.income, const LinearGradient(colors: [Color.fromARGB(255, 166, 248, 141), Color.fromARGB(244, 56, 153, 0)])),
-      TypeTrans(TypeTransaction.expense, const LinearGradient(colors: [Color.fromARGB(255, 250, 117, 117), Color.fromARGB(255, 151, 0, 0)])),
+      TypeTrans(
+          TypeTransaction.all,
+           Colors.blue),
+      TypeTrans(
+          TypeTransaction.income,
+          Colors.green),
+      TypeTrans(
+          TypeTransaction.expense,
+           Colors.red),
     ];
     return SizedBox(
-      height: 80,
+      height: 70,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: type
               .map((typeString) => GestureDetector(
-                    onLongPress: () => context.read<MainModel>().resetTypeTransaction(context),
-                    onTap: () => context.read<MainModel>().selectTypeTransaction(context, typeString.name),
+                    onLongPress: () =>
+                        context.read<MainModel>().resetTypeTransaction(context),
+                    onTap: () => context
+                        .read<MainModel>()
+                        .selectTypeTransaction(context, typeString.name),
                     child: Container(
-                      width: 80,
+                      width: 70,
                       decoration: BoxDecoration(
-                        // color: Colors.primaries[index],
+                         color: typeString.color,
                         borderRadius: BorderRadius.circular(10),
-                        gradient: typeString.color,
                       ),
                       // color: Colors.red,
                       child: Center(
-                        child: Text(typeString.name, textAlign: TextAlign.center),
+                        child:
+                            Text(typeString.name, textAlign: TextAlign.center),
                       ),
                     ).paddingAll(4),
                   ))

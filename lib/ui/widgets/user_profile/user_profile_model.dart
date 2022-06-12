@@ -2,6 +2,7 @@ import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,79 +12,53 @@ class UserProfileModel extends ChangeNotifier {
   int userKey;
   late final Box<User> _userBox;
 
-  String? typeTransaction  = TypeTransaction.all;
-  List<CategoryTransaction> listTypes = [];
+  String? typeTransaction = TypeTransaction.all;
+  List<NameCategory> listTypes = [];
 
   User? _user;
   User? get user => _user;
+  DateTimeRange? dateTimeRange;
 
   UserProfileModel({required this.userKey}) {
     _setup();
   }
   void selectTypeTransaction(BuildContext context, String type) async {
     typeTransaction = type;
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName)
         .values
-        .where((element) => type == TypeTransaction.all ? true : element.type == typeTransaction)
+        .where((element) => type == TypeTransaction.all
+            ? true
+            : element.type == typeTransaction)
         .toList();
     notifyListeners();
   }
 
   void resetTypeTransaction(BuildContext context, String type) async {
     typeTransaction = null;
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
     notifyListeners();
   }
 
-  void addTransaction(BuildContext context, CategoryTransaction categoryTransaction) {
+  void addTransaction(BuildContext context, NameCategory categoryTransaction) {
     final transaction = Transaction()
       ..name = ''
       ..createdDate = DateTime.now()
-      ..isExpense =categoryTransaction.type == TypeTransaction.income? false : true
+      ..isExpense =
+          categoryTransaction.type == TypeTransaction.income ? false : true
       ..nameUser = _user?.name ?? ''
-      ..nameCategory = categoryTransaction.nameCategory
+      ..nameCategory = categoryTransaction.name
       ..typeTransaction = categoryTransaction.type
       ..amount = 0;
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => TransactionDialog(transaction: transaction)));
-  }
-
-  void _loadUser() {
-    final box = _userBox;
-    _user = box.get(userKey);
-    notifyListeners();
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.transactioDialog,
+        arguments: transaction);
   }
 
   void _setup() {
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(UserAdapter());
-    }
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
     _userBox = Hive.box<User>(HiveDbName.userBox);
-
-    _loadUser();
+    _user = _userBox.get(userKey);
     notifyListeners();
-    // _setupListenTasks();
   }
+
+  void setState() => notifyListeners();
 }
-
-// class TasksWidgetModelProvider extends InheritedNotifier {
-//   final TasksWidgetModel model;
-//   const TasksWidgetModelProvider({
-//     Key? key,
-//     required this.model,
-//     required Widget child,
-//   }) : super(
-//           key: key,
-//           notifier: model,
-//           child: child,
-//         );
-
-//   static TasksWidgetModelProvider? watch(BuildContext context) {
-//     return context.dependOnInheritedWidgetOfExactType<TasksWidgetModelProvider>();
-//   }
-
-//   static TasksWidgetModelProvider? read(BuildContext context) {
-//     final widget = context.getElementForInheritedWidgetOfExactType<TasksWidgetModelProvider>()?.widget;
-//     return widget is TasksWidgetModelProvider ? widget : null;
-//   }
-// }

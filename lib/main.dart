@@ -20,8 +20,7 @@ void main() async {
 
   await Hive.openBox<User>(HiveDbName.userBox);
   await Hive.openBox<Transaction>(HiveDbName.transactionBox);
-  await Hive.openBox<String>(HiveDbName.typeBox);
-  await Hive.openBox<CategoryTransaction>(HiveDbName.categoryTransaction);
+  await Hive.openBox<NameCategory>(HiveDbName.categoryName);
 
   const app = MyApp();
   runApp(app);
@@ -30,6 +29,5 @@ void main() async {
 abstract class HiveDbName {
   static const userBox = 'users_box';
   static const transactionBox = 'transaction_box';
-  static const typeBox = 'type_box';
-  static const categoryTransaction = 'categoryTransaction_box';
+  static const categoryName = 'categoryTransaction_box';
 }

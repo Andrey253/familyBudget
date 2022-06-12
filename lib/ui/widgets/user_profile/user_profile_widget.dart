@@ -1,7 +1,12 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
+import 'package:family_budget/ui/widgets/type_transaction/transaction_item.dart';
+import 'package:family_budget/ui/widgets/type_transaction/transaction_list.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
+import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
+import 'package:family_budget/ui/widgets/user_profile/select_period.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
@@ -49,60 +54,24 @@ class TransactionsWidgetBody extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: const _TransactionListWidget(),
+      body: Column(
+        children: [
+          Text('Name user: ${model.user?.name}'),
+          const TypeInUserProfile(),
+          const ListCategoryInProfile(),
+          SelectPeriod(),
+          IndicatorFamalyBudget(
+              userName: model.user?.name, dateTimeRange: model.dateTimeRange),
+          Expanded(
+              child: TransactionList(
+                  typeTransaction: model.typeTransaction,
+                  userName: model.user?.name))
+        ],
+      ),
     );
   }
 }
 
-class _TransactionListWidget extends StatelessWidget {
-  const _TransactionListWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.watch<UserProfileModel>();
-    return Column(
-      children: [
-        Text('Name user: ${model.user?.name}'),
-        const TypeInUserProfile(),
-        const ListCategoryInProfile(),
-        Expanded(
-          child: ValueListenableBuilder<Box<Transaction>>(
-            valueListenable:
-                Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
-            builder: (context, box, _) {
-              final transactions = box.values
-                  .toList()
-                  .cast<Transaction>()
-                  .where((element) =>
-                      model.typeTransaction != TypeTransaction.all
-                          ? element.typeTransaction == model.typeTransaction
-                          : true)
-                  .where((element) => element.nameUser == model.user?.name)
-                  .toList();
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) => Card(
-                        elevation: 5,
-                        child: ListTile(
-                          leading: Text(transactions[index].typeTransaction),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: transactions[index].delete,
-                          ),
-                          subtitle: Text(
-                              '${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
-                          title: Text(
-                              '${transactions[index].name} : ${transactions[index].amount}: ${transactions[index].isExpense}'),
-                        ),
-                      ));
-            },
-          ),
-        )
-      ],
-    );
-  }
-}
 // class _TaskListWidget extends StatelessWidget {
 //   const _TaskListWidget({Key? key}) : super(key: key);
 

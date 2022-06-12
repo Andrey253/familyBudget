@@ -3,15 +3,18 @@ import 'package:hive_flutter/hive_flutter.dart';
 part 'category_transaction.g.dart';
 
 @HiveType(typeId: 3)
-class CategoryTransaction extends HiveObject {
+class NameCategory extends HiveObject {
   @HiveField(0)
-  String nameCategory;
+  String name;
 
   @HiveField(1)
   String type;
 
-  CategoryTransaction({
-    required this.nameCategory,
+  @HiveField(2)
+  double? fix;
+
+  NameCategory({
+    required this.name,
     required this.type,
   });
 
@@ -22,5 +25,5 @@ class CategoryTransaction extends HiveObject {
   // }
 
   @override
-  String toString() => 'CategoryTransaction(name: $nameCategory, type: $type)';
+  String toString() => 'CategoryTransaction(name: $name, type: $type)';
 }

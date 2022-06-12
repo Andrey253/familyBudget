@@ -15,10 +15,11 @@ import 'package:provider/provider.dart';
 class MainModel extends ChangeNotifier {
   var _groups = <User>[];
   var groupName = '';
-  List<CategoryTransaction> listTypes = [];
+  List<NameCategory> listTypes = [];
 
   List<User> get groups => _groups.toList();
   String typeTransaction = TypeTransaction.all;
+  DateTimeRange? dateTimeRange;
   MainModel() {
     _setup();
   }
@@ -37,16 +38,18 @@ class MainModel extends ChangeNotifier {
 
   void selectTypeTransaction(BuildContext context, String type) async {
     typeTransaction = type;
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName)
         .values
-        .where((element) =>type==TypeTransaction.all ? true: element.type == typeTransaction)
+        .where((element) => type == TypeTransaction.all
+            ? true
+            : element.type == typeTransaction)
         .toList();
     notifyListeners();
   }
 
   void resetTypeTransaction(BuildContext context) async {
     typeTransaction = TypeTransaction.all;
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
     notifyListeners();
   }
 
@@ -101,25 +104,26 @@ class MainModel extends ChangeNotifier {
   }
 
   void _setup() {
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction).values.toList();
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
   }
 
   void addCategory(BuildContext context) async {
     // final type = context.read<MainModel>().typeTransaction;
 
-    final transactionCategory = await Navigator.of(context).push(MaterialPageRoute(
+    final transactionCategory =
+        await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
         return TransactionTypeDialog(type: typeTransaction);
       },
-    )) as CategoryTransaction?;
+    )) as NameCategory?;
     print('teg transactionCategory $transactionCategory');
     if (transactionCategory == null) return;
-    final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
-    final index = await box.add( transactionCategory);
+    final box = Hive.box<NameCategory>(HiveDbName.categoryName);
+    final index = await box.add(transactionCategory);
     // final key = await box.keyAt(index);
     // transactionCategory.keyAt = key;
     // await transactionCategory.save();
-    listTypes = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction)
+    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName)
         .values
         .where((element) => element.type == typeTransaction)
         .toList();
@@ -127,64 +131,33 @@ class MainModel extends ChangeNotifier {
     // Navigator.of(context).pop();
   }
 
-  void addType(BuildContext context) async {
-    final textEditController = TextEditingController();
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Введите имя типа транзакций'),
-              content: TextField(controller: textEditController),
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      Hive.box<String>(HiveDbName.typeBox).add(textEditController.text);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Ок')),
-                TextButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Отмена'))
-              ],
-            ));
+  openTransElement(BuildContext ctx, NameCategory categoryTransaction) {
+    Navigator.of(ctx).pushNamed(MainNavigationRouteNames.transactionDetail,
+        arguments: [categoryTransaction, ctx.read<MainModel>()]);
   }
 
-  openTransElement(BuildContext context, CategoryTransaction categoryTransaction) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) {
-        return TransactionDetail(categoryTransaction: categoryTransaction);
-      },
-    ));
-  }
-
-  void deleteCategoryTransaction(int index) async {
-    final box = Hive.box<CategoryTransaction>(HiveDbName.categoryTransaction);
-    await box.delete(index);
+  void deleteCategoryTransaction(
+      NameCategory categoryTransaction, BuildContext context) async {
+    categoryTransaction.delete();
+    final box = Hive.box<NameCategory>(HiveDbName.categoryName);
     listTypes = box.values.toList();
+    Navigator.pop(context);
     notifyListeners();
     // box.deleteFromDisk();
   }
 
-  void deleteTypeTransaction(int groupIndex, BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              actions: [
-                TextButton(
-                    onPressed: () async {
-                      final box = Hive.box<String>(HiveDbName.typeBox);
-                      await box.deleteAt(groupIndex);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Удалить тип транзакции ')),
-                TextButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Отмена'))
-              ],
-            ));
+  void saveCategoryTransaction(
+      NameCategory categoryTransaction, BuildContext context) async {
+    categoryTransaction.save();
+    final box = Hive.box<NameCategory>(HiveDbName.categoryName);
+    listTypes = box.values.toList();
+    Navigator.pop(context);
+    notifyListeners();
+    // box.deleteFromDisk();
+  }
+
+  void setState() {
+    notifyListeners();
   }
 }
 

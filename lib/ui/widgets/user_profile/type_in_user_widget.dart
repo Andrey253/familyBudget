@@ -17,11 +17,10 @@ class TypeInUserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<UserProfileModel>();
-    final types = Hive.box<String>(HiveDbName.typeBox).values.toList();
-final type = <TypeTrans>[
-      TypeTrans(TypeTransaction.all, const LinearGradient(colors: [Color.fromARGB(255, 0, 255, 0), Color.fromARGB(255, 255, 0, 0)])),
-      TypeTrans(TypeTransaction.income, const LinearGradient(colors: [Color.fromARGB(255, 166, 248, 141), Color.fromARGB(244, 56, 153, 0)])),
-      TypeTrans(TypeTransaction.expense, const LinearGradient(colors: [Color.fromARGB(255, 250, 117, 117), Color.fromARGB(255, 151, 0, 0)])),
+    final type = <TypeTrans>[
+      TypeTrans(TypeTransaction.all, Colors.blue),
+      TypeTrans(TypeTransaction.income, Colors.green),
+      TypeTrans(TypeTransaction.expense, Colors.red),
     ];
 
     return SizedBox(
@@ -30,17 +29,21 @@ final type = <TypeTrans>[
           mainAxisAlignment: MainAxisAlignment.center,
           children: type
               .map((typeString) => GestureDetector(
-    onLongPress: () => model.resetTypeTransaction(context, typeString.name),
-                    onTap: () =>model.selectTypeTransaction(context, typeString.name),
+                    onLongPress: () =>
+                        model.resetTypeTransaction(context, typeString.name),
+                    onTap: () =>
+                        model.selectTypeTransaction(context, typeString.name),
                     child: Container(
+                      
                       width: 80,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        gradient: typeString.color,
+                        color: typeString.color,
                       ),
                       // color: Colors.red,
                       child: Center(
-                        child: Text(typeString.name, textAlign: TextAlign.center),
+                        child:
+                            Text(typeString.name, textAlign: TextAlign.center),
                       ),
                     ).paddingAll(4),
                   ))
@@ -48,7 +51,8 @@ final type = <TypeTrans>[
     );
   }
 
-  Future addTransaction(String name, double amount, bool isExpense, String nameUser, String nameCategory) async {
+  Future addTransaction(String name, double amount, bool isExpense,
+      String nameUser, String nameCategory) async {
     final transaction = Transaction()
       ..name = name
       ..createdDate = DateTime.now()

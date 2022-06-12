@@ -52,7 +52,8 @@ class _TransactionTypeDialogState extends State<TransactionTypeDialog> {
           border: OutlineInputBorder(),
           hintText: 'Enter Name',
         ),
-        validator: (name) => name != null && name.isEmpty ? 'Enter a name' : null,
+        validator: (name) =>
+            name != null && name.isEmpty ? 'Enter a name' : null,
       );
 
   Widget buildCancelButton(BuildContext context) => TextButton(
@@ -68,11 +69,11 @@ class _TransactionTypeDialogState extends State<TransactionTypeDialog> {
       onPressed: () async {
         final isValid = formKey.currentState!.validate();
 
-        if (isValid && widget.type!=null) {
+        if (isValid && widget.type != null) {
           final name = nameController.text;
 
           Navigator.of(context)
-              .pop(CategoryTransaction(nameCategory: name, type: widget.type!));
+              .pop(NameCategory(name: name, type: widget.type!));
         }
       },
     );

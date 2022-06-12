@@ -1,10 +1,11 @@
-import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
-import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/indicators/circular_indicator.dart';
+import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
+import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
+import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
+import 'package:family_budget/ui/widgets/type_transaction/transaction_list.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
@@ -47,51 +48,20 @@ class _GroupsWidgetBody extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const _UserListWidget(),
-            const Text('Типы транзакций'),
-            const TypeTransactionWidget(),
-            const ListCategoryTransaction(),
-            IndicatorFamalyBudget(),
-            ValueListenableBuilder<Box<Transaction>>(
-              valueListenable:
-                  Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
-              builder: (context, box, _) {
-                final transactions = box.values
-                    .toList()
-                    .cast<Transaction>()
-                    .where((element) =>
-                        model.typeTransaction == TypeTransaction.all
-                            ? true
-                            : element.typeTransaction == model.typeTransaction)
-                    .toList();
-                return ListView.builder(
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: transactions.length,
-                    itemBuilder: (context, index) => Card(
-                          elevation: 5,
-                          child: ListTile(
-                            leading: Text(transactions[index].typeTransaction),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: transactions[index].delete,
-                            ),
-                            subtitle: Text(
-                                '${transactions[index].createdDate} ${transactions[index].nameUser} ${transactions[index].nameCategory} ${transactions[index].name} '),
-                            title: Text(
-                                '${transactions[index].name} : ${transactions[index].amount} : ${transactions[index].isExpense}'),
-                          ),
-                        ));
-              },
-            )
+            _UserListWidget(),
+            Text('Типы транзакций'),
+            TypeTransactionWidget(),
+            ListCategoryTransaction(),
+            SelectPeriodMain(),
+            IndicatorFamalyBudget(dateTimeRange: model.dateTimeRange),
+            IndicatorPerson(dateTimeRange: model.dateTimeRange),
+            // TransactionList(typeTransaction: TypeTransaction.all)
           ],
         ),
       ),
     );
   }
 }
-
-
 
 class _UserListWidget extends StatelessWidget {
   const _UserListWidget({Key? key}) : super(key: key);
@@ -103,7 +73,7 @@ class _UserListWidget extends StatelessWidget {
       builder: (context, box, _) {
         final users = box.values.toList().cast<User>();
         return SizedBox(
-          height: 80,
+          height: 70,
           child: Row(
             children: [
               Expanded(
@@ -119,7 +89,7 @@ class _UserListWidget extends StatelessWidget {
                               .read<MainModel>()
                               .showTasks(context, index),
                           child: Container(
-                            width: 80,
+                            width: 70,
                             decoration: BoxDecoration(
                               //  color: Colors.primaries[index],
                               borderRadius: BorderRadius.circular(10),
@@ -138,7 +108,7 @@ class _UserListWidget extends StatelessWidget {
               GestureDetector(
                 onTap: () => context.read<MainModel>().showForm(context),
                 child: Container(
-                  width: 80, height: 80,
+                  width: 70, height: 70,
                   decoration: BoxDecoration(
                     // color: Colors.primaries[9],
                     borderRadius: BorderRadius.circular(10),

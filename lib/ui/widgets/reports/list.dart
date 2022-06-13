@@ -1,13 +1,12 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
-import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:family_budget/ui/widgets/reports/scrollable_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ListMy extends StatefulWidget {
-  const ListMy({Key? key, this.userName}) : super(key: key);
-  final String? userName;
+  const ListMy({Key? key,required this.listTr}) : super(key: key);
+    final List<Transaction> listTr;
+
 
   @override
   State<ListMy> createState() => _ListMyState();
@@ -16,31 +15,29 @@ class ListMy extends StatefulWidget {
 class _ListMyState extends State<ListMy> {
   int? sortColumnIndex;
   bool isAscending = false;
-  late List<Transaction> listTr;
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return ScrollableWidget(child: buildDataTable());
-    
   }
 
   Widget buildDataTable() {
-    final columns = ['Приход/ \n Расход', 'Катег.', 'Дата', 'Польз.', 'Сумма'];
-     
-          final model = context.read<MainModel>();
-          listTr = model.listTransaction;
-          return DataTable(
-            columnSpacing: 20,
-            sortAscending: isAscending,
-            sortColumnIndex: sortColumnIndex,
-            columns: getColumns(columns),
-            rows: getRows(listTr),
-          );
-      
+    final columns = [
+      'Приход/ \n Расход',
+      'Катег.',
+      'Дата',
+      'Польз.',
+      'Наимен\n операции',
+      'Сумма'
+    ];
+
+    return DataTable(
+      columnSpacing: 20,
+      sortAscending: isAscending,
+      sortColumnIndex: sortColumnIndex,
+      columns: getColumns(columns),
+      rows: getRows(widget.listTr),
+    );
   }
 
   List<DataColumn> getColumns(List<String> columns) => columns
@@ -56,6 +53,7 @@ class _ListMyState extends State<ListMy> {
           trans.nameCategory,
           trans.createdDate.toString().split(' ').first,
           trans.nameUser,
+          trans.name,
           trans.amount
         ];
 
@@ -73,19 +71,21 @@ class _ListMyState extends State<ListMy> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      listTr.sort((rt1, tr2) =>
+    widget.  listTr.sort((rt1, tr2) =>
           compareString(ascending, rt1.typeTransaction, tr2.typeTransaction));
     } else if (columnIndex == 1) {
-      listTr.sort((tr1, tr2) =>
+    widget.  listTr.sort((tr1, tr2) =>
           compareString(ascending, tr1.nameCategory, tr2.nameCategory));
     } else if (columnIndex == 2) {
-      listTr.sort((tr1, tr2) =>
+     widget. listTr.sort((tr1, tr2) =>
           compareString(ascending, '${tr1.createdDate}', '${tr2.createdDate}'));
     } else if (columnIndex == 3) {
-      listTr.sort((tr1, tr2) =>
-          compareString(ascending, tr1.nameUser, tr2.nameUser));
+    widget.  listTr.sort(
+          (tr1, tr2) => compareString(ascending, tr1.nameUser, tr2.nameUser));
     } else if (columnIndex == 4) {
-      listTr.sort((tr1, tr2) => ascending
+      widget.listTr.sort((tr1, tr2) => compareString(ascending, tr1.name, tr2.name));
+    } else if (columnIndex == 5) {
+     widget. listTr.sort((tr1, tr2) => ascending
           ? tr1.amount.compareTo(tr2.amount)
           : tr2.amount.compareTo(tr1.amount));
     }

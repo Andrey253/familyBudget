@@ -23,44 +23,42 @@ class SelectPeriod extends StatelessWidget {
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
               if (date == null) return;
-              model.dateTimeRange = DateTimeRange(
-                  start: date, end: model.dateTimeRange?.end ?? DateTime(2220));
-
-              model.setState();
+              model.setDateTimeRange(date, null);
             },
-            child: const Text('Старт')),
+            child: Text(
+              'Старт \n ${(model.start ?? '').toString().split(' ').first}',
+              textAlign: TextAlign.center,
+            )),
         TextButton(
             onPressed: () async {
-              model.dateTimeRange = await showDateRangePicker(
+              final range = await showDateRangePicker(
                   context: context,
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
 
-              model.setState();
+              model.setDateTimeRange(range?.start, range?.end);
             },
-            child: buildRange(model.dateTimeRange)),
+            child: buildRange(model)),
         TextButton(
             onPressed: () async {
-              final date = await showDatePicker(
+              final end = await showDatePicker(
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
-              if (date == null) return;
-              model.dateTimeRange = DateTimeRange(
-                  start: model.dateTimeRange?.start ?? DateTime(0), end: date);
-
-              model.setState();
+              if (end == null) return;
+              model.setDateTimeRange(null, end);
             },
-            child: const Text('Конец')),
+            child: Text(
+                'Конец \n ${(model.end ?? '').toString().split(' ').first}',
+                textAlign: TextAlign.center)),
       ],
     );
   }
 
-  Widget buildRange(DateTimeRange? dateTimeRange) {
-    return dateTimeRange != null
-        ? Text(
-            '${dateTimeRange.start.toString().split(' ').first} ${dateTimeRange.end.toString().split(' ').first}')
-        :const Text('Выбрать период');
+  Widget buildRange(UserProfileModel? model) {
+    return Text(
+        'Выбрать период \n ${(model?.start ?? '').toString().split(' ').first} ${(model?.end ?? '').toString().split(' ').first}',
+        textAlign: TextAlign.center);
   }
 }

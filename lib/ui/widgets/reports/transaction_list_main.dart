@@ -1,4 +1,3 @@
-
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
@@ -8,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
-class TransactionList extends StatelessWidget {
-  const TransactionList({
+class TransactionListMain extends StatelessWidget {
+  const TransactionListMain({
     Key? key,
     required this.typeTransaction,
     this.userName,
@@ -26,14 +25,12 @@ class TransactionList extends StatelessWidget {
         child: Scaffold(
             body: Column(children: [
       const SelectPeriodMain(),
-      // Expanded(child: ListMy()),
       Expanded(
           child: ValueListenableBuilder<Box<Transaction>>(
               valueListenable:
                   Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
               builder: (context, box, _) {
-                model.setListTransaction(userName);
-                return const ListMy();
+                return ListMy(listTr: model.getTransaction(userName).toList());
               }))
     ])));
   }

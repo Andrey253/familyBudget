@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-class IndicatorFamalyBudget extends StatelessWidget {
-  const IndicatorFamalyBudget({Key? key, this.userName}) : super(key: key);
-  final String? userName;
+class IndicatorType extends StatelessWidget {
+  const IndicatorType({Key? key, required this.chartData}) : super(key: key);
+  final List<ChartData> chartData;
   @override
   Widget build(BuildContext context) {
     final model = context.watch<MainModel>();
@@ -17,7 +17,7 @@ class IndicatorFamalyBudget extends StatelessWidget {
         valueListenable:
             Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
         builder: (context, box, _) {
-          model.getDataTypeTransactions(userName);
+          model.getDataTypeTransactions('userName');
           return CircleDiagramm(chartData: model.chartDataTypeTransaction);
         });
   }

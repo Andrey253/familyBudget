@@ -43,7 +43,7 @@ class MainModel extends ChangeNotifier {
     final box = Hive.box<User>(HiveDbName.userBox);
     final users = box.values;
     if (users.map((e) => e.name).contains(nameUser)) return;
-    final user = User(name: nameUser,fix: null);
+    final user = User(name: nameUser, fix: null);
     await box.add(user);
     Navigator.of(context).pop();
   }
@@ -141,11 +141,15 @@ class MainModel extends ChangeNotifier {
 
   openTransElement(BuildContext context, NameCategory categoryTransaction) {
     Navigator.of(context).pushNamed(MainNavigationRouteNames.transactionDetail,
-        arguments: [categoryTransaction, deleteCategoryTransaction, saveCategoryTransaction]);
+        arguments: [
+          categoryTransaction,
+          deleteCategoryTransaction,
+          saveCategoryTransaction
+        ]);
   }
 
-  void deleteCategoryTransaction(BuildContext context,
-      NameCategory nameCategory) async {
+  void deleteCategoryTransaction(
+      BuildContext context, NameCategory nameCategory) async {
     final summ = Hive.box<Transaction>(HiveDbName.transactionBox)
         .values
         .where((element) => element.nameCategory == nameCategory.name)
@@ -165,11 +169,15 @@ class MainModel extends ChangeNotifier {
     // box.deleteFromDisk();
   }
 
-  void saveCategoryTransaction(BuildContext context,
-      NameCategory categoryTransaction, bool validate, String textFieldName, String textFieldFix) async {
-        if (!validate) return;
+  void saveCategoryTransaction(
+      BuildContext context,
+      NameCategory categoryTransaction,
+      bool validate,
+      String textFieldName,
+      String textFieldFix) async {
+    if (!validate) return;
     final oldNameTransaction = categoryTransaction.name;
-    final newNameTransaction =textFieldName;
+    final newNameTransaction = textFieldName;
     final transactions =
         Hive.box<Transaction>(HiveDbName.transactionBox).values;
     transactions
@@ -179,9 +187,8 @@ class MainModel extends ChangeNotifier {
       e.save();
     });
     categoryTransaction.name = newNameTransaction;
-    categoryTransaction.fix = textFieldFix == ''
-        ? null
-        : double.parse(textFieldFix);
+    categoryTransaction.fix =
+        textFieldFix == '' ? null : double.parse(textFieldFix);
     await categoryTransaction.save();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
     listCategory = box.values.toList();
@@ -210,7 +217,7 @@ class MainModel extends ChangeNotifier {
         .where((e) => userName == null ? true : e.nameUser == userName);
   }
 
-  void getDataNameTransactions(String? userName) {
+  List<ChartData> getDataNameTransactions(String? userName) {
     final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
     final tr = getTransaction(userName);
 
@@ -230,9 +237,10 @@ class MainModel extends ChangeNotifier {
       e.name =
           '${e.name} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
     }
+    return chartDataNameTransaction;
   }
 
-  void getDataTypeTransactions(String? userName) {
+  List<ChartData> getDataTypeTransactions(String? userName) {
     final tr = getTransaction(userName);
 
     final List<String> types = [
@@ -253,12 +261,11 @@ class MainModel extends ChangeNotifier {
       e.name =
           '${e.name} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
     }
+    return chartDataTypeTransaction;
   }
 
   void setListTransaction(String? userName) {
-    // listTransaction = [];
     listTransaction = getTransaction(userName).toList();
-    listTransaction.sort(((a, b) => a.createdDate.compareTo(b.createdDate)));
   }
 }
 

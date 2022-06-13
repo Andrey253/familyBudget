@@ -1,7 +1,9 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
+import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
@@ -92,6 +94,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   }
 
   Widget buildName() => TextFormField(
+        autofocus: true,
         controller: nameController,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
@@ -125,7 +128,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
                 dateTime = date ?? DateTime.now();
                 setState(() {});
               },
-              icon:const Icon(Icons.calendar_today)),
+              icon: const Icon(Icons.calendar_today)),
           Text(dateTime.toString().split(' ').first)
         ],
       );
@@ -158,7 +161,6 @@ class _TransactionDialogState extends State<TransactionDialog> {
           final amount = double.tryParse(amountController.text) ?? 0;
 
           onClickedDone(name, amount, widget.transaction!);
-          
 
           Navigator.of(context).pop();
         }

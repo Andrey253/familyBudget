@@ -9,8 +9,6 @@ class DrawerMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.now();
-
     return Drawer(
         child: Column(
       children: [
@@ -19,16 +17,11 @@ class DrawerMain extends StatelessWidget {
               Navigator.pop(context);
 
               Navigator.pushNamed(
-                  context, MainNavigationRouteNames.transactions,
-                  arguments: [
-                    TypeTransaction.all,
-                    null,
-                    DateTime(date.year, date.month),
-                    DateTime(date.year, date.month + 1)
-                  ]);
+                  context, MainNavigationRouteNames.transactionsMain,
+                  arguments: [TypeTransaction.all, null]);
             },
-            icon:const Icon(Icons.add),
-            label:const Text('Все операции')),
+            icon: const Icon(Icons.add),
+            label: const Text('Все операции')),
       ],
     ));
   }

@@ -1,4 +1,3 @@
-
 import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
@@ -7,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-class IndicatorPerson extends StatelessWidget {
-  const IndicatorPerson({Key? key, this.userName}) : super(key: key);
+class IndicatorName extends StatelessWidget {
+  const IndicatorName({Key? key, this.userName}) : super(key: key);
 
   final String? userName;
   @override

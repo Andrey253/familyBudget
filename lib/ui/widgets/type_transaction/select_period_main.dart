@@ -22,8 +22,6 @@ class SelectPeriodMain extends StatelessWidget {
                   lastDate: DateTime(2025));
               if (date == null) return;
               model.setDateTimeRange(date, null);
-
-              // model.setState();
             },
             child: Text(
               'Старт \n ${(model.start ?? '').toString().split(' ').first}',

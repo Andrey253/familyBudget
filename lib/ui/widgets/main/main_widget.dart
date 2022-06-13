@@ -1,4 +1,4 @@
-
+import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
@@ -25,6 +25,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<MainModel>();
 
     return SafeArea(
       child: Scaffold(
@@ -35,21 +36,20 @@ class _MainPageState extends State<MainPage> {
             Builder(
                 builder: (context) => IconButton(
                     onPressed: () => Scaffold.of(context).openDrawer(),
-                    icon:const Icon(Icons.menu)))
+                    icon: const Icon(Icons.menu)))
           ],
           title: const Text('Члены семьи'),
         ),
         body: SingleChildScrollView(
           child: Column(
-            children: const [
-              _UserListWidget(),
-              Text('Типы транзакций'),
-              TypeTransactionWidget(),
-              CategoryTransaction(),
-              SelectPeriodMain(),
-              IndicatorFamalyBudget(),
-              IndicatorPerson(),
-              // TransactionList(typeTransaction: TypeTransaction.all)
+            children:  [
+             const _UserListWidget(),
+             const Text('Типы транзакций'),
+            const  TypeTransactionWidget(),
+            const  CategoryTransaction(),
+            const  SelectPeriodMain(),
+              CircleDiagramm(chartData: model.getDataTypeTransactions(null)),
+              CircleDiagramm(chartData: model.getDataNameTransactions(null)),
             ],
           ),
         ),

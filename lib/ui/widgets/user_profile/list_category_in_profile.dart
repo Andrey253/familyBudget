@@ -21,6 +21,7 @@ class _ListCategoryInProfileState extends State<ListCategoryInProfile> {
     final size = MediaQuery.of(context).size;
 
     return GridView(
+        primary: false,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: size.width / 2),
         shrinkWrap: true,
@@ -38,8 +39,8 @@ Widget categoryTransactionItem(
   final userName = model.user!.name;
   Widget buildSaveLimit() {
     return TextButton(
-        onPressed: () => model.saveLimit(
-            nameCategory, context, textEditingController),
+        onPressed: () =>
+            model.saveLimit(nameCategory, context, textEditingController),
         child: const Text('Save'));
   }
 

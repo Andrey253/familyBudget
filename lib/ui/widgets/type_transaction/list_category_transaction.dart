@@ -23,6 +23,7 @@ class CategoryTransaction extends StatelessWidget {
             children: [
               const Text('Категории транзакций'),
               GridView(
+                  primary: false,
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: size.width / 4),
                   shrinkWrap: true,
@@ -54,8 +55,8 @@ class CategoryTransaction extends StatelessWidget {
         Text(
           (nameCategory.fix ?? '-- -').toString(),
           style: nameCategory.fix != null && nameCategory.fix! < summ
-              ?const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-              :const TextStyle(),
+              ? const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
+              : const TextStyle(),
         ),
         TextButton(
             onPressed: () {

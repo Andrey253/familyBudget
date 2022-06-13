@@ -1,8 +1,6 @@
-import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
+import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
-import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
 import 'package:family_budget/ui/widgets/main/drawer_main.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
 import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';

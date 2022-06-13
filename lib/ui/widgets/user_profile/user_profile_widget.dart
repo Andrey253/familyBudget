@@ -1,7 +1,5 @@
-import 'package:family_budget/domain/entity/cilcle_diagramm.dart';
+import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/domain/sourse/string.dart';
-import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
-import 'package:family_budget/ui/widgets/indicators/indicator_type.dart';
 import 'package:family_budget/ui/widgets/reports/transaction_list_main.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/user_profile/select_period.dart';
@@ -51,7 +49,6 @@ class UserProfileWidgetBody extends StatelessWidget {
               const SelectPeriod(),
               CircleDiagramm(chartData: model.getDataTypeTransactions(title)),
               CircleDiagramm(chartData: model.getDataNameTransactions(title)),
-              IndicatorName(userName: model.user?.name),
             ],
           ),
         ),

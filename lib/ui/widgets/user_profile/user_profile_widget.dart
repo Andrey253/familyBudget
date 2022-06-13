@@ -96,7 +96,7 @@ class _Drawer extends StatelessWidget {
               }));
             },
             icon: const Icon(Icons.add),
-            label: const Text('Все операции')),
+            label: const Text('Отчет транзакции')),
       ],
     ));
   }

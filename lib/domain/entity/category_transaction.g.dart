@@ -21,7 +21,7 @@ class NameCategoryAdapter extends TypeAdapter<NameCategory> {
       type: fields[1] as String,
     )
       ..fix = fields[2] as double?
-      ..users = (fields[3] as HiveList?)?.castHiveList();
+      ..users = (fields[3] as Map?)?.cast<String, double>();
   }
 
   @override

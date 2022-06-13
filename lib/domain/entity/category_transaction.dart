@@ -1,6 +1,6 @@
+
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:family_budget/domain/entity/user.dart';
 
 part 'category_transaction.g.dart';
 
@@ -16,7 +16,7 @@ class NameCategory extends HiveObject {
   double? fix;
   
   @HiveField(3)
-  HiveList<User>? users;
+  Map<String, double>? users;
   
 
   NameCategory({

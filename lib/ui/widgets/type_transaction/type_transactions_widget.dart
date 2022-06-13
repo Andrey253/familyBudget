@@ -1,6 +1,5 @@
 import 'package:family_budget/domain/model/type_transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 import 'package:family_budget/domain/sourse/string.dart';

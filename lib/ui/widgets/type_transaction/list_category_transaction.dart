@@ -14,8 +14,7 @@ class CategoryTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<MainModel>();
     final size = MediaQuery.of(context).size;
-return
-    ValueListenableBuilder<Box<Transaction>>(
+    return ValueListenableBuilder<Box<Transaction>>(
         valueListenable:
             Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
         builder: (context, box, _) {
@@ -25,17 +24,12 @@ return
               const Text('Категории транзакций'),
               GridView(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: size.width / 4,
-                    // childAspectRatio: 6 / 2,
-                    // crossAxisSpacing: 20,
-                    // mainAxisSpacing: 20
-                  ),
+                      maxCrossAxisExtent: size.width / 4),
                   shrinkWrap: true,
                   children: model.listCategory
                       .map((e) => Card(
-                            elevation: 8,
-                            child: categoryTransactionItem(model, e, context),
-                          ))
+                          elevation: 8,
+                          child: categoryTransactionItem(model, e, context)))
                       .toList()),
             ],
           );
@@ -60,8 +54,8 @@ return
         Text(
           (nameCategory.fix ?? '-- -').toString(),
           style: nameCategory.fix != null && nameCategory.fix! < summ
-              ? TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-              : TextStyle(),
+              ?const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
+              :const TextStyle(),
         ),
         TextButton(
             onPressed: () {

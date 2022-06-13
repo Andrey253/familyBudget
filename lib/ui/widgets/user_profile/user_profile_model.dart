@@ -3,7 +3,6 @@ import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
@@ -13,7 +12,7 @@ class UserProfileModel extends ChangeNotifier {
   late final Box<User> _userBox;
 
   String? typeTransaction = TypeTransaction.all;
-  List<NameCategory> listTypes = [];
+  List<NameCategory> listCategory = [];
 
   User? _user;
   User? get user => _user;
@@ -24,7 +23,7 @@ class UserProfileModel extends ChangeNotifier {
   }
   void selectTypeTransaction(BuildContext context, String type) async {
     typeTransaction = type;
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName)
+    listCategory = Hive.box<NameCategory>(HiveDbName.categoryName)
         .values
         .where((element) => type == TypeTransaction.all
             ? true
@@ -35,7 +34,8 @@ class UserProfileModel extends ChangeNotifier {
 
   void resetTypeTransaction(BuildContext context, String type) async {
     typeTransaction = null;
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
+    listCategory =
+        Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
     notifyListeners();
   }
 
@@ -51,10 +51,12 @@ class UserProfileModel extends ChangeNotifier {
         amount: 0);
     Navigator.of(context).pushNamed(MainNavigationRouteNames.transactioDialog,
         arguments: transaction);
+  
   }
 
   void _setup() {
-    listTypes = Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
+    listCategory =
+        Hive.box<NameCategory>(HiveDbName.categoryName).values.toList();
     _userBox = Hive.box<User>(HiveDbName.userBox);
     _user = _userBox.get(userKey);
     notifyListeners();

@@ -1,13 +1,12 @@
-import 'package:family_budget/domain/entity/category_transaction.dart';
+
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/ui/widgets/reports/transaction_list.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_detail.dart';
+import 'package:family_budget/ui/widgets/type_transaction/category_detail.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_add_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 abstract class MainNavigationRouteNames {
   static const mainPage = '/';
@@ -31,7 +30,7 @@ class MainNavigation {
       case MainNavigationRouteNames.userProfile:
         final groupKey = settings.arguments as int;
         return MaterialPageRoute(
-          builder: (context) => UserProfileWidget(groupKey: groupKey),
+          builder: (context) => UserProfileWidget(userKey: groupKey),
         );
       case MainNavigationRouteNames.transactioDialog:
         final transaction = settings.arguments as Transaction;
@@ -44,9 +43,9 @@ class MainNavigation {
         final arg = settings.arguments as List;
         return MaterialPageRoute(
           builder: (context) {
-            return TransactionDetail(
+            return CategoryDetail(
               categoryTransaction: arg[0],
-              model: arg[1],
+              deleteCategoryTransaction: arg[1],saveCategoryTransaction: arg[2],
             );
           },
         );

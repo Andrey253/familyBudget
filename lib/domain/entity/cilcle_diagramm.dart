@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class CircleDiagramm extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -22,7 +21,7 @@ class _CircleDiagrammState extends State<CircleDiagramm> {
           PieSeries<ChartData, String>(
             dataLabelSettings: const DataLabelSettings(isVisible: true),
             dataSource: widget.chartData,
-            xValueMapper: (ChartData data, _) => data.type,
+            xValueMapper: (ChartData data, _) => data.name,
             yValueMapper: (ChartData data, _) => data.summa,
             //pointColorMapper: (ChartData data, _) => data.color
           )
@@ -30,19 +29,14 @@ class _CircleDiagrammState extends State<CircleDiagramm> {
   }
 }
 
-class _SalesData {
-  _SalesData(this.year, this.sales);
 
-  final String year;
-  final double sales;
-}
 
 class ChartData {
-  ChartData(this.type, this.summa, [this.color]);
-  String type;
+  ChartData(this.name, this.summa, [this.color]);
+  String name;
   final double summa;
   final Color? color;
 
   @override
-  String toString() => 'ChartData(type: $type, summa: $summa, color: $color)';
+  String toString() => 'ChartData(name: $name, summa: $summa, color: $color)';
 }

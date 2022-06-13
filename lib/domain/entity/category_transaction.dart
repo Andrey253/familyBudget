@@ -1,5 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'package:family_budget/domain/entity/user.dart';
+
 part 'category_transaction.g.dart';
 
 @HiveType(typeId: 3)
@@ -12,18 +14,18 @@ class NameCategory extends HiveObject {
 
   @HiveField(2)
   double? fix;
+  
+  @HiveField(3)
+  HiveList<User>? users;
+  
 
   NameCategory({
     required this.name,
     required this.type,
   });
 
-  // void addTask(Box<Task> box, Task task) {
-  //   tasks ??= HiveList(box);
-  //   tasks?.add(task);
-  //   save();
-  // }
-
   @override
-  String toString() => 'CategoryTransaction(name: $name, type: $type)';
+  String toString() {
+    return 'NameCategory(name: $name, type: $type, fix: $fix, users: $users)';
+  }
 }

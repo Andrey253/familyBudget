@@ -1,4 +1,4 @@
-import 'package:family_budget/domain/sourse/string.dart';
+
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/indicators/indicator_name.dart';
@@ -9,7 +9,6 @@ import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dar
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,7 @@ class _MainPageState extends State<MainPage> {
             Builder(
                 builder: (context) => IconButton(
                     onPressed: () => Scaffold.of(context).openDrawer(),
-                    icon: Icon(Icons.menu)))
+                    icon:const Icon(Icons.menu)))
           ],
           title: const Text('Члены семьи'),
         ),
@@ -121,55 +120,6 @@ class _UserListWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-// @override
-// Widget build2(BuildContext context) {
-//   final groupsCount = GroupsWidgetModelProvider.watch(context)?.model.groups.length ?? 0;
-//   return ListView.separated(
-//     itemCount: groupsCount,
-//     itemBuilder: (BuildContext context, int index) {
-//       return _GroupListRowWidget(indexInList: index);
-//     },
-//     separatorBuilder: (BuildContext context, int index) {
-//       return const Divider(height: 1);
-//     },
-//   );
-// }
-
-class _GroupListRowWidget extends StatelessWidget {
-  final int indexInList;
-  const _GroupListRowWidget({
-    Key? key,
-    required this.indexInList,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final model = context.read<MainModel>();
-
-    final user = model.users[indexInList];
-
-    return Slidable(
-      actionPane: const SlidableBehindActionPane(),
-      secondaryActions: <Widget>[
-        IconSlideAction(
-          caption: 'Delete',
-          color: Colors.red,
-          icon: Icons.delete,
-          onTap: () => model.deleteUser(indexInList, context),
-        ),
-      ],
-      child: ColoredBox(
-        color: Colors.white,
-        child: ListTile(
-          title: Text(user.name),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => model.showTasks(context, indexInList),
-        ),
-      ),
     );
   }
 }

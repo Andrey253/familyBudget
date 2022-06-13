@@ -1,6 +1,5 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class TransactionTypeDialog extends StatefulWidget {
   const TransactionTypeDialog({

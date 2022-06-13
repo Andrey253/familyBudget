@@ -1,9 +1,7 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
@@ -127,8 +125,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
                 dateTime = date ?? DateTime.now();
                 setState(() {});
               },
-              icon: Icon(Icons.calendar_today)),
-          Text('${dateTime.toString().split(' ').first}')
+              icon:const Icon(Icons.calendar_today)),
+          Text(dateTime.toString().split(' ').first)
         ],
       );
 
@@ -141,8 +139,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
         child: transaction?.key != null
             ? const Text('Delete')
             : const SizedBox.shrink(),
-        onPressed: () {
-          transaction?.delete();
+        onPressed: () async {
+          await transaction?.delete();
           Navigator.of(context).pop();
         },
       );
@@ -160,6 +158,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           final amount = double.tryParse(amountController.text) ?? 0;
 
           onClickedDone(name, amount, widget.transaction!);
+          
 
           Navigator.of(context).pop();
         }

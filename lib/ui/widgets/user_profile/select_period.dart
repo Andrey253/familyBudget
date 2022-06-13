@@ -1,4 +1,3 @@
-import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +61,6 @@ class SelectPeriod extends StatelessWidget {
     return dateTimeRange != null
         ? Text(
             '${dateTimeRange.start.toString().split(' ').first} ${dateTimeRange.end.toString().split(' ').first}')
-        : Text('Выбрать период');
+        :const Text('Выбрать период');
   }
 }

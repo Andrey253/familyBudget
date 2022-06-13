@@ -18,7 +18,7 @@ class UserAdapter extends TypeAdapter<User> {
     };
     return User(
       name: fields[0] as String,
-      isSelected: fields[2] as bool,
+      fix: fields[2] as double?,
     );
   }
 
@@ -29,7 +29,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.isSelected);
+      ..write(obj.fix);
   }
 
   @override

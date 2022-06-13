@@ -5,17 +5,15 @@ import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/model/type_transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/type_transaction/transaction_detail.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_type_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
-import 'package:provider/provider.dart';
 
 class MainModel extends ChangeNotifier {
-  var _groups = <User>[];
+  final _groups = <User>[];
   var nameUser = '';
   List<NameCategory> listCategory = [];
   List<Transaction> listTransaction = [];
@@ -45,7 +43,7 @@ class MainModel extends ChangeNotifier {
     final box = Hive.box<User>(HiveDbName.userBox);
     final users = box.values;
     if (users.map((e) => e.name).contains(nameUser)) return;
-    final user = User(name: nameUser, isSelected: false);
+    final user = User(name: nameUser,fix: null);
     await box.add(user);
     Navigator.of(context).pop();
   }
@@ -83,22 +81,18 @@ class MainModel extends ChangeNotifier {
   }
 
   void showTasks(BuildContext context, int userIndex) async {
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(UserAdapter());
-    }
-
     final box = Hive.box<User>(HiveDbName.userBox);
-    final groupKey = box.keyAt(userIndex) as int;
+    final userKey = box.keyAt(userIndex) as int;
 
     unawaited(
       Navigator.of(context).pushNamed(
         MainNavigationRouteNames.userProfile,
-        arguments: groupKey,
+        arguments: userKey,
       ),
     );
   }
 
-  void deleteUser(int groupIndex, BuildContext context) async {
+  void deleteUser(int userIndex, BuildContext context) async {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -107,7 +101,7 @@ class MainModel extends ChangeNotifier {
                     onPressed: () async {
                       final box = await Hive.openBox<User>(HiveDbName.userBox);
 
-                      await box.deleteAt(groupIndex);
+                      await box.deleteAt(userIndex);
                       Navigator.pop(context);
                     },
                     child: const Text('Удалить пользователя')),
@@ -145,13 +139,13 @@ class MainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  openTransElement(BuildContext ctx, NameCategory categoryTransaction) {
-    Navigator.of(ctx).pushNamed(MainNavigationRouteNames.transactionDetail,
-        arguments: [categoryTransaction, ctx.read<MainModel>()]);
+  openTransElement(BuildContext context, NameCategory categoryTransaction) {
+    Navigator.of(context).pushNamed(MainNavigationRouteNames.transactionDetail,
+        arguments: [categoryTransaction, deleteCategoryTransaction, saveCategoryTransaction]);
   }
 
-  void deleteCategoryTransaction(
-      NameCategory nameCategory, BuildContext context) async {
+  void deleteCategoryTransaction(BuildContext context,
+      NameCategory nameCategory) async {
     final summ = Hive.box<Transaction>(HiveDbName.transactionBox)
         .values
         .where((element) => element.nameCategory == nameCategory.name)
@@ -171,8 +165,23 @@ class MainModel extends ChangeNotifier {
     // box.deleteFromDisk();
   }
 
-  void saveCategoryTransaction(
-      NameCategory categoryTransaction, BuildContext context) async {
+  void saveCategoryTransaction(BuildContext context,
+      NameCategory categoryTransaction, bool validate, String textFieldName, String textFieldFix) async {
+        if (!validate) return;
+    final oldNameTransaction = categoryTransaction.name;
+    final newNameTransaction =textFieldName;
+    final transactions =
+        Hive.box<Transaction>(HiveDbName.transactionBox).values;
+    transactions
+        .where((transaction) => transaction.nameCategory == oldNameTransaction)
+        .forEach((e) {
+      e.nameCategory = newNameTransaction;
+      e.save();
+    });
+    categoryTransaction.name = newNameTransaction;
+    categoryTransaction.fix = textFieldFix == ''
+        ? null
+        : double.parse(textFieldFix);
     await categoryTransaction.save();
     final box = Hive.box<NameCategory>(HiveDbName.categoryName);
     listCategory = box.values.toList();
@@ -218,8 +227,8 @@ class MainModel extends ChangeNotifier {
     final s =
         chartDataNameTransaction.fold<double>(0, (prV, e) => prV + e.summa);
     for (var e in chartDataNameTransaction) {
-      e.type =
-          '${e.type} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
+      e.name =
+          '${e.name} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
     }
   }
 
@@ -241,8 +250,8 @@ class MainModel extends ChangeNotifier {
     final s =
         chartDataTypeTransaction.fold<double>(0, (prV, e) => prV + e.summa);
     for (var e in chartDataTypeTransaction) {
-      e.type =
-          '${e.type} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
+      e.name =
+          '${e.name} ${(e.summa / (s == 0 ? 1 : s) * 100).toStringAsFixed(1)}%';
     }
   }
 

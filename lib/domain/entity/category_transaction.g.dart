@@ -19,19 +19,23 @@ class NameCategoryAdapter extends TypeAdapter<NameCategory> {
     return NameCategory(
       name: fields[0] as String,
       type: fields[1] as String,
-    )..fix = fields[2] as double?;
+    )
+      ..fix = fields[2] as double?
+      ..users = (fields[3] as HiveList?)?.castHiveList();
   }
 
   @override
   void write(BinaryWriter writer, NameCategory obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.type)
       ..writeByte(2)
-      ..write(obj.fix);
+      ..write(obj.fix)
+      ..writeByte(3)
+      ..write(obj.users);
   }
 
   @override

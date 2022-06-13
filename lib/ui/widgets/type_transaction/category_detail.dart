@@ -1,37 +1,34 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
-import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/extentions.dart';
-import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
 
-class TransactionDetail extends StatefulWidget {
-  TransactionDetail({
+class CategoryDetail extends StatefulWidget {
+  CategoryDetail({
     Key? key,
     required this.categoryTransaction,
-    required this.model,
+    required this.deleteCategoryTransaction,
+    required this.saveCategoryTransaction,
   }) : super(key: key);
   final NameCategory categoryTransaction;
-  final MainModel model;
+  final Function(BuildContext context,NameCategory categoryTransaction) deleteCategoryTransaction;
+  final Function(BuildContext context,NameCategory categoryTransaction, bool validate, String textFieldName, String textFieldFix) saveCategoryTransaction;
   final TextEditingController textControllerName = TextEditingController();
   final TextEditingController textControllerFix = TextEditingController();
 
   @override
-  State<TransactionDetail> createState() => _TransactionDetailState();
+  State<CategoryDetail> createState() => _CategoryDetailState();
 }
 
-class _TransactionDetailState extends State<TransactionDetail> {
+class _CategoryDetailState extends State<CategoryDetail> {
   @override
   Widget build(BuildContext context) {
     widget.textControllerName.text = widget.categoryTransaction.name;
     widget.textControllerFix.text =
         (widget.categoryTransaction.fix ?? '').toString();
-    ;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Детали транзакции'),
+        title:const Text('Детали транзакции'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +37,7 @@ class _TransactionDetailState extends State<TransactionDetail> {
               .paddingAll(),
           Row(
             children: [
-              Text(' Наименование транзакции: ').paddingAll(),
+              const Text(' Наименование транзакции: ').paddingAll(),
               Expanded(child: TextField(controller: widget.textControllerName))
             ],
           ),
@@ -55,16 +52,16 @@ class _TransactionDetailState extends State<TransactionDetail> {
               ))
             ],
           ),
-          Text(' Индекс транзакции: ${widget.categoryTransaction.key}')
-              .paddingAll(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(onPressed: save, icon: const Icon(Icons.save)),
               IconButton(
-                  onPressed: () => widget.model.deleteCategoryTransaction(
-                      widget.categoryTransaction, context),
-                  icon: const Icon(Icons.delete)),
+                  onPressed:()=> widget.saveCategoryTransaction(context, widget.categoryTransaction,validate(widget.textControllerFix.text),widget.textControllerName.text,widget.textControllerFix.text),
+                  icon: const Icon(Icons.save)),
+              IconButton(
+                  onPressed: () => widget.deleteCategoryTransaction(
+                      context, widget.categoryTransaction),
+                  icon: const Icon(Icons.delete))
             ],
           ),
         ],
@@ -72,27 +69,8 @@ class _TransactionDetailState extends State<TransactionDetail> {
     );
   }
 
-  void save() {
-    if (!validate(widget.textControllerFix.text)) return;
-    final oldNameTransaction = widget.categoryTransaction.name;
-    final newNameTransaction = widget.textControllerName.text;
-    final transactions =
-        Hive.box<Transaction>(HiveDbName.transactionBox).values;
-    transactions
-        .where((transaction) => transaction.nameCategory == oldNameTransaction)
-        .forEach((e) {
-      e.nameCategory = newNameTransaction;
-      e.save();
-    });
-    widget.categoryTransaction.name = newNameTransaction;
-    widget.categoryTransaction.fix = widget.textControllerFix.text == ''
-        ? null
-        : double.parse(widget.textControllerFix.text);
 
-    widget.model.saveCategoryTransaction(widget.categoryTransaction, context);
-  }
-
-  bool validate(String value) {
+ bool validate(String value) {
     try {
       if (value != '') double.parse(value);
       return true;

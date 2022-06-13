@@ -9,12 +9,12 @@ class User extends HiveObject {
   String name;
 
     @HiveField(2)
-  bool isSelected;
+  double? fix;
 
   User({
     required this.name,
 
-    required this.isSelected,
+    required this.fix,
   });
 
 

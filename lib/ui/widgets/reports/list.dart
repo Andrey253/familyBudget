@@ -1,12 +1,8 @@
 import 'package:family_budget/domain/entity/transaction.dart';
-import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:family_budget/ui/widgets/reports/scrollable_widget.dart';
-import 'package:family_budget/ui/widgets/reports/user.dart';
-import 'package:family_budget/ui/widgets/reports/users.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ListMy extends StatefulWidget {
@@ -28,19 +24,14 @@ class _ListMyState extends State<ListMy> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ScrollableWidget(child: buildDataTable()),
-    );
+    return ScrollableWidget(child: buildDataTable());
+    
   }
 
   Widget buildDataTable() {
     final columns = ['Приход/ \n Расход', 'Катег.', 'Дата', 'Польз.', 'Сумма'];
-    return ValueListenableBuilder<Box<Transaction>>(
-        valueListenable:
-            Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
-        builder: (context, box, _) {
+     
           final model = context.read<MainModel>();
-          model.setListTransaction(widget.userName);
           listTr = model.listTransaction;
           return DataTable(
             columnSpacing: 20,
@@ -49,7 +40,7 @@ class _ListMyState extends State<ListMy> {
             columns: getColumns(columns),
             rows: getRows(listTr),
           );
-        });
+      
   }
 
   List<DataColumn> getColumns(List<String> columns) => columns
@@ -92,7 +83,7 @@ class _ListMyState extends State<ListMy> {
           compareString(ascending, '${tr1.createdDate}', '${tr2.createdDate}'));
     } else if (columnIndex == 3) {
       listTr.sort((tr1, tr2) =>
-          compareString(ascending, '${tr1.nameUser}', '${tr2.nameUser}'));
+          compareString(ascending, tr1.nameUser, tr2.nameUser));
     } else if (columnIndex == 4) {
       listTr.sort((tr1, tr2) => ascending
           ? tr1.amount.compareTo(tr2.amount)
@@ -100,8 +91,8 @@ class _ListMyState extends State<ListMy> {
     }
 
     setState(() {
-      this.sortColumnIndex = columnIndex;
-      this.isAscending = ascending;
+      sortColumnIndex = columnIndex;
+      isAscending = ascending;
     });
   }
 

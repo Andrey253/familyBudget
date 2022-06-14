@@ -1,6 +1,7 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
+import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _ListCategoryInProfileState extends State<ListCategoryInProfile> {
     return GridView(
         primary: false,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: size.width / 2),
+            maxCrossAxisExtent: size.width / 2, childAspectRatio: 1.2),
         shrinkWrap: true,
         children: model.listCategory
             .map((e) => Card(
@@ -51,6 +52,8 @@ Widget categoryTransactionItem(
 
   model.getSummOfUser(nameCategory);
   return Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.start,
     children: [
       Text(
           (nameCategory.fix == null
@@ -62,27 +65,36 @@ Widget categoryTransactionItem(
               ? const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
               : const TextStyle(),
           textAlign: TextAlign.center),
-      TextButton(
-          onPressed: () {},
-          child: Text(
-            nameCategory.name,
-            style: TextStyle(
-                color: nameCategory.type == TypeTransaction.expense
-                    ? Colors.red
-                    : Colors.green),
-          )),
-      Text((model.summaOfUser.toString())),
-      IconButton(
-          onPressed: () => model.addTransaction(context, nameCategory),
-          icon: const Icon(Icons.add)),
+      Row(
+        children: [
+          Text(nameCategory.name,
+                  style: TextStyle(
+                      shadows: const [Shadow(offset: Offset(0.5, 0.5))],
+                      color: nameCategory.type == TypeTransaction.expense
+                          ? Colors.red
+                          : Colors.green))
+              .paddingAll(6),
+          Expanded(
+              child: Text(model.summaOfUser.toString(),
+                      style: const TextStyle(overflow: TextOverflow.ellipsis))
+                  .paddingAll(6)),
+        ],
+      ),
+      Container(
+        color: Colors.green,
+        child: IconButton(
+            padding: const EdgeInsets.all(0),
+            onPressed: () => model.addTransaction(context, nameCategory),
+            icon: const Icon(Icons.add)),
+      ),
       TextButton(
           onPressed: () => showDialog(
               context: context,
               builder: (context) => AlertDialog(
                     content: TextField(
-                      controller: textEditingController,
-                      autofocus: true,
-                    ),
+                        keyboardType: TextInputType.number,
+                        controller: textEditingController,
+                        autofocus: true),
                     actions: [buildCancel(), buildSaveLimit()],
                   )),
           child: Text(

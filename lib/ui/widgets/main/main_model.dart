@@ -276,18 +276,27 @@ class MainModel extends ChangeNotifier {
     final transactions = getTransaction(null);
     final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
     print('teg start $start end $end');
-
-    for (DateTime i = start!;
-        i.compareTo(end!) <= 0;
-        i = i.add(const Duration(days: 1))) {
-      print('teg day ${i.day} month   ${i.month}');
-    }
+    List<ChartIExp> listChartIExp = [];
 
     for (var e in catName) {
       final category = transactions.where((el) => el.nameCategory == e.name);
 
-      final chartDataIncomeExpenses = category.map((e) =>
-          ChartIncomeExpenses(x: e.amount, y: e.createdDate.day.toString()));
+      for (DateTime dTime = start!;
+          dTime.compareTo(end!) <= 0;
+          dTime = dTime.add(const Duration(days: 1))) {
+        final onDate = category.where((el) =>
+            el.createdDate.toString().split(' ').first ==
+            dTime.toString().split(' ').first);
+        final summ =
+            onDate.fold<double>(0, (prV, element) => prV + element.amount);
+        listChartIExp.add(ChartIExp(summa: summ, createDate: dTime));
+
+
+        
+      }
+
+      final chartDataIncomeExpenses = listChartIExp.map(
+          (e) => ChartIncomeExpenses(summa: e.summa, createDate: e.createDate));
       final categoryChartIncomeExpenses =
           getChartDataIncomeExpenses(chartDataIncomeExpenses, e.name);
       result.add(categoryChartIncomeExpenses);
@@ -302,8 +311,9 @@ class MainModel extends ChangeNotifier {
       ColumnSeries<ChartIncomeExpenses, num>(
         name: name,
         dataSource: chartDataIncomeExpenses.toList(),
-        xValueMapper: (ChartIncomeExpenses data, _) => data.x,
-        yValueMapper: (ChartIncomeExpenses data, _) => double.parse(data.y),
+        xValueMapper: (ChartIncomeExpenses data, _) => data.summa,
+        yValueMapper: (ChartIncomeExpenses data, _) =>
+            double.parse('${data.createDate.day}'),
         dataLabelSettings: const DataLabelSettings(
             isVisible: true, textStyle: TextStyle(fontSize: 10)),
       )

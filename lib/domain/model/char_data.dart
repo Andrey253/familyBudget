@@ -1,8 +1,16 @@
 class ChartIncomeExpenses {
-  final double x;
-  final String y;
+  final double summa;
+  final DateTime createDate;
   ChartIncomeExpenses({
-    required this.x,
-    required this.y,
+    required this.summa,
+    required this.createDate,
+  });
+}
+class ChartIExp {
+  final double summa;
+  final DateTime createDate;
+  ChartIExp({
+    required this.summa,
+    required this.createDate,
   });
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/model/char_data.dart';
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/model/type_transaction.dart';
@@ -11,6 +12,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MainModel extends ChangeNotifier {
   final _groups = <User>[];
@@ -267,26 +269,44 @@ class MainModel extends ChangeNotifier {
   void setListTransaction(String? userName) {
     listTransaction = getTransaction(userName).toList();
   }
+
+  List<List<ColumnSeries<ChartIncomeExpenses, num>>>
+      getListChartDataIncomeExpenses() {
+    List<List<ColumnSeries<ChartIncomeExpenses, num>>> result = [];
+    final transactions = getTransaction(null);
+    final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
+    print('teg start $start end $end');
+
+    for (DateTime i = start!;
+        i.compareTo(end!) <= 0;
+        i = i.add(const Duration(days: 1))) {
+      print('teg day ${i.day} month   ${i.month}');
+    }
+
+    for (var e in catName) {
+      final category = transactions.where((el) => el.nameCategory == e.name);
+
+      final chartDataIncomeExpenses = category.map((e) =>
+          ChartIncomeExpenses(x: e.amount, y: e.createdDate.day.toString()));
+      final categoryChartIncomeExpenses =
+          getChartDataIncomeExpenses(chartDataIncomeExpenses, e.name);
+      result.add(categoryChartIncomeExpenses);
+    }
+
+    return result;
+  }
+
+  List<ColumnSeries<ChartIncomeExpenses, num>> getChartDataIncomeExpenses(
+      Iterable<ChartIncomeExpenses> chartDataIncomeExpenses, String name) {
+    return <ColumnSeries<ChartIncomeExpenses, num>>[
+      ColumnSeries<ChartIncomeExpenses, num>(
+        name: name,
+        dataSource: chartDataIncomeExpenses.toList(),
+        xValueMapper: (ChartIncomeExpenses data, _) => data.x,
+        yValueMapper: (ChartIncomeExpenses data, _) => double.parse(data.y),
+        dataLabelSettings: const DataLabelSettings(
+            isVisible: true, textStyle: TextStyle(fontSize: 10)),
+      )
+    ];
+  }
 }
-
-// class GroupsWidgetModelProvider extends InheritedNotifier {
-//   final UsersWidgetModel model;
-//   const GroupsWidgetModelProvider({
-//     Key? key,
-//     required this.model,
-//     required Widget child,
-//   }) : super(
-//           key: key,
-//           notifier: model,
-//           child: child,
-//         );
-
-//   static GroupsWidgetModelProvider? watch(BuildContext context) {
-//     return context.dependOnInheritedWidgetOfExactType<GroupsWidgetModelProvider>();
-//   }
-
-//   static GroupsWidgetModelProvider? read(BuildContext context) {
-//     final widget = context.getElementForInheritedWidgetOfExactType<GroupsWidgetModelProvider>()?.widget;
-//     return widget is GroupsWidgetModelProvider ? widget : null;
-//   }
-// }

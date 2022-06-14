@@ -1,6 +1,6 @@
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/domain/sourse/string.dart';
-import 'package:family_budget/ui/widgets/reports/transaction_list_main.dart';
+import 'package:family_budget/ui/widgets/reports/transaction/transaction_report.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/user_profile/select_period.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';

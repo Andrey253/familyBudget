@@ -10,8 +10,8 @@ void main() async {
   await Hive.initFlutter();
 
   // await Hive.deleteBoxFromDisk(HiveDbName.userBox);
-  //  await Hive.deleteBoxFromDisk(HiveDbName.transactionBox);
-  //  await Hive.deleteBoxFromDisk(HiveDbName.categoryName);
+  // await Hive.deleteBoxFromDisk(HiveDbName.transactionBox);
+  // await Hive.deleteBoxFromDisk(HiveDbName.categoryName);
 
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(TransactionAdapter());

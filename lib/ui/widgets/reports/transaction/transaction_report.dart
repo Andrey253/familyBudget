@@ -1,7 +1,7 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
-import 'package:family_budget/ui/widgets/reports/list.dart';
+import 'package:family_budget/ui/widgets/reports/transaction/ltransaction_list.dart';
 import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -30,7 +30,8 @@ class TransactionListMain extends StatelessWidget {
               valueListenable:
                   Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
               builder: (context, box, _) {
-                return ListMy(listTr: model.getTransaction(userName).toList());
+                return TransactionsList(
+                    listTr: model.getTransaction(userName).toList());
               }))
     ])));
   }

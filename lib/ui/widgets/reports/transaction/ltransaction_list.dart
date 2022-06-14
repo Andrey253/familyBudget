@@ -3,16 +3,15 @@ import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:family_budget/ui/widgets/reports/scrollable_widget.dart';
 import 'package:flutter/material.dart';
 
-class ListMy extends StatefulWidget {
-  const ListMy({Key? key,required this.listTr}) : super(key: key);
-    final List<Transaction> listTr;
-
+class TransactionsList extends StatefulWidget {
+  const TransactionsList({Key? key, required this.listTr}) : super(key: key);
+  final List<Transaction> listTr;
 
   @override
-  State<ListMy> createState() => _ListMyState();
+  State<TransactionsList> createState() => _TransactionsListState();
 }
 
-class _ListMyState extends State<ListMy> {
+class _TransactionsListState extends State<TransactionsList> {
   int? sortColumnIndex;
   bool isAscending = false;
 
@@ -71,21 +70,22 @@ class _ListMyState extends State<ListMy> {
 
   void onSort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-    widget.  listTr.sort((rt1, tr2) =>
+      widget.listTr.sort((rt1, tr2) =>
           compareString(ascending, rt1.typeTransaction, tr2.typeTransaction));
     } else if (columnIndex == 1) {
-    widget.  listTr.sort((tr1, tr2) =>
+      widget.listTr.sort((tr1, tr2) =>
           compareString(ascending, tr1.nameCategory, tr2.nameCategory));
     } else if (columnIndex == 2) {
-     widget. listTr.sort((tr1, tr2) =>
+      widget.listTr.sort((tr1, tr2) =>
           compareString(ascending, '${tr1.createdDate}', '${tr2.createdDate}'));
     } else if (columnIndex == 3) {
-    widget.  listTr.sort(
+      widget.listTr.sort(
           (tr1, tr2) => compareString(ascending, tr1.nameUser, tr2.nameUser));
     } else if (columnIndex == 4) {
-      widget.listTr.sort((tr1, tr2) => compareString(ascending, tr1.name, tr2.name));
+      widget.listTr
+          .sort((tr1, tr2) => compareString(ascending, tr1.name, tr2.name));
     } else if (columnIndex == 5) {
-     widget. listTr.sort((tr1, tr2) => ascending
+      widget.listTr.sort((tr1, tr2) => ascending
           ? tr1.amount.compareTo(tr2.amount)
           : tr2.amount.compareTo(tr1.amount));
     }

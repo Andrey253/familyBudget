@@ -1,8 +1,9 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
+import 'package:family_budget/ui/widgets/reports/report_model.dart';
 import 'package:family_budget/ui/widgets/reports/transaction/ltransaction_list.dart';
-import 'package:family_budget/ui/widgets/select_period.dart';
+import 'package:family_budget/ui/widgets/general_widgets/select_period.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -11,15 +12,15 @@ class TransactionListMain extends StatelessWidget {
   const TransactionListMain({
     Key? key,
 
-    this.userName,
+
   }) : super(key: key);
 
 
-  final String? userName;
+
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<MainModel>();
+    final model = context.watch<ReportModel>();
 
     return SafeArea(
         child: Scaffold(
@@ -34,7 +35,7 @@ class TransactionListMain extends StatelessWidget {
                   Hive.box<Transaction>(HiveDbName.transactionBox).listenable(),
               builder: (context, box, _) {
                 return TransactionsList(
-                    listTr: model.getTransaction(userName).toList());
+                    listTr: model.getTransaction().toList());
               }))
     ])));
   }

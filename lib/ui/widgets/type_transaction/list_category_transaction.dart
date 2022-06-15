@@ -53,10 +53,13 @@ class CategoryTransaction extends StatelessWidget {
     return Column(
       children: [
         Text(
-          (nameCategory.fix ?? '-- -').toString(),
+          (nameCategory.fix != null
+              ? 'Ограничение ${nameCategory.fix}'
+              : 'Нет ограничений'),
+          textAlign: TextAlign.center,
           style: nameCategory.fix != null && nameCategory.fix! < summ
               ? const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
-              : const TextStyle(),
+              : const TextStyle(color: Colors.green),
         ),
         TextButton(
             onPressed: () {

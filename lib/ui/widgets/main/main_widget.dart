@@ -1,9 +1,12 @@
+import 'package:family_budget/domain/entity/category_transaction.dart';
+import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/drawer.dart';
+import 'package:family_budget/ui/widgets/general_widgets/drawer_report.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
-import 'package:family_budget/ui/widgets/select_period.dart';
+import 'package:family_budget/ui/widgets/general_widgets/select_period.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +23,20 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   @override
+  void dispose() {
+    Hive.box<User>(HiveDbName.userBox).close();
+    Hive.box<Transaction>(HiveDbName.transactionBox).close();
+    Hive.box<NameCategory>(HiveDbName.categoryName).close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final model = context.watch<MainModel>();
 
     return SafeArea(
       child: Scaffold(
-        drawer: const DrawerMy(),
+        drawer: DrawerReport(selectReport: selectReport),
         appBar: app(),
         body: SingleChildScrollView(
           child: Column(
@@ -47,6 +58,11 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  void selectReport(int i, [String? userName]) {
+    Navigator.pushNamed(context, MainNavigationRouteNames.reports,
+        arguments: [userName, i]);
+  }
+
   AppBar app() {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -56,7 +72,7 @@ class _MainPageState extends State<MainPage> {
                 onPressed: () => Scaffold.of(context).openDrawer(),
                 icon: const Icon(Icons.menu)))
       ],
-      title: const Text('Члены семьи'),
+      title: const Text('Главная'),
     );
   }
 }

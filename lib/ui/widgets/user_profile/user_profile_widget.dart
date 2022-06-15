@@ -1,6 +1,8 @@
+import 'package:family_budget/ui/navigation/main_navigation.dart';
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
-import 'package:family_budget/ui/widgets/main/drawer.dart';
-import 'package:family_budget/ui/widgets/select_period.dart';
+import 'package:family_budget/ui/widgets/general_widgets/drawer_report.dart';
+
+import 'package:family_budget/ui/widgets/general_widgets/select_period.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
@@ -35,11 +37,15 @@ class UserProfileWidgetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<UserProfileModel>();
     final title = model.user?.name ?? '';
-    print('teg model.user?.name ${model.user?.name}');
+
+    void selectReport(int i, [String? userName]) {
+      Navigator.pushNamed(context, MainNavigationRouteNames.reports,
+          arguments: [userName, i]);
+    }
 
     return SafeArea(
       child: Scaffold(
-        drawer: DrawerMy(userName: model.user?.name),
+        drawer: DrawerReport(selectReport: selectReport, userName: model.user?.name),
         appBar: appBar(context, title),
         body: SingleChildScrollView(
           child: Column(

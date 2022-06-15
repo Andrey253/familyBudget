@@ -19,7 +19,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  //final model = GroupsWidgetModel();
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +27,7 @@ class _MainPageState extends State<MainPage> {
     return SafeArea(
       child: Scaffold(
         drawer: const DrawerMain(),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: [
-            Builder(
-                builder: (context) => IconButton(
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                    icon: const Icon(Icons.menu)))
-          ],
-          title: const Text('Члены семьи'),
-        ),
+        appBar: app(),
         body: SingleChildScrollView(
           child: Column(
             children:  [
@@ -53,6 +43,19 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+
+  AppBar app() {
+    return AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          Builder(
+              builder: (context) => IconButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  icon: const Icon(Icons.menu)))
+        ],
+        title: const Text('Члены семьи'),
+      );
   }
 }
 

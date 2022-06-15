@@ -275,28 +275,31 @@ class MainModel extends ChangeNotifier {
     List<List<ColumnSeries<ChartIncomeExpenses, num>>> result = [];
     final transactions = getTransaction(null);
     final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
-    print('teg start $start end $end');
-    List<ChartIExp> listChartIExp = [];
 
     for (var e in catName) {
+      List<ChartIExp> listChartIExp = [];
       final category = transactions.where((el) => el.nameCategory == e.name);
-
+      int i = 0;
       for (DateTime dTime = start!;
           dTime.compareTo(end!) <= 0;
           dTime = dTime.add(const Duration(days: 1))) {
-        final onDate = category.where((el) =>
+        i++;
+        final trtansactionOnDate = category.where((el) =>
             el.createdDate.toString().split(' ').first ==
             dTime.toString().split(' ').first);
-        final summ =
-            onDate.fold<double>(0, (prV, element) => prV + element.amount);
-        listChartIExp.add(ChartIExp(summa: summ, createDate: dTime));
-
-
-        
+        final summ = trtansactionOnDate.fold<double>(
+            0, (prV, element) => prV + element.amount);
+        listChartIExp.add(ChartIExp(
+            summa: summ,
+            createDate: dTime,
+            count: '${dTime.month}.${dTime.day}'));
       }
 
-      final chartDataIncomeExpenses = listChartIExp.map(
-          (e) => ChartIncomeExpenses(summa: e.summa, createDate: e.createDate));
+      final chartDataIncomeExpenses = listChartIExp.map((elem) =>
+          ChartIncomeExpenses(
+              summa: elem.summa,
+              createDate: elem.createDate,
+              count: elem.count));
       final categoryChartIncomeExpenses =
           getChartDataIncomeExpenses(chartDataIncomeExpenses, e.name);
       result.add(categoryChartIncomeExpenses);
@@ -311,11 +314,12 @@ class MainModel extends ChangeNotifier {
       ColumnSeries<ChartIncomeExpenses, num>(
         name: name,
         dataSource: chartDataIncomeExpenses.toList(),
-        xValueMapper: (ChartIncomeExpenses data, _) => data.summa,
-        yValueMapper: (ChartIncomeExpenses data, _) =>
-            double.parse('${data.createDate.day}'),
+        xValueMapper: (ChartIncomeExpenses data, _) => double.parse(data.count),
+        yValueMapper: (ChartIncomeExpenses data, _) => data.summa,
+        dataLabelMapper: (ChartIncomeExpenses data, _) =>
+            data.summa != 0 ? '    ${data.summa.toInt().toString()}' : '',
         dataLabelSettings: const DataLabelSettings(
-            isVisible: true, textStyle: TextStyle(fontSize: 10)),
+            angle: -90, isVisible: true, textStyle: TextStyle(fontSize: 10)),
       )
     ];
   }

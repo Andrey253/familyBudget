@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class IncomeExpensesWidget extends StatelessWidget {
-  const IncomeExpensesWidget(
-      {Key? key, required this.series})
+  const IncomeExpensesWidget({Key? key, required this.series})
       : super(key: key);
   final List<ColumnSeries<ChartIncomeExpenses, num>> series;
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +26,12 @@ class IncomeExpensesWidget extends StatelessWidget {
           primaryXAxis:
               CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
           primaryYAxis: NumericAxis(
-              labelFormat: '{value}',
-              majorTickLines: const MajorTickLines(color: Colors.transparent),
-              axisLine: const AxisLine(width: 0),
-              minimum: 0,
-              maximum: 100),
+            enableAutoIntervalOnZooming: true,
+            labelFormat: '{value}',
+            majorTickLines: const MajorTickLines(color: Colors.transparent),
+            axisLine: const AxisLine(width: 0),
+            minimum: 0,
+          ),
           series: series,
           tooltipBehavior:
               TooltipBehavior(enable: true, header: '', canShowMarker: true),

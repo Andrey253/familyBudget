@@ -1,5 +1,6 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
 import 'package:family_budget/domain/model/char_data.dart';
+import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
@@ -36,7 +37,7 @@ class ReportModel extends ChangeNotifier {
 
   void setDateTimeRange(DateTime? start, DateTime? end) {
     _start = start ?? _start ?? DateTime(2022);
-    _end = end ?? _end ?? DateTime(2220);
+    _end = end ?? _end ?? DateTime(2210);
     notifyListeners();
   }
 
@@ -88,6 +89,61 @@ class ReportModel extends ChangeNotifier {
   }
 
   List<ColumnSeries<ChartIncomeExpenses, num>> getChartDataOnCategory(
+      Iterable<ChartIncomeExpenses> chartDataIncomeExpenses, String name) {
+    return <ColumnSeries<ChartIncomeExpenses, num>>[
+      ColumnSeries<ChartIncomeExpenses, num>(
+          name: name,
+          dataSource: chartDataIncomeExpenses.toList(),
+          xValueMapper: (ChartIncomeExpenses data, _) =>
+              double.parse(data.count),
+          yValueMapper: (ChartIncomeExpenses data, _) => data.summa,
+          dataLabelMapper: (ChartIncomeExpenses data, _) =>
+              data.summa != 0 ? '    ${data.summa.toInt().toString()}' : '',
+          dataLabelSettings: const DataLabelSettings(
+              angle: -90, isVisible: true, textStyle: TextStyle(fontSize: 10)))
+    ];
+  }
+
+  List<List<ColumnSeries<ChartIncomeExpenses, num>>>
+      getListChartDataOnIncomeExp() {
+    List<List<ColumnSeries<ChartIncomeExpenses, num>>> result = [];
+    final transactions = getTransaction();
+    final List<String> incomExp = [
+      TypeTransaction.income,
+      TypeTransaction.expense
+    ];
+    for (var e in incomExp) {
+      List<ChartIExp> listChartIExp = [];
+      final type = transactions.where((el) => el.typeTransaction == e);
+
+      for (DateTime dTime = start!;
+          dTime.compareTo(end!) <= 0;
+          dTime = dTime.add(const Duration(days: 1))) {
+        final trtansactionOnDate = type.where((el) =>
+            el.createdDate.toString().split(' ').first ==
+            dTime.toString().split(' ').first);
+        final summ = trtansactionOnDate.fold<double>(
+            0, (prV, element) => prV + element.amount);
+        listChartIExp.add(ChartIExp(
+            summa: summ,
+            createDate: dTime,
+            count: '${dTime.month}.${dTime.day}'));
+      }
+
+      final chartDataIncomeExpenses = listChartIExp.map((elem) =>
+          ChartIncomeExpenses(
+              summa: elem.summa,
+              createDate: elem.createDate,
+              count: elem.count));
+      final categoryChartIncomeExpenses =
+          getChartDataOnIncomeExp(chartDataIncomeExpenses, e);
+      result.add(categoryChartIncomeExpenses);
+    }
+
+    return result;
+  }
+
+  List<ColumnSeries<ChartIncomeExpenses, num>> getChartDataOnIncomeExp(
       Iterable<ChartIncomeExpenses> chartDataIncomeExpenses, String name) {
     return <ColumnSeries<ChartIncomeExpenses, num>>[
       ColumnSeries<ChartIncomeExpenses, num>(

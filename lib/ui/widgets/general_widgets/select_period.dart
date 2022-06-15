@@ -21,7 +21,7 @@ class SelectPeriod extends StatelessWidget {
               final date = await showDatePicker(
                   context: context,
                   initialDate: DateTime.now(),
-                  firstDate: DateTime(2022),
+                  firstDate: DateTime(2021),
                   lastDate: DateTime(2025));
               if (date == null) return;
               setDateTimeRange(date, null);

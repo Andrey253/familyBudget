@@ -67,9 +67,7 @@ class _IncomExpState extends State<IncomExp> {
           labelIntersectAction: AxisLabelIntersectAction.multipleRows,
           edgeLabelPlacement: EdgeLabelPlacement.shift),
       primaryYAxis: NumericAxis(
-          labelFormat: '{value}%',
-          // interval: isCardView ? 2 : 1,
-          title: AxisTitle(text: 'GDP growth rate'),
+          labelFormat: '{value}',
           axisLine: const AxisLine(width: 0),
           majorTickLines: const MajorTickLines(size: 0)),
       series: _getIndexedCategoryAxisSeries(),

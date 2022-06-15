@@ -9,7 +9,21 @@ class IncomeExpensesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<CategoricalMultiLevelLabel> _xAxisCategories =
+        <CategoricalMultiLevelLabel>[
+      const CategoricalMultiLevelLabel(
+          start: 'Dec', end: 'Feb', text: 'Summer'),
+      const CategoricalMultiLevelLabel(
+          start: 'Mar', end: 'May', text: 'Autumn'),
+      const CategoricalMultiLevelLabel(
+          start: 'Jun', end: 'Aug', text: 'Winter'),
+      const CategoricalMultiLevelLabel(
+          start: 'Sep', end: 'Nov', text: 'Spring'),
+      const CategoricalMultiLevelLabel(
+          start: 'Dec', end: 'Nov', text: 'Year - 2020', level: 1)
+    ];
     return Scaffold(
+      backgroundColor: Colors.green[50],
       body: SizedBox(
         height: 400,
         child: SfCartesianChart(
@@ -23,8 +37,13 @@ class IncomeExpensesWidget extends StatelessWidget {
               return Text(name);
             },
           ),
-          primaryXAxis:
-              CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
+          primaryXAxis: CategoryAxis(
+              majorTickLines: MajorTickLines(size: 5),
+              multiLevelLabelStyle: const MultiLevelLabelStyle(
+                  borderWidth: 1,
+                  borderType: MultiLevelBorderType.withoutTopAndBottom),
+              majorGridLines: const MajorGridLines(width: 1),
+              multiLevelLabels: _xAxisCategories),
           primaryYAxis: NumericAxis(
             enableAutoIntervalOnZooming: true,
             labelFormat: '{value}',

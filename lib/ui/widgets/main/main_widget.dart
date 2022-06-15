@@ -1,9 +1,9 @@
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/extentions.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/drawer_main.dart';
+import 'package:family_budget/ui/widgets/main/drawer.dart';
 import 'package:family_budget/ui/widgets/type_transaction/list_category_transaction.dart';
-import 'package:family_budget/ui/widgets/type_transaction/select_period_main.dart';
+import 'package:family_budget/ui/widgets/select_period.dart';
 import 'package:family_budget/ui/widgets/type_transaction/type_transactions_widget.dart';
 import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:flutter/material.dart';
@@ -19,23 +19,25 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   @override
   Widget build(BuildContext context) {
     final model = context.watch<MainModel>();
 
     return SafeArea(
       child: Scaffold(
-        drawer: const DrawerMain(),
+        drawer: const DrawerMy(),
         appBar: app(),
         body: SingleChildScrollView(
           child: Column(
-            children:  [
-             const _UserListWidget(),
-             const Text('Типы транзакций'),
-            const  TypeTransactionWidget(),
-            const  CategoryTransaction(),
-            const  SelectPeriodMain(),
+            children: [
+              const _UserListWidget(),
+              const Text('Типы транзакций'),
+              const TypeTransactionWidget(),
+              const CategoryTransaction(),
+              SelectPeriod(
+                  setDateTimeRange: model.setDateTimeRange,
+                  start: model.start,
+                  end: model.end),
               CircleDiagramm(chartData: model.getDataTypeTransactions(null)),
               CircleDiagramm(chartData: model.getDataNameTransactions(null)),
             ],
@@ -47,15 +49,15 @@ class _MainPageState extends State<MainPage> {
 
   AppBar app() {
     return AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          Builder(
-              builder: (context) => IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: const Icon(Icons.menu)))
-        ],
-        title: const Text('Члены семьи'),
-      );
+      automaticallyImplyLeading: false,
+      actions: [
+        Builder(
+            builder: (context) => IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: const Icon(Icons.menu)))
+      ],
+      title: const Text('Члены семьи'),
+    );
   }
 }
 

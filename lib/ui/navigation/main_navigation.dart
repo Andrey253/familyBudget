@@ -1,4 +1,5 @@
 import 'package:family_budget/domain/entity/transaction.dart';
+import 'package:family_budget/ui/widgets/reports/report_widget.dart';
 import 'package:family_budget/ui/widgets/reports/transaction/transaction_report.dart';
 import 'package:family_budget/ui/widgets/type_transaction/category_detail.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';
@@ -9,8 +10,7 @@ import 'package:flutter/material.dart';
 
 abstract class MainNavigationRouteNames {
   static const mainPage = '/';
-  static const transactionsMain = '/transactionsMain';
-  static const transactionsUser = '/transactionsUser';
+  static const reports = '/reports';
   static const transactionDetail = '/transactionDetail';
   static const userAdd = '/userAdd';
   static const userProfile = '/userProfile';
@@ -50,12 +50,12 @@ class MainNavigation {
             );
           },
         );
-      case MainNavigationRouteNames.transactionsMain:
-        final data = settings.arguments as List;
+      case MainNavigationRouteNames.reports:
+        final arguments = settings.arguments as List;
         return MaterialPageRoute(
           builder: (context) {
-            return TransactionListMain(
-                typeTransaction: data[0], userName: data[1]);
+            return ReportWidget(
+                userName: arguments[0], initialPage: arguments[1]);
           },
         );
 

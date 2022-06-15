@@ -1,8 +1,7 @@
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
-import 'package:family_budget/domain/sourse/string.dart';
-import 'package:family_budget/ui/widgets/reports/transaction/transaction_report.dart';
+import 'package:family_budget/ui/widgets/main/drawer.dart';
+import 'package:family_budget/ui/widgets/select_period.dart';
 import 'package:family_budget/ui/widgets/user_profile/list_category_in_profile.dart';
-import 'package:family_budget/ui/widgets/user_profile/select_period.dart';
 import 'package:family_budget/ui/widgets/user_profile/type_in_user_widget.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
@@ -36,17 +35,21 @@ class UserProfileWidgetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<UserProfileModel>();
     final title = model.user?.name ?? '';
+    print('teg model.user?.name ${model.user?.name}');
 
     return SafeArea(
       child: Scaffold(
-        drawer: _Drawer(model: model),
+        drawer: DrawerMy(userName: model.user?.name),
         appBar: appBar(context, title),
         body: SingleChildScrollView(
           child: Column(
             children: [
               const TypeInUserProfile(),
               const ListCategoryInProfile(),
-              const SelectPeriod(),
+              SelectPeriod(
+                  setDateTimeRange: model.setDateTimeRange,
+                  start: model.start,
+                  end: model.end),
               CircleDiagramm(chartData: model.getDataTypeTransactions(title)),
               CircleDiagramm(chartData: model.getDataNameTransactions(title)),
             ],
@@ -69,35 +72,5 @@ class UserProfileWidgetBody extends StatelessWidget {
       ),
       title: Text(title),
     );
-  }
-}
-
-class _Drawer extends StatelessWidget {
-  const _Drawer({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
-
-  final UserProfileModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-        child: Column(
-      children: [
-        TextButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return TransactionListMain(
-                    typeTransaction: TypeTransaction.all,
-                    userName: model.user?.name);
-              }));
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('Отчет транзакции')),
-      ],
-    ));
   }
 }

@@ -1,19 +1,15 @@
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
-import 'package:family_budget/ui/widgets/main/main_model.dart';
-import 'package:family_budget/ui/widgets/reports/income_expenses/income_expenses.dart';
 import 'package:family_budget/ui/widgets/reports/income_expenses/income_expenses_report.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class DrawerMain extends StatelessWidget {
-  const DrawerMain({
-    Key? key,
+class DrawerMy extends StatelessWidget {
+  const DrawerMy({
+    Key? key, this.userName,
   }) : super(key: key);
-
+final String? userName;
   @override
   Widget build(BuildContext context) {
-
     return Drawer(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,29 +20,22 @@ class DrawerMain extends StatelessWidget {
         TextButton.icon(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamed(
-                  context, MainNavigationRouteNames.transactionsMain,
-                  arguments: [TypeTransaction.all, null]);
+              Navigator.pushNamed(context, MainNavigationRouteNames.reports,
+                  arguments: [userName,0]);
             },
             icon: const Icon(Icons.arrow_right),
             label: const Text('Транзакции')),
         TextButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                    const      IncomeExpensesReportWidget()));
+            onPressed: () {Navigator.pop(context);
+              Navigator.pushNamed(context, MainNavigationRouteNames.reports,
+                  arguments: [userName,1]);
             },
             icon: const Icon(Icons.arrow_right),
             label: const Text('Доходы/Расходы')),
         TextButton.icon(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(
-                  context, MainNavigationRouteNames.transactionsMain,
-                  arguments: [TypeTransaction.all, null]);
+            onPressed: () {Navigator.pop(context);
+              Navigator.pushNamed(context, MainNavigationRouteNames.reports,
+                  arguments: [userName,2]);
             },
             icon: const Icon(Icons.arrow_right),
             label: const Text('По категориям')),

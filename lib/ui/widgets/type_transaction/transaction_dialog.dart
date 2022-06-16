@@ -7,10 +7,14 @@ import 'package:provider/provider.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
+  final double? limit;
+  final double? currenValue;
 
   const TransactionDialog({
     Key? key,
     this.transaction,
+    this.limit,
+    this.currenValue,
   }) : super(key: key);
 
   @override
@@ -76,6 +80,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const SizedBox(height: 8),
+              buildLimit(),
+              const SizedBox(height: 8),
               buildName(),
               const SizedBox(height: 8),
               buildAmount(),
@@ -107,12 +113,21 @@ class _TransactionDialogState extends State<TransactionDialog> {
   Widget buildAmount() => TextFormField(
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          hintText: 'Enter Amount',
+          hintText: 'Введите сумму',
         ),
         keyboardType: TextInputType.number,
-        validator: (amount) => amount != null && double.tryParse(amount) == null
-            ? 'Enter a valid number'
-            : null,
+        validator: (amount) {
+          if (amount != null && double.tryParse(amount) == null) {
+            return 'Не правильное значение суммы';
+          } else if (amount != null &&
+              double.tryParse(amount) != null &&
+              (widget.limit! - widget.currenValue!) <
+                  double.tryParse(amount)!) {
+            return 'Превышен лимит';
+          } else {
+            return null;
+          }
+        },
         controller: amountController,
       );
 
@@ -166,5 +181,11 @@ class _TransactionDialogState extends State<TransactionDialog> {
         }
       },
     );
+  }
+
+  buildLimit() {
+    return Text(widget.limit != null
+        ? 'Осталось ${widget.limit! - (widget.currenValue ?? 0)} в этом месяце'
+        : 'Ограничений не установлено');
   }
 }

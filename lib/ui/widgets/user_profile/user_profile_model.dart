@@ -18,10 +18,10 @@ class UserProfileModel extends ChangeNotifier {
   User? _user;
 
   double summaOfUser = 0;
-  
-  List<ChartData> chartDataTypeTransaction=[];
-  
-  List<ChartData> chartDataNameTransaction=[];
+
+  List<ChartData> chartDataTypeTransaction = [];
+
+  List<ChartData> chartDataNameTransaction = [];
   User? get user => _user;
   DateTimeRange? dateTimeRange;
 
@@ -61,9 +61,12 @@ class UserProfileModel extends ChangeNotifier {
         nameCategory: nameCategory.name,
         typeTransaction: nameCategory.type,
         amount: 0);
-    await Navigator.of(context).pushNamed(
-        MainNavigationRouteNames.transactioDialog,
-        arguments: transaction);
+    await Navigator.of(context)
+        .pushNamed(MainNavigationRouteNames.transactioDialog, arguments: [
+      transaction,
+      nameCategory.users?[_user?.name ?? ''],
+      getSummOfUser(nameCategory)
+    ]);
     getSummOfUser(nameCategory);
     notifyListeners();
   }
@@ -78,6 +81,7 @@ class UserProfileModel extends ChangeNotifier {
         .add(const Duration(microseconds: -1));
     notifyListeners();
   }
+
   void setDateTimeRange(DateTime? start, DateTime? end) {
     _start = start ?? _start ?? DateTime(2022);
     _end = end ?? _end ?? DateTime(2220);
@@ -100,7 +104,7 @@ class UserProfileModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getSummOfUser(NameCategory nameCategory) {
+  double getSummOfUser(NameCategory nameCategory) {
     final dateStart = DateTime(dateNow.year, dateNow.month);
     final dateEnd = DateTime(dateNow.year, dateNow.month + 1);
     final trans = Hive.box<Transaction>(HiveDbName.transactionBox)
@@ -111,8 +115,10 @@ class UserProfileModel extends ChangeNotifier {
         .where((element) => element.nameUser == user?.name);
     summaOfUser = trans.fold<double>(
         0, (previousValue, element) => previousValue + element.amount);
+    return summaOfUser;
   }
-    Iterable<Transaction> getTransaction(String? userName) {
+
+  Iterable<Transaction> getTransaction(String? userName) {
     return Hive.box<Transaction>(HiveDbName.transactionBox)
         .values
         .where((e) => start != null ? e.createdDate.isAfter(start!) : true)
@@ -121,7 +127,8 @@ class UserProfileModel extends ChangeNotifier {
             : true)
         .where((e) => userName == null ? true : e.nameUser == userName);
   }
-    List<ChartData> getDataNameTransactions(String? userName) {
+
+  List<ChartData> getDataNameTransactions(String? userName) {
     final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
     final tr = getTransaction(userName);
 
@@ -143,7 +150,8 @@ class UserProfileModel extends ChangeNotifier {
     }
     return chartDataNameTransaction;
   }
-    List<ChartData> getDataTypeTransactions(String? userName) {
+
+  List<ChartData> getDataTypeTransactions(String? userName) {
     final tr = getTransaction(userName);
 
     final List<String> types = [

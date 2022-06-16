@@ -18,13 +18,13 @@ class SelectPeriod extends StatelessWidget {
       children: [
         TextButton(
             onPressed: () async {
-              final date = await showDatePicker(
+              final showDatePickerStart = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
+                  initialDate:start?? DateTime.now(),
                   firstDate: DateTime(2021),
                   lastDate: DateTime(2025));
-              if (date == null) return;
-              setDateTimeRange(date, null);
+              if (showDatePickerStart == null) return;
+              setDateTimeRange(showDatePickerStart, null);
             },
             child: Text(
               'Старт \n ${(start ?? '').toString().split(' ').first}',
@@ -34,6 +34,7 @@ class SelectPeriod extends StatelessWidget {
             onPressed: () async {
               final range = await showDateRangePicker(
                   context: context,
+                  initialDateRange:DateTimeRange(start: start??DateTime.now(), end: end??DateTime.now()),
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
 
@@ -42,13 +43,13 @@ class SelectPeriod extends StatelessWidget {
             child: buildRange()),
         TextButton(
             onPressed: () async {
-              final end = await showDatePicker(
+              final showDatePickerEnd = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
+                  initialDate:end?? DateTime.now(),
                   firstDate: DateTime(2022),
                   lastDate: DateTime(2025));
-              if (end == null) return;
-              setDateTimeRange(null, end);
+              if (showDatePickerEnd == null) return;
+              setDateTimeRange(null, showDatePickerEnd);
             },
             child: Text('Конец \n ${(end ?? '').toString().split(' ').first}',
                 textAlign: TextAlign.center)),

@@ -35,11 +35,24 @@ class ReportModel extends ChangeNotifier {
         .add(const Duration(microseconds: -1));
   }
 
-  void setDateTimeRange(DateTime? start, DateTime? end) {
-    _start = start ?? _start ?? DateTime(2022);
-    _end = end ?? _end ?? DateTime(2210);
+  void setDateTimeRange(DateTime? startL, DateTime? endL) {
+    _start = startL ?? _start ?? DateTime(2022);
+    _end = endL ?? _end ?? DateTime(2210);
     notifyListeners();
   }
+
+  // Future setDateTimeAllRange() async {
+  //   final transactions = Hive.box<Transaction>(HiveDbName.transactionBox)
+  //       .values
+  //       .where((e) => nameUser == '' ? true : e.nameUser == nameUser);
+  //   final listDate = transactions.map((e) => e.createdDate).toList();
+  //   listDate.sort();
+  //   _start = listDate.first;
+  //   _end = listDate.last;
+  //   await Future.delayed(Duration(seconds: 1));
+  //   // getListChartDataOnIncomeExp();
+  //   notifyListeners();
+  // }
 
   Iterable<Transaction> getTransaction() {
     return Hive.box<Transaction>(HiveDbName.transactionBox)
@@ -51,9 +64,9 @@ class ReportModel extends ChangeNotifier {
         .where((e) => nameUser == '' ? true : e.nameUser == nameUser);
   }
 
-  List<List<ColumnSeries<ChartIncomeExpenses, num>>>
+  List<List<ColumnSeries<ChartIncomeExpenses, String>>>
       getListChartDataOnCategory() {
-    List<List<ColumnSeries<ChartIncomeExpenses, num>>> result = [];
+    List<List<ColumnSeries<ChartIncomeExpenses, String>>> result = [];
     final transactions = getTransaction();
     final catName = Hive.box<NameCategory>(HiveDbName.categoryName).values;
 
@@ -88,14 +101,13 @@ class ReportModel extends ChangeNotifier {
     return result;
   }
 
-  List<ColumnSeries<ChartIncomeExpenses, num>> getChartDataOnCategory(
+  List<ColumnSeries<ChartIncomeExpenses, String>> getChartDataOnCategory(
       Iterable<ChartIncomeExpenses> chartDataIncomeExpenses, String name) {
-    return <ColumnSeries<ChartIncomeExpenses, num>>[
-      ColumnSeries<ChartIncomeExpenses, num>(
+    return <ColumnSeries<ChartIncomeExpenses, String>>[
+      ColumnSeries<ChartIncomeExpenses, String>(
           name: name,
           dataSource: chartDataIncomeExpenses.toList(),
-          xValueMapper: (ChartIncomeExpenses data, _) =>
-              double.parse(data.count),
+          xValueMapper: (ChartIncomeExpenses data, _) => data.count,
           yValueMapper: (ChartIncomeExpenses data, _) => data.summa,
           dataLabelMapper: (ChartIncomeExpenses data, _) =>
               data.summa != 0 ? '    ${data.summa.toInt().toString()}' : '',
@@ -104,10 +116,11 @@ class ReportModel extends ChangeNotifier {
     ];
   }
 
-  List<List<ColumnSeries<ChartIncomeExpenses, num>>>
-      getListChartDataOnIncomeExp() {
-    List<List<ColumnSeries<ChartIncomeExpenses, num>>> result = [];
+  List<List<ChartIncomeExpenses>> getListChartDataOnIncomeExp() {
+    // _end = DateTime(dateNow.year, dateNow.month + 5);
+    List<List<ChartIncomeExpenses>> result = [];
     final transactions = getTransaction();
+
     final List<String> incomExp = [
       TypeTransaction.income,
       TypeTransaction.expense
@@ -118,16 +131,16 @@ class ReportModel extends ChangeNotifier {
 
       for (DateTime dTime = start!;
           dTime.compareTo(end!) <= 0;
-          dTime = dTime.add(const Duration(days: 1))) {
+          dTime = DateTime(dTime.year, dTime.month + 1)) {
         final trtansactionOnDate = type.where((el) =>
-            el.createdDate.toString().split(' ').first ==
-            dTime.toString().split(' ').first);
+            el.createdDate.month == dTime.month &&
+            el.createdDate.year == dTime.year);
         final summ = trtansactionOnDate.fold<double>(
             0, (prV, element) => prV + element.amount);
         listChartIExp.add(ChartIExp(
             summa: summ,
             createDate: dTime,
-            count: '${dTime.month}.${dTime.day}'));
+            count: '${dTime.year}.${dTime.month}'));
       }
 
       final chartDataIncomeExpenses = listChartIExp.map((elem) =>
@@ -135,27 +148,9 @@ class ReportModel extends ChangeNotifier {
               summa: elem.summa,
               createDate: elem.createDate,
               count: elem.count));
-      final categoryChartIncomeExpenses =
-          getChartDataOnIncomeExp(chartDataIncomeExpenses, e);
-      result.add(categoryChartIncomeExpenses);
+      result.add(chartDataIncomeExpenses.toList());
     }
 
     return result;
-  }
-
-  List<ColumnSeries<ChartIncomeExpenses, num>> getChartDataOnIncomeExp(
-      Iterable<ChartIncomeExpenses> chartDataIncomeExpenses, String name) {
-    return <ColumnSeries<ChartIncomeExpenses, num>>[
-      ColumnSeries<ChartIncomeExpenses, num>(
-          name: name,
-          dataSource: chartDataIncomeExpenses.toList(),
-          xValueMapper: (ChartIncomeExpenses data, _) =>
-              double.parse(data.count),
-          yValueMapper: (ChartIncomeExpenses data, _) => data.summa,
-          dataLabelMapper: (ChartIncomeExpenses data, _) =>
-              data.summa != 0 ? '    ${data.summa.toInt().toString()}' : '',
-          dataLabelSettings: const DataLabelSettings(
-              angle: -90, isVisible: true, textStyle: TextStyle(fontSize: 10)))
-    ];
   }
 }

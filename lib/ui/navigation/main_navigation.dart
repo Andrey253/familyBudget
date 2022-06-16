@@ -32,10 +32,14 @@ class MainNavigation {
           builder: (context) => UserProfileWidget(userKey: groupKey),
         );
       case MainNavigationRouteNames.transactioDialog:
-        final transaction = settings.arguments as Transaction;
+        final arguments = settings.arguments as List;
         return MaterialPageRoute(
           builder: (context) {
-            return TransactionDialog(transaction: transaction);
+            return TransactionDialog(
+              transaction: arguments[0],
+              limit: arguments[1],
+              currenValue: arguments[2],
+            );
           },
         );
       case MainNavigationRouteNames.transactionDetail:

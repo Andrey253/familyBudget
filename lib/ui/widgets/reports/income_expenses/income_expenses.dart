@@ -1,5 +1,7 @@
 import 'package:family_budget/domain/model/char_data.dart';
+import 'package:family_budget/ui/widgets/reports/report_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class IncomExp extends StatefulWidget {
@@ -12,48 +14,16 @@ class IncomExp extends StatefulWidget {
 }
 
 class _IncomExpState extends State<IncomExp> {
-  bool? isIndexed;
-
   @override
   void initState() {
-    isIndexed = true;
-
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback(
+    //     (_) => {context.read<ReportModel>().setDateTimeAllRange()});
   }
 
   @override
   Widget build(BuildContext context) {
     return _buildIndexedCategoryAxisChart();
-  }
-
-  @override
-  Widget buildSettings(BuildContext context) {
-    return StatefulBuilder(
-        builder: (BuildContext context, StateSetter stateSetter) {
-      return Row(
-        children: <Widget>[
-          const Text('Arrange by index',
-              style: TextStyle(
-                // color: model.textColor,
-                fontSize: 16,
-              )),
-          Padding(
-            padding: const EdgeInsets.only(left: 2.0),
-            child: SizedBox(
-                width: 90,
-                child: CheckboxListTile(
-                    // activeColor: model.backgroundColor,
-                    value: isIndexed,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isIndexed = value;
-                        stateSetter(() {});
-                      });
-                    })),
-          )
-        ],
-      );
-    });
   }
 
   /// Returns the column chart with arranged index.
@@ -62,7 +32,7 @@ class _IncomExpState extends State<IncomExp> {
       plotAreaBorderWidth: 0,
       legend: Legend(isVisible: true, position: LegendPosition.top),
       primaryXAxis: CategoryAxis(
-          arrangeByIndex: isIndexed ?? true,
+          arrangeByIndex: true,
           majorGridLines: const MajorGridLines(width: 0),
           labelIntersectAction: AxisLabelIntersectAction.multipleRows,
           edgeLabelPlacement: EdgeLabelPlacement.shift),
@@ -83,12 +53,20 @@ class _IncomExpState extends State<IncomExp> {
           dataSource: widget.chartData,
           xValueMapper: (ChartIncomeExpenses data, _) => data.count,
           yValueMapper: (ChartIncomeExpenses data, _) => data.summa,
-          name: 'Доходы'),
+          dataLabelMapper: (ChartIncomeExpenses data, _) =>
+              data.summa != 0 ? '    ${data.summa.toInt().toString()}' : '',
+          name: 'Доходы',
+          dataLabelSettings: const DataLabelSettings(
+              angle: -90, isVisible: true, textStyle: TextStyle(fontSize: 10))),
       ColumnSeries<ChartIncomeExpenses, String>(
           dataSource: widget.chartData1,
-          xValueMapper: (ChartIncomeExpenses data, _) => data.count,
+          xValueMapper: (ChartIncomeExpenses data, _) => '',
           yValueMapper: (ChartIncomeExpenses data, _) => data.summa,
-          name: 'Расходы')
+          dataLabelMapper: (ChartIncomeExpenses data, _) =>
+              data.summa != 0 ? '    ${data.summa.toInt().toString()}' : '',
+          name: 'Расходы',
+          dataLabelSettings: const DataLabelSettings(
+              angle: -90, isVisible: true, textStyle: TextStyle(fontSize: 10)))
     ];
   }
 }

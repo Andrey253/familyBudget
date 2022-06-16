@@ -18,34 +18,7 @@ class IncomeExpensesReportWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.watch<ReportModel>();
 
-    List<ChartIncomeExpenses> chartData = <ChartIncomeExpenses>[
-      ChartIncomeExpenses(
-          summa: 3,
-          createDate: DateTime.now().add(const Duration(days: 1)),
-          count: '1'),
-      ChartIncomeExpenses(
-          summa: 4,
-          createDate: DateTime.now().add(const Duration(days: 2)),
-          count: '2'),
-      ChartIncomeExpenses(
-          summa: 7,
-          createDate: DateTime.now().add(const Duration(days: 3)),
-          count: '3'),
-    ];
-    List<ChartIncomeExpenses> chartData1 = <ChartIncomeExpenses>[
-      ChartIncomeExpenses(
-          summa: 2,
-          createDate: DateTime.now().add(const Duration(days: 1)),
-          count: '1'),
-      ChartIncomeExpenses(
-          summa: 1,
-          createDate: DateTime.now().add(const Duration(days: 2)),
-          count: '2'),
-      ChartIncomeExpenses(
-          summa: 6,
-          createDate: DateTime.now().add(const Duration(days: 3)),
-          count: '3'),
-    ];
+    final data = model.getListChartDataOnIncomeExp();
     // final listData = model.getListChartDataOnCategory();
     return SafeArea(
         child: Scaffold(
@@ -56,8 +29,8 @@ class IncomeExpensesReportWidget extends StatelessWidget {
           end: model.end),
       Expanded(
           child: IncomExp(
-        chartData: chartData,
-        chartData1: chartData1,
+        chartData: data[0],
+        chartData1: data[1],
       ))
     ])));
   }

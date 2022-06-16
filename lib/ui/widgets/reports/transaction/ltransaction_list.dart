@@ -64,7 +64,7 @@ class _TransactionsListState extends State<TransactionsList> {
             Text('$data'),
             onTap: () => Navigator.pushNamed(
                 context, MainNavigationRouteNames.transactioDialog,
-                arguments: trans),
+                arguments: [trans, null, null]),
           ))
       .toList();
 

@@ -5,7 +5,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class CategoryWidget extends StatelessWidget {
   const CategoryWidget({Key? key, required this.series})
       : super(key: key);
-  final List<ColumnSeries<ChartIncomeExpenses, num>> series;
+  final List<ColumnSeries<ChartIncomeExpenses, String>> series;
 
   @override
   Widget build(BuildContext context) {

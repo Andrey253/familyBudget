@@ -264,5 +264,13 @@ class MainModel extends ChangeNotifier {
     return chartDataTypeTransaction;
   }
 
-
+ List<TypeTrans> type() {
+    return <TypeTrans>[
+      TypeTrans(TypeTransaction.income, Colors.green),
+      TypeTrans(TypeTransaction.expense, Colors.red),
+      TypeTrans(TypeTransaction.all, Colors.blue),
+      TypeTrans(TypeTransaction.addIncome, Colors.green.shade200),
+      TypeTrans(TypeTransaction.addExpense, Colors.red.shade200),
+    ];
+  }
 }

@@ -118,7 +118,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
           if (amount != null && double.tryParse(amount) == null) {
             return 'Не правильное значение суммы';
           } else if (amount != null &&
-              double.tryParse(amount) != null &&
+              double.tryParse(amount) != null && widget.limit!=null&&widget.currenValue!=null&&
               (widget.limit! - widget.currenValue!) <
                   double.tryParse(amount)!) {
             return 'Превышен лимит';

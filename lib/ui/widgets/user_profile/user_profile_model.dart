@@ -117,6 +117,19 @@ class UserProfileModel extends ChangeNotifier {
         0, (previousValue, element) => previousValue + element.amount);
     return summaOfUser;
   }
+  double getSummOfCcategory(NameCategory nameCategory) {
+    final dateStart = DateTime(dateNow.year, dateNow.month);
+    final dateEnd = DateTime(dateNow.year, dateNow.month + 1);
+    final trans = Hive.box<Transaction>(HiveDbName.transactionBox)
+        .values
+        .where((e) => e.createdDate.isAfter(dateStart))
+        .where((e) => e.createdDate.isBefore(dateEnd))
+        .where((element) => element.nameCategory == nameCategory.name)
+;
+    final summa = trans.fold<double>(
+        0, (previousValue, element) => previousValue + element.amount);
+    return summa;
+  }
 
   Iterable<Transaction> getTransaction(String? userName) {
     return Hive.box<Transaction>(HiveDbName.transactionBox)

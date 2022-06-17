@@ -58,7 +58,7 @@ Widget categoryTransactionItem(
                   : 'Ограничение в семейном бюджете ${nameCategory.fix}')
               .toString(),
           style: nameCategory.fix != null &&
-                  nameCategory.fix! < model.summaOfUser
+                  nameCategory.fix! < model.getSummOfCcategory(nameCategory)
               ? const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
               : const TextStyle(),
           textAlign: TextAlign.center),

@@ -1,6 +1,5 @@
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/main.dart';
-import 'package:family_budget/ui/widgets/main/main_model.dart';
 import 'package:family_budget/ui/widgets/reports/report_model.dart';
 import 'package:family_budget/ui/widgets/reports/transaction/ltransaction_list.dart';
 import 'package:family_budget/ui/widgets/general_widgets/select_period.dart';

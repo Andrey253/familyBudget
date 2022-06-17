@@ -1,4 +1,3 @@
-import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/ui/widgets/reports/report_widget.dart';
 import 'package:family_budget/ui/widgets/type_transaction/category_detail.dart';
 import 'package:family_budget/ui/widgets/type_transaction/transaction_dialog.dart';

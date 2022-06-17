@@ -1,7 +1,5 @@
 import 'package:family_budget/domain/model/char_data.dart';
-import 'package:family_budget/ui/widgets/reports/report_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class IncomExp extends StatefulWidget {

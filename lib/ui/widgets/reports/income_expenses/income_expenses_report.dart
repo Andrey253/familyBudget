@@ -1,4 +1,3 @@
-import 'package:family_budget/domain/model/char_data.dart';
 
 import 'package:family_budget/ui/widgets/reports/income_expenses/income_expenses.dart';
 import 'package:family_budget/ui/widgets/general_widgets/select_period.dart';

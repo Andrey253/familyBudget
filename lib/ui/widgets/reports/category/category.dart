@@ -38,7 +38,7 @@ class CategoryWidget extends StatelessWidget {
             },
           ),
           primaryXAxis: CategoryAxis(
-              majorTickLines: MajorTickLines(size: 5),
+              majorTickLines:const MajorTickLines(size: 5),
               multiLevelLabelStyle: const MultiLevelLabelStyle(
                   borderWidth: 1,
                   borderType: MultiLevelBorderType.withoutTopAndBottom),

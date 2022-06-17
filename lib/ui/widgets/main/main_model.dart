@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:family_budget/domain/entity/category_transaction.dart';
-import 'package:family_budget/domain/model/char_data.dart';
 import 'package:family_budget/ui/widgets/indicators/cilcle_diagramm.dart';
 import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/model/type_transaction.dart';
@@ -12,7 +11,6 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:family_budget/domain/entity/user.dart';
 import 'package:family_budget/ui/navigation/main_navigation.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MainModel extends ChangeNotifier {
   final _groups = <User>[];

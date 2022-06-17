@@ -1,11 +1,8 @@
 import 'package:family_budget/domain/entity/category_transaction.dart';
-import 'package:family_budget/domain/entity/transaction.dart';
 import 'package:family_budget/domain/sourse/string.dart';
 import 'package:family_budget/extentions.dart';
-import 'package:family_budget/main.dart';
 import 'package:family_budget/ui/widgets/user_profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
 class ListCategoryInProfile extends StatefulWidget {

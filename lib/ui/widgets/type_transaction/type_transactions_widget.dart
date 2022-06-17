@@ -31,9 +31,21 @@ class TypeTransactionWidget extends StatelessWidget {
                     child: Container(
                       width: 70,
                       decoration: BoxDecoration(
-                        color: typeTrans.color,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                          color: typeTrans.color,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(
+                                    typeTrans.name == model.typeTransaction
+                                        ? 3
+                                        : -3,
+                                    typeTrans.name == model.typeTransaction
+                                        ? 3
+                                        : -3),
+                                color: Colors.grey,
+                                blurRadius: 2,
+                                spreadRadius: 1)
+                          ]),
                       // color: Colors.red,
                       child: Center(
                         child: Text(typeTrans.name,

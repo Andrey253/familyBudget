@@ -30,9 +30,21 @@ class TypeInUserProfile extends StatelessWidget {
                     child: Container(
                       width: 80,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: typeTrans.color,
-                      ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: typeTrans.color,
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(
+                                    typeTrans.name == model.typeTransaction
+                                        ? 3
+                                        : -3,
+                                    typeTrans.name == model.typeTransaction
+                                        ? 3
+                                        : -3),
+                                color: Colors.grey,
+                                blurRadius: 2,
+                                spreadRadius: 1)
+                          ]),
                       // color: Colors.red,
                       child: Center(
                         child: Text(

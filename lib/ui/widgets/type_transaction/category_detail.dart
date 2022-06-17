@@ -10,8 +10,14 @@ class CategoryDetail extends StatefulWidget {
     required this.saveCategoryTransaction,
   }) : super(key: key);
   final NameCategory categoryTransaction;
-  final Function(BuildContext context,NameCategory categoryTransaction) deleteCategoryTransaction;
-  final Function(BuildContext context,NameCategory categoryTransaction, bool validate, String textFieldName, String textFieldFix) saveCategoryTransaction;
+  final Function(BuildContext context, NameCategory categoryTransaction)
+      deleteCategoryTransaction;
+  final Function(
+      BuildContext context,
+      NameCategory categoryTransaction,
+      bool validate,
+      String textFieldName,
+      String textFieldFix) saveCategoryTransaction;
   final TextEditingController textControllerName = TextEditingController();
   final TextEditingController textControllerFix = TextEditingController();
 
@@ -28,7 +34,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        title:const Text('Детали транзакции'),
+        title: const Text('Детали категории'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +62,12 @@ class _CategoryDetailState extends State<CategoryDetail> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                  onPressed:()=> widget.saveCategoryTransaction(context, widget.categoryTransaction,validate(widget.textControllerFix.text),widget.textControllerName.text,widget.textControllerFix.text),
+                  onPressed: () => widget.saveCategoryTransaction(
+                      context,
+                      widget.categoryTransaction,
+                      validate(widget.textControllerFix.text),
+                      widget.textControllerName.text,
+                      widget.textControllerFix.text),
                   icon: const Icon(Icons.save)),
               IconButton(
                   onPressed: () => widget.deleteCategoryTransaction(
@@ -69,8 +80,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     );
   }
 
-
- bool validate(String value) {
+  bool validate(String value) {
     try {
       if (value != '') double.parse(value);
       return true;

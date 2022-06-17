@@ -29,10 +29,10 @@ class TypeTransactionWidget extends StatelessWidget {
                             BoxShadow(
                                 offset: Offset(
                                     typeT.name == model.typeTransaction
-                                        ? 3
+                                        ? 0
                                         : -3,
                                     typeT.name == model.typeTransaction
-                                        ? 3
+                                        ? 0
                                         : -3),
                                 color: Colors.grey,
                                 blurRadius: 2,

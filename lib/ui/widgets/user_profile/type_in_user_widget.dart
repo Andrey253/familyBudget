@@ -36,11 +36,11 @@ class TypeInUserProfile extends StatelessWidget {
                             BoxShadow(
                                 offset: Offset(
                                     typeTrans.name == model.typeTransaction
-                                        ? 3
-                                        : -3,
+                                        ? 0
+                                        : 3,
                                     typeTrans.name == model.typeTransaction
-                                        ? 3
-                                        : -3),
+                                        ? 0
+                                        : 3),
                                 color: Colors.grey,
                                 blurRadius: 2,
                                 spreadRadius: 1)

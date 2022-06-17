@@ -41,19 +41,6 @@ class ReportModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future setDateTimeAllRange() async {
-  //   final transactions = Hive.box<Transaction>(HiveDbName.transactionBox)
-  //       .values
-  //       .where((e) => nameUser == '' ? true : e.nameUser == nameUser);
-  //   final listDate = transactions.map((e) => e.createdDate).toList();
-  //   listDate.sort();
-  //   _start = listDate.first;
-  //   _end = listDate.last;
-  //   await Future.delayed(Duration(seconds: 1));
-  //   // getListChartDataOnIncomeExp();
-  //   notifyListeners();
-  // }
-
   Iterable<Transaction> getTransaction() {
     return Hive.box<Transaction>(HiveDbName.transactionBox)
         .values
@@ -117,7 +104,6 @@ class ReportModel extends ChangeNotifier {
   }
 
   List<List<ChartIncomeExpenses>> getListChartDataOnIncomeExp() {
-    // _end = DateTime(dateNow.year, dateNow.month + 5);
     List<List<ChartIncomeExpenses>> result = [];
     final transactions = getTransaction();
 

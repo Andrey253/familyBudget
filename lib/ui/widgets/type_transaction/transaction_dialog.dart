@@ -183,7 +183,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
 
   buildLimit() {
     return Text(widget.limit != null
-        ? 'Осталось ${widget.limit! - (widget.currenValue ?? 0)} в этом месяце'
+        ? 'Доступно ${widget.limit! - (widget.currenValue ?? 0)} в этом месяце'
         : 'Ограничений не установлено');
   }
 }

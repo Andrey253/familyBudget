@@ -25,7 +25,7 @@ class CategoryTransaction extends StatelessWidget {
               GridView(
                   primary: false,
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: size.width / 4),
+                      maxCrossAxisExtent: size.width / 3),
                   shrinkWrap: true,
                   children: model.listCategory
                       .map((e) => Card(

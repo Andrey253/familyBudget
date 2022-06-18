@@ -43,7 +43,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
               .paddingAll(),
           Row(
             children: [
-              const Text(' Наименование транзакции: ').paddingAll(),
+              const Text(' Наименование категории: ').paddingAll(),
               Expanded(child: TextField(controller: widget.textControllerName))
             ],
           ),

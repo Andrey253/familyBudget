@@ -3,29 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CategoryWidget extends StatelessWidget {
-  const CategoryWidget({Key? key, required this.series})
-      : super(key: key);
+  const CategoryWidget({Key? key, required this.series}) : super(key: key);
   final List<ColumnSeries<ChartIncomeExpenses, String>> series;
 
   @override
   Widget build(BuildContext context) {
-    List<CategoricalMultiLevelLabel> _xAxisCategories =
-        <CategoricalMultiLevelLabel>[
-      const CategoricalMultiLevelLabel(
-          start: 'Dec', end: 'Feb', text: 'Summer'),
-      const CategoricalMultiLevelLabel(
-          start: 'Mar', end: 'May', text: 'Autumn'),
-      const CategoricalMultiLevelLabel(
-          start: 'Jun', end: 'Aug', text: 'Winter'),
-      const CategoricalMultiLevelLabel(
-          start: 'Sep', end: 'Nov', text: 'Spring'),
-      const CategoricalMultiLevelLabel(
-          start: 'Dec', end: 'Nov', text: 'Year - 2020', level: 1)
-    ];
     return Scaffold(
       backgroundColor: Colors.green[50],
       body: SizedBox(
-        height: 400,
+        height: 300,
         child: SfCartesianChart(
           plotAreaBorderWidth: 0,
           legend: Legend(
@@ -38,12 +24,12 @@ class CategoryWidget extends StatelessWidget {
             },
           ),
           primaryXAxis: CategoryAxis(
-              majorTickLines:const MajorTickLines(size: 5),
-              multiLevelLabelStyle: const MultiLevelLabelStyle(
-                  borderWidth: 1,
-                  borderType: MultiLevelBorderType.withoutTopAndBottom),
-              majorGridLines: const MajorGridLines(width: 1),
-              multiLevelLabels: _xAxisCategories),
+            majorTickLines: const MajorTickLines(size: 5),
+            multiLevelLabelStyle: const MultiLevelLabelStyle(
+                borderWidth: 1,
+                borderType: MultiLevelBorderType.withoutTopAndBottom),
+            majorGridLines: const MajorGridLines(width: 1),
+          ),
           primaryYAxis: NumericAxis(
             enableAutoIntervalOnZooming: true,
             labelFormat: '{value}',

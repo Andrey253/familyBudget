@@ -25,8 +25,7 @@ class CategoryReportWidget extends StatelessWidget {
             start: model.start,
             end: model.end),
         ...listData
-            .map((e) =>
-                SizedBox(height: 400, child: CategoryWidget(series: e)))
+            .map((e) => SizedBox(height: 300, child: CategoryWidget(series: e)))
             .toList()
       ]),
     )));
